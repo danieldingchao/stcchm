@@ -1,0 +1,34 @@
+{
+  "manifest_version": 1,
+  "name": "service:shell",
+  "display_name": "Service Manager",
+  "capabilities": {
+    // NOTE: This manifest is for documentation purposes only. Relevant
+    // capability spec is defined inline in the ServiceManager implementation.
+    //
+    // TODO(rockot): Fix this. We can bake this file into ServiceManager at
+    // build time or something. Same with service:catalog.
+    "provided": {
+      // Clients requesting this class are able to connect to other clients as
+      // specific users other than their own.
+      "shell:user_id": [ ],
+      // Clients requesting this class are allowed to register clients for
+      // processes they launch themselves.
+      "shell:client_process": [ ],
+      // Clients requesting this class are allowed to connect to other clients
+      // in specific process instance groups.
+      "shell:instance_name": [ ],
+      // Clients requesting this class are run as a unique user id which is
+      // visible to clients run as any user.
+      "shell:all_users": [ ],
+      "shell:block_wildcard":  [ ],
+      // Clients requesting this class block inbound requests to bind interfaces
+      // from other sources who specify wildcard rules in their manifest
+      // capability interface sets.
+      "shell:explicit_class": [ ]
+    },
+    "required": {
+      "service:shell": { "classes": [ "shell:all_users" ] }
+    }
+  }
+}

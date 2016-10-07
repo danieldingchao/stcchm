@@ -1,0 +1,18 @@
+{
+  // NOTE: This is the manifest for service:chrome_mash, which is only used to
+  // package services for the Mash environment when baked into the Chrome binary
+  // (i.e. "chrome --mash")
+  //
+  // If you need to require or provide capabilities from Chrome itself within
+  // the Mash environment, you should instead modify
+  // chrome_mash_content_browser_manifest_overlay.json.
+  "manifest_version": 1,
+  "name": "service:chrome_mash",
+  "display_name": "Chrome Mash Packaged Services",
+  "capabilities": {
+    "required": {
+      "service:mash_session": { "classes": [ "app" ] },
+      "service:catalog": { "classes": [ "control" ] }
+    }
+  }
+}
