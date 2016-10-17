@@ -487,8 +487,8 @@ class Internals final : public GarbageCollectedFinalized<Internals>,
   int visualViewportHeight();
   int visualViewportWidth();
   // The scroll position of the visual viewport relative to the document origin.
-  float visualViewportScrollX();
-  float visualViewportScrollY();
+  double visualViewportScrollX();
+  double visualViewportScrollY();
 
   // Return true if the given use counter exists for the given document.
   // |useCounterId| must be one of the values from the UseCounter::Feature enum.

@@ -9,6 +9,5 @@ include_rules = [
   "+components/tracing",
   "+services/ui",
   "+mash",
-  "+services/catalog",
   "+services/shell",
 ]

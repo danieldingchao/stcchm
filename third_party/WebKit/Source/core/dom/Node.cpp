@@ -29,7 +29,6 @@
 #include "bindings/core/v8/DOMDataStore.h"
 #include "bindings/core/v8/ExceptionState.h"
 #include "bindings/core/v8/Microtask.h"
-#include "bindings/core/v8/ScriptWrappableVisitor.h"
 #include "bindings/core/v8/V8DOMWrapper.h"
 #include "core/HTMLNames.h"
 #include "core/MathMLNames.h"
@@ -295,8 +294,8 @@ NodeRareData& Node::ensureRareData() {
     m_data.m_rareData = NodeRareData::create(m_data.m_layoutObject);
 
   DCHECK(m_data.m_rareData);
+
   setFlag(HasRareDataFlag);
-  ScriptWrappableVisitor::writeBarrier(this, rareData());
   return *rareData();
 }
 
@@ -1974,7 +1973,6 @@ void Node::registerMutationObserver(
     registry.append(MutationObserverRegistration::create(
         observer, this, options, attributeFilter));
     registration = registry.last().get();
-    ScriptWrappableVisitor::writeBarrier(this, registration);
   }
 
   document().addMutationObserverTypes(registration->mutationTypes());

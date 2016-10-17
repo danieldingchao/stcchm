@@ -75,24 +75,24 @@ MouseRelatedEvent::MouseRelatedEvent(
       m_movementDelta(movementDelta),
       m_positionType(positionType) {
   LayoutPoint adjustedPageLocation;
-  LayoutSize scrollOffset;
+  LayoutPoint scrollPosition;
 
   LocalFrame* frame = view() && view()->isLocalDOMWindow()
                           ? toLocalDOMWindow(view())->frame()
                           : nullptr;
   if (frame && hasPosition()) {
     if (FrameView* frameView = frame->view()) {
-      scrollOffset = LayoutSize(frameView->scrollOffsetInt());
+      scrollPosition = frameView->scrollPosition();
       adjustedPageLocation = frameView->rootFrameToContents(rootFrameLocation);
       float scaleFactor = 1 / frame->pageZoomFactor();
       if (scaleFactor != 1.0f) {
         adjustedPageLocation.scale(scaleFactor, scaleFactor);
-        scrollOffset.scale(scaleFactor, scaleFactor);
+        scrollPosition.scale(scaleFactor, scaleFactor);
       }
     }
   }
 
-  m_clientLocation = adjustedPageLocation - scrollOffset;
+  m_clientLocation = adjustedPageLocation - toLayoutSize(scrollPosition);
   m_pageLocation = adjustedPageLocation;
 
   // Set up initial values for coordinates.

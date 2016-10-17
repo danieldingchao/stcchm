@@ -125,7 +125,7 @@ class ResourcePrefetcherTest : public testing::Test {
                                        net::SSLInfo(), false);
   }
   void OnResponse(const std::string& url) {
-    prefetcher_->OnResponseStarted(GetInFlightRequest(url), net::OK);
+    prefetcher_->OnResponseStarted(GetInFlightRequest(url));
   }
 
   base::MessageLoop loop_;

@@ -8,10 +8,7 @@ if (is_android) {
 }
 
 source_set("settings") {
-  visibility = [
-    "//blimp/client/app:*",  # TODO(nyquist): Remove this. See crbug/651964.
-    "//blimp/client/core/*",
-  ]
+  visibility = [ "//blimp/client/*" ]
 
   sources = [
     "blimp_settings_delegate.h",
@@ -45,10 +42,7 @@ source_set("settings") {
 
 if (is_android) {
   android_library("settings_java") {
-    visibility = [
-      "//blimp/client/app:*",  # TODO(nyquist): Remove this. See crbug/651964.
-      "//blimp/client/core/*",
-    ]
+    visibility = [ "//blimp/client/*" ]
 
     java_files = [
       "android/java/src/org/chromium/blimp/core/settings/AboutBlimpPreferences.java",
@@ -58,7 +52,7 @@ if (is_android) {
     # TODO(xingliu): Clean resources files in the future. http://crbug.com/630687.
     deps = [
       "//base:base_java",
-      "//blimp/client/app:blimp_java_resources",
+      "//blimp/client:blimp_java_resources",
       "//blimp/client/core/common:common_java",
       "//blimp/client/public:public_headers_java",
       "//components/signin/core/browser/android:java",

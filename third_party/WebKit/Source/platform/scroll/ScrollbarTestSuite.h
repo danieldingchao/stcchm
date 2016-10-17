@@ -23,9 +23,9 @@ class MockScrollableArea : public GarbageCollectedFinalized<MockScrollableArea>,
  public:
   static MockScrollableArea* create() { return new MockScrollableArea(); }
 
-  static MockScrollableArea* create(const ScrollOffset& maximumScrollOffset) {
+  static MockScrollableArea* create(const IntPoint& maximumScrollPosition) {
     MockScrollableArea* mock = create();
-    mock->setMaximumScrollOffset(maximumScrollOffset);
+    mock->setMaximumScrollPosition(maximumScrollPosition);
     return mock;
   }
 
@@ -46,15 +46,14 @@ class MockScrollableArea : public GarbageCollectedFinalized<MockScrollableArea>,
   bool userInputScrollable(ScrollbarOrientation) const override { return true; }
   bool scrollbarsCanBeActive() const override { return true; }
   bool shouldPlaceVerticalScrollbarOnLeft() const override { return false; }
-  void updateScrollOffset(const ScrollOffset& offset, ScrollType) override {
-    m_scrollOffset = offset.shrunkTo(m_maximumScrollOffset);
+  void setScrollOffset(const DoublePoint& offset, ScrollType) override {
+    m_scrollPosition =
+        flooredIntPoint(offset).shrunkTo(m_maximumScrollPosition);
   }
-  IntSize scrollOffsetInt() const override {
-    return flooredIntSize(m_scrollOffset);
-  }
-  IntSize minimumScrollOffsetInt() const override { return IntSize(); }
-  IntSize maximumScrollOffsetInt() const override {
-    return expandedIntSize(m_maximumScrollOffset);
+  IntPoint scrollPosition() const override { return m_scrollPosition; }
+  IntPoint minimumScrollPosition() const override { return IntPoint(); }
+  IntPoint maximumScrollPosition() const override {
+    return m_maximumScrollPosition;
   }
   int visibleHeight() const override { return 768; }
   int visibleWidth() const override { return 1024; }
@@ -69,14 +68,14 @@ class MockScrollableArea : public GarbageCollectedFinalized<MockScrollableArea>,
   DEFINE_INLINE_VIRTUAL_TRACE() { ScrollableArea::trace(visitor); }
 
  private:
-  void setMaximumScrollOffset(const ScrollOffset& maximumScrollOffset) {
-    m_maximumScrollOffset = maximumScrollOffset;
+  void setMaximumScrollPosition(const IntPoint& maximumScrollPosition) {
+    m_maximumScrollPosition = maximumScrollPosition;
   }
 
-  explicit MockScrollableArea() : m_maximumScrollOffset(ScrollOffset(0, 100)) {}
+  explicit MockScrollableArea() : m_maximumScrollPosition(IntPoint(0, 100)) {}
 
-  ScrollOffset m_scrollOffset;
-  ScrollOffset m_maximumScrollOffset;
+  IntPoint m_scrollPosition;
+  IntPoint m_maximumScrollPosition;
 };
 
 class ScrollbarTestSuite : public testing::Test {

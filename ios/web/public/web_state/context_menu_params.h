@@ -38,10 +38,6 @@ struct ContextMenuParams {
 
   // The location in |view| to present the menu.
   CGPoint location;
-
-  // The text associated with the link. It is either nil or nonempty (it can not
-  // be empty).
-  base::scoped_nsobject<NSString> link_text;
 };
 
 }  // namespace web

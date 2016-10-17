@@ -199,7 +199,11 @@ class CORE_EXPORT FrameView final
   IntSize inputEventsOffsetForEmulation() const;
   void setInputEventsTransformForEmulation(const IntSize&, float);
 
+  void setScrollPosition(const DoublePoint&,
+                         ScrollType,
+                         ScrollBehavior = ScrollBehaviorInstant) override;
   void didChangeScrollOffset();
+
   void didUpdateElasticOverscroll();
 
   void viewportSizeChanged(bool widthChanged, bool heightChanged);
@@ -298,7 +302,7 @@ class CORE_EXPORT FrameView final
   // Updates the fragment anchor element based on URL's fragment identifier.
   // Updates corresponding ':target' CSS pseudo class on the anchor element.
   // If |UrlFragmentScroll| is passed in then makes the anchor element
-  // focused and also visible by scrolling to it. The scroll offset is
+  // focused and also visible by scrolling to it. The scroll position is
   // maintained during the frame loading process.
   void processUrlFragment(const KURL&, UrlFragmentBehavior = UrlFragmentScroll);
   void clearFragmentAnchor();
@@ -409,7 +413,7 @@ class CORE_EXPORT FrameView final
     return IntSize(0, ceilf(m_topControlsViewportAdjustment));
   }
 
-  IntSize maximumScrollOffsetInt() const override;
+  IntPoint maximumScrollPosition() const override;
 
   // ScrollableArea interface
   void getTickmarks(Vector<IntRect>&) const override;
@@ -523,21 +527,30 @@ class CORE_EXPORT FrameView final
   int contentsWidth() const { return contentsSize().width(); }
   int contentsHeight() const { return contentsSize().height(); }
 
-  // Functions for querying the current scrolled offset (both as a point, a
-  // size, or as individual X and Y values).  Be careful in using the Float
-  // version scrollOffset() and scrollOffset(). They are meant to be used to
-  // communicate the fractional scroll offset with chromium compositor which can
-  // do sub-pixel positioning.  Do not call these if the scroll offset is used
-  // in Blink for positioning. Use the Int version instead.
-  IntSize scrollOffsetInt() const override {
+  // Functions for querying the current scrolled position (both as a point, a
+  // size, or as individual X and Y values).  Be careful in using the Double
+  // version scrollPositionDouble() and scrollOffsetDouble(). They are meant to
+  // be used to communicate the fractional scroll position/offset with chromium
+  // compositor which can do sub-pixel positioning.  Do not call these if the
+  // scroll position/offset is used in Blink for positioning. Use the Int
+  // version instead.
+  IntPoint scrollPosition() const override {
+    return visibleContentRect().location();
+  }
+  DoublePoint scrollPositionDouble() const override { return m_scrollPosition; }
+  // Gets the scrolled position as an IntSize. Convenient for adding to other
+  // sizes.
+  IntSize scrollOffset() const {
     return toIntSize(visibleContentRect().location());
   }
-  ScrollOffset scrollOffset() const override { return m_scrollOffset; }
-  ScrollOffset pendingScrollDelta() const { return m_pendingScrollDelta; }
-  IntSize minimumScrollOffsetInt()
-      const override;  // The minimum offset we can be scrolled to.
-  int scrollX() const { return scrollOffsetInt().width(); }
-  int scrollY() const { return scrollOffsetInt().height(); }
+  DoubleSize scrollOffsetDouble() const {
+    return DoubleSize(m_scrollPosition.x(), m_scrollPosition.y());
+  }
+  DoubleSize pendingScrollDelta() const { return m_pendingScrollDelta; }
+  // The minimum position we can be scrolled to.
+  IntPoint minimumScrollPosition() const override;
+  int scrollX() const { return scrollPosition().x(); }
+  int scrollY() const { return scrollPosition().y(); }
 
   // Scroll the actual contents of the view (either blitting or invalidating as
   // needed).
@@ -783,7 +796,7 @@ class CORE_EXPORT FrameView final
  private:
   explicit FrameView(LocalFrame*);
 
-  void updateScrollOffset(const ScrollOffset&, ScrollType) override;
+  void setScrollOffset(const DoublePoint&, ScrollType) override;
 
   void updateLifecyclePhasesInternal(
       DocumentLifecycle::LifecycleState targetState);
@@ -805,7 +818,7 @@ class CORE_EXPORT FrameView final
 
   void clearLayoutSubtreeRootsAndMarkContainingBlocks();
 
-  // Called when our frame rect changes (or the rect/scroll offset of an
+  // Called when our frame rect changes (or the rect/scroll position of an
   // ancestor changes).
   void frameRectsChanged() override;
 
@@ -851,7 +864,7 @@ class CORE_EXPORT FrameView final
   void didScrollTimerFired(TimerBase*);
 
   void updateLayersAndCompositingAfterScrollIfNeeded(
-      const ScrollOffset& scrollDelta);
+      const DoubleSize& scrollDelta);
 
   static bool computeCompositedSelection(LocalFrame&, CompositedSelection&);
   void updateCompositedSelectionIfNeeded();
@@ -880,7 +893,7 @@ class CORE_EXPORT FrameView final
 
   bool adjustScrollbarExistence(ComputeScrollbarExistenceOption = FirstPass);
   void adjustScrollbarOpacity();
-  void adjustScrollOffsetFromUpdateScrollbars();
+  void adjustScrollPositionFromUpdateScrollbars();
   bool visualViewportSuppliesScrollbars() const;
 
   bool isFrameViewScrollbar(const Widget* child) const {
@@ -1012,8 +1025,8 @@ class CORE_EXPORT FrameView final
 
   ChildrenWidgetSet m_children;
 
-  ScrollOffset m_pendingScrollDelta;
-  ScrollOffset m_scrollOffset;
+  DoubleSize m_pendingScrollDelta;
+  DoublePoint m_scrollPosition;
   IntSize m_contentsSize;
 
   int m_scrollbarsAvoidingResizer;

@@ -181,7 +181,6 @@ void InProcessWorkerObjectProxy::didTerminateWorkerThread() {
 InProcessWorkerObjectProxy::InProcessWorkerObjectProxy(
     InProcessWorkerMessagingProxy* messagingProxy)
     : m_messagingProxy(messagingProxy),
-      m_defaultIntervalInSec(kDefaultIntervalInSec),
       m_nextIntervalInSec(kDefaultIntervalInSec),
       m_maxIntervalInSec(kMaxIntervalInSec) {}
 
@@ -210,7 +209,7 @@ void InProcessWorkerObjectProxy::checkPendingActivity(TimerBase*) {
 
     // Don't schedule a timer. It will be started again when a message event
     // is dispatched.
-    m_nextIntervalInSec = m_defaultIntervalInSec;
+    m_nextIntervalInSec = kDefaultIntervalInSec;
     return;
   }
 

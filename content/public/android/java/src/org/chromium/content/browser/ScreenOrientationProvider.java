@@ -7,7 +7,6 @@ package org.chromium.content.browser;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.view.Surface;
 
 import org.chromium.base.ApplicationStatus;
 import org.chromium.base.Log;
@@ -17,6 +16,7 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.content_public.common.ScreenOrientationConstants;
 import org.chromium.content_public.common.ScreenOrientationValues;
 import org.chromium.ui.display.DisplayAndroid;
+import org.chromium.ui.gfx.DeviceDisplayInfo;
 
 /**
  * This is the implementation of the C++ counterpart ScreenOrientationProvider.
@@ -45,15 +45,15 @@ public class ScreenOrientationProvider {
             case ScreenOrientationValues.ANY:
                 return ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
             case ScreenOrientationValues.NATURAL:
-                DisplayAndroid displayAndroid = DisplayAndroid.get(activity);
-                int rotation = displayAndroid.getRotation();
-                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
-                    if (displayAndroid.getDisplayHeight() >= displayAndroid.getDisplayWidth()) {
+                DeviceDisplayInfo displayInfo = DeviceDisplayInfo.create(activity);
+                int rotation = displayInfo.getRotationDegrees();
+                if (rotation == 0 || rotation == 180) {
+                    if (displayInfo.getDisplayHeight() >= displayInfo.getDisplayWidth()) {
                         return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     }
                     return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                 } else {
-                    if (displayAndroid.getDisplayHeight() < displayAndroid.getDisplayWidth()) {
+                    if (displayInfo.getDisplayHeight() < displayInfo.getDisplayWidth()) {
                         return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     }
                     return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;

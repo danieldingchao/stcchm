@@ -1662,6 +1662,20 @@ void FrameView::clearFragmentAnchor() {
   m_fragmentAnchor = nullptr;
 }
 
+void FrameView::setScrollPosition(const DoublePoint& scrollPoint,
+                                  ScrollType scrollType,
+                                  ScrollBehavior scrollBehavior) {
+  DoublePoint newScrollPosition = clampScrollPosition(scrollPoint);
+  if (newScrollPosition == scrollPositionDouble())
+    return;
+
+  if (scrollBehavior == ScrollBehaviorAuto)
+    scrollBehavior = scrollBehaviorStyle();
+
+  ScrollableArea::setScrollPosition(newScrollPosition, scrollType,
+                                    scrollBehavior);
+}
+
 void FrameView::didUpdateElasticOverscroll() {
   Page* page = frame().page();
   if (!page)
@@ -1706,7 +1720,7 @@ void FrameView::didScrollTimerFired(TimerBase*) {
 }
 
 void FrameView::updateLayersAndCompositingAfterScrollIfNeeded(
-    const ScrollOffset& scrollDelta) {
+    const DoubleSize& scrollDelta) {
   // Nothing to do after scrolling if there are no fixed position elements.
   if (!hasViewportConstrainedObjects())
     return;
@@ -3107,12 +3121,14 @@ void FrameView::forceLayoutForPagination(const FloatSize& pageSize,
 IntRect FrameView::convertFromLayoutObject(
     const LayoutObject& layoutObject,
     const IntRect& layoutObjectRect) const {
-  // Convert from page ("absolute") to FrameView coordinates.
-  LayoutRect rect = enclosingLayoutRect(
+  IntRect rect = pixelSnappedIntRect(enclosingLayoutRect(
       layoutObject.localToAbsoluteQuad(FloatRect(layoutObjectRect))
-          .boundingBox());
-  rect.move(LayoutSize(-scrollOffset()));
-  return pixelSnappedIntRect(rect);
+          .boundingBox()));
+
+  // Convert from page ("absolute") to FrameView coordinates.
+  rect.moveBy(-scrollPosition());
+
+  return rect;
 }
 
 IntRect FrameView::convertToLayoutObject(const LayoutObject& layoutObject,
@@ -3120,7 +3136,7 @@ IntRect FrameView::convertToLayoutObject(const LayoutObject& layoutObject,
   IntRect rectInContent = frameToContents(frameRect);
 
   // Convert from FrameView coords into page ("absolute") coordinates.
-  rectInContent.move(scrollOffsetInt());
+  rectInContent.moveBy(scrollPosition());
 
   // FIXME: we don't have a way to map an absolute rect down to a local quad, so
   // just move the rect for now.
@@ -3136,7 +3152,7 @@ IntPoint FrameView::convertFromLayoutObject(
       layoutObject.localToAbsolute(layoutObjectPoint, UseTransforms));
 
   // Convert from page ("absolute") to FrameView coordinates.
-  point.move(-scrollOffsetInt());
+  point.moveBy(-scrollPosition());
   return point;
 }
 
@@ -3417,16 +3433,15 @@ void FrameView::setTopControlsViewportAdjustment(float adjustment) {
   m_topControlsViewportAdjustment = adjustment;
 }
 
-IntSize FrameView::maximumScrollOffsetInt() const {
+IntPoint FrameView::maximumScrollPosition() const {
   // Make the same calculation as in CC's LayerImpl::MaxScrollOffset()
   // FIXME: We probably shouldn't be storing the bounds in a float.
   // crbug.com/422331.
   IntSize visibleSize =
       visibleContentSize(ExcludeScrollbars) + topControlsSize();
   IntSize contentBounds = contentsSize();
-  IntSize maximumOffset =
-      toIntSize(-scrollOrigin() + (contentBounds - visibleSize));
-  return maximumOffset.expandedTo(minimumScrollOffsetInt());
+  IntPoint maximumPosition = -scrollOrigin() + (contentBounds - visibleSize);
+  return maximumPosition.expandedTo(minimumScrollPosition());
 }
 
 void FrameView::addChild(Widget* child) {
@@ -3537,7 +3552,7 @@ IntSize FrameView::visibleContentSize(
 
 IntRect FrameView::visibleContentRect(
     IncludeScrollbarsInRect scrollbarInclusion) const {
-  return IntRect(IntPoint(flooredIntSize(m_scrollOffset)),
+  return IntRect(flooredIntPoint(m_scrollPosition),
                  visibleContentSize(scrollbarInclusion));
 }
 
@@ -3556,8 +3571,8 @@ void FrameView::clipPaintRect(FloatRect* paintRect) const {
           visibleContentRect()));
 }
 
-IntSize FrameView::minimumScrollOffsetInt() const {
-  return IntSize(-scrollOrigin().x(), -scrollOrigin().y());
+IntPoint FrameView::minimumScrollPosition() const {
+  return IntPoint(-scrollOrigin().x(), -scrollOrigin().y());
 }
 
 void FrameView::adjustScrollbarOpacity() {
@@ -3588,9 +3603,10 @@ int FrameView::scrollSize(ScrollbarOrientation orientation) const {
   return scrollbar->totalSize() - scrollbar->visibleSize();
 }
 
-void FrameView::updateScrollOffset(const ScrollOffset& offset,
-                                   ScrollType scrollType) {
-  ScrollOffset scrollDelta = offset - m_scrollOffset;
+void FrameView::setScrollOffset(const DoublePoint& offset,
+                                ScrollType scrollType) {
+  DoublePoint oldPosition = m_scrollPosition;
+  DoubleSize scrollDelta = offset - oldPosition;
   if (scrollDelta.isZero())
     return;
 
@@ -3599,7 +3615,7 @@ void FrameView::updateScrollOffset(const ScrollOffset& offset,
     ASSERT_NOT_REACHED();
   }
 
-  m_scrollOffset = offset;
+  m_scrollPosition = offset;
 
   if (!scrollbarsSuppressed())
     m_pendingScrollDelta += scrollDelta;
@@ -3862,7 +3878,7 @@ void FrameView::updateScrollbars() {
   if (visualViewportSuppliesScrollbars()) {
     setHasHorizontalScrollbar(false);
     setHasVerticalScrollbar(false);
-    adjustScrollOffsetFromUpdateScrollbars();
+    adjustScrollPositionFromUpdateScrollbars();
     return;
   }
 
@@ -3898,20 +3914,20 @@ void FrameView::updateScrollbars() {
     updateScrollCorner();
   }
 
-  adjustScrollOffsetFromUpdateScrollbars();
+  adjustScrollPositionFromUpdateScrollbars();
 }
 
-void FrameView::adjustScrollOffsetFromUpdateScrollbars() {
-  ScrollOffset clamped = clampScrollOffset(scrollOffset());
+void FrameView::adjustScrollPositionFromUpdateScrollbars() {
+  DoublePoint clamped = clampScrollPosition(scrollPositionDouble());
   // Restore before clamping because clamping clears the scroll anchor.
   // TODO(ymalik): This same logic exists in PaintLayerScrollableArea.
   // Remove when root-layer-scrolls is enabled.
-  if (clamped != scrollOffset() && shouldPerformScrollAnchoring()) {
+  if (clamped != scrollPositionDouble() && shouldPerformScrollAnchoring()) {
     m_scrollAnchor.restore();
-    clamped = clampScrollOffset(scrollOffset());
+    clamped = clampScrollPosition(scrollPositionDouble());
   }
-  if (clamped != scrollOffset() || scrollOriginChanged()) {
-    ScrollableArea::setScrollOffset(clamped, ProgrammaticScroll);
+  if (clamped != scrollPositionDouble() || scrollOriginChanged()) {
+    ScrollableArea::setScrollPosition(clamped, ProgrammaticScroll);
     resetScrollOriginChanged();
   }
 }
@@ -3919,8 +3935,8 @@ void FrameView::adjustScrollOffsetFromUpdateScrollbars() {
 void FrameView::scrollContentsIfNeeded() {
   if (m_pendingScrollDelta.isZero())
     return;
-  ScrollOffset scrollDelta = m_pendingScrollDelta;
-  m_pendingScrollDelta = ScrollOffset();
+  DoubleSize scrollDelta = m_pendingScrollDelta;
+  m_pendingScrollDelta = DoubleSize();
   // FIXME: Change scrollContents() to take DoubleSize. crbug.com/414283.
   scrollContents(flooredIntSize(scrollDelta));
 }
@@ -3941,7 +3957,7 @@ void FrameView::scrollContents(const IntSize& scrollDelta) {
 }
 
 IntPoint FrameView::contentsToFrame(const IntPoint& pointInContentSpace) const {
-  return pointInContentSpace - scrollOffsetInt();
+  return pointInContentSpace - scrollOffset();
 }
 
 IntRect FrameView::contentsToFrame(const IntRect& rectInContentSpace) const {
@@ -3954,7 +3970,7 @@ FloatPoint FrameView::frameToContents(const FloatPoint& pointInFrame) const {
 }
 
 IntPoint FrameView::frameToContents(const IntPoint& pointInFrame) const {
-  return pointInFrame + scrollOffsetInt();
+  return pointInFrame + scrollOffset();
 }
 
 IntRect FrameView::frameToContents(const IntRect& rectInFrame) const {
@@ -4141,11 +4157,8 @@ LayoutRect FrameView::scrollIntoView(const LayoutRect& rectInContent,
   LayoutRect viewRect(visibleContentRect());
   LayoutRect exposeRect =
       ScrollAlignment::getRectToExpose(viewRect, rectInContent, alignX, alignY);
-  if (exposeRect != viewRect) {
-    setScrollOffset(
-        ScrollOffset(exposeRect.x().toFloat(), exposeRect.y().toFloat()),
-        scrollType);
-  }
+  if (exposeRect != viewRect)
+    setScrollPosition(DoublePoint(exposeRect.x(), exposeRect.y()), scrollType);
 
   // Scrolling the FrameView cannot change the input rect's location relative to
   // the document.

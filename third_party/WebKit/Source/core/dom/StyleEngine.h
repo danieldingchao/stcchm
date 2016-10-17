@@ -211,8 +211,9 @@ class CORE_EXPORT StyleEngine final
                                               Element& removedElement,
                                               Element& afterElement);
   void scheduleNthPseudoInvalidations(ContainerNode&);
-  void scheduleInvalidationsForRuleSets(TreeScope&,
-                                        const HeapVector<Member<RuleSet>>&);
+  void scheduleInvalidationsForRuleSets(
+      TreeScope&,
+      const HeapVector<Member<const RuleSet>>&);
 
   unsigned styleForElementCount() const { return m_styleForElementCount; }
   void incStyleForElementCount() { m_styleForElementCount++; }
@@ -270,7 +271,7 @@ class CORE_EXPORT StyleEngine final
   bool shouldSkipInvalidationFor(const Element&) const;
   void scheduleRuleSetInvalidationsForElement(
       Element&,
-      const HeapVector<Member<RuleSet>>&);
+      const HeapVector<Member<const RuleSet>>&);
   void invalidateSlottedElements(HTMLSlotElement&);
 
   Member<Document> m_document;

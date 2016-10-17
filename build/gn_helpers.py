@@ -63,7 +63,7 @@ def ToGNString(value, allow_dicts = True):
   raise GNException("Unsupported type when printing to GN.")
 
 
-def FromGNString(input_string):
+def FromGNString(input):
   """Converts the input string from a GN serialized value to Python values.
 
   For details on supported types see GNValueParser.Parse() below.
@@ -99,11 +99,11 @@ def FromGNString(input_string):
   using string interpolation on a list (as in the top example) the embedded
   strings will be quoted and escaped according to GN rules so the list can be
   re-parsed to get the same result."""
-  parser = GNValueParser(input_string)
+  parser = GNValueParser(input)
   return parser.Parse()
 
 
-def FromGNArgs(input_string):
+def FromGNArgs(input):
   """Converts a string with a bunch of gn arg assignments into a Python dict.
 
   Given a whitespace-separated list of
@@ -120,7 +120,7 @@ def FromGNArgs(input_string):
   This routine is meant to handle only the simple sorts of values that
   arise in parsing --args.
   """
-  parser = GNValueParser(input_string)
+  parser = GNValueParser(input)
   return parser.ParseArgs()
 
 
@@ -237,22 +237,22 @@ class GNValueParser(object):
       raise GNException("Unexpected token: " + self.input[self.cur:])
 
   def _ParseIdent(self):
-    ident = ''
+    id = ''
 
     next_char = self.input[self.cur]
     if not next_char.isalpha() and not next_char=='_':
       raise GNException("Expected an identifier: " + self.input[self.cur:])
 
-    ident += next_char
+    id += next_char
     self.cur += 1
 
     next_char = self.input[self.cur]
     while next_char.isalpha() or next_char.isdigit() or next_char=='_':
-      ident += next_char
+      id += next_char
       self.cur += 1
       next_char = self.input[self.cur]
 
-    return ident
+    return id
 
   def ParseNumber(self):
     self.ConsumeWhitespace()

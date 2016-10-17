@@ -158,14 +158,13 @@ TEST_F(ExternalPopupMenuTest, PopupAccountsForVisualViewportOffset) {
   IntRect rectInDocument = menuList->absoluteBoundingBoxRect();
 
   webView()->setPageScaleFactor(2);
-  ScrollOffset scrollDelta(20, 30);
+  IntPoint scrollDelta(20, 30);
   visualViewport.move(scrollDelta);
 
   select->showPopup();
 
-  EXPECT_EQ(rectInDocument.x() - scrollDelta.width(), client().shownBounds().x);
-  EXPECT_EQ(rectInDocument.y() - scrollDelta.height(),
-            client().shownBounds().y);
+  EXPECT_EQ(rectInDocument.x() - scrollDelta.x(), client().shownBounds().x);
+  EXPECT_EQ(rectInDocument.y() - scrollDelta.y(), client().shownBounds().y);
 }
 
 TEST_F(ExternalPopupMenuTest, DidAcceptIndex) {

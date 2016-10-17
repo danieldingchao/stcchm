@@ -12,13 +12,6 @@ import shutil
 import sys
 import urlparse
 
-
-# Keys which are completely overridden by manifest overlays
-_MANIFEST_OVERLAY_OVERRIDE_KEYS = [
-  "display_name",
-  "process-group",
-]
-
 eater_relative = '../../../../../../tools/json_comment_eater'
 eater_relative = os.path.join(os.path.abspath(__file__), eater_relative)
 sys.path.insert(0, os.path.normpath(eater_relative))
@@ -27,15 +20,13 @@ try:
 finally:
   sys.path.pop(0)
 
-
 def ParseJSONFile(filename):
   with open(filename) as json_file:
     try:
       return json.loads(json_comment_eater.Nom(json_file.read()))
-    except ValueError as e:
+    except ValueError:
       print "%s is not a valid JSON document" % filename
-      raise e
-
+      return None
 
 def MergeDicts(left, right):
   for k, v in right.iteritems():
@@ -53,17 +44,16 @@ def MergeDicts(left, right):
   return left
 
 
-def MergeManifestOverlay(manifest, overlay):
-  MergeDicts(manifest["capabilities"], overlay["capabilities"])
+def MergeBaseManifest(parent, base):
+  MergeDicts(parent["capabilities"], base["capabilities"])
 
-  if "services" in overlay:
-    if "services" not in manifest:
-      manifest["services"] = []
-    manifest["services"].extend(overlay["services"])
+  if "services" in base:
+    if "services" not in parent:
+      parent["services"] = []
+    parent["services"].extend(base["services"])
 
-  for key in _MANIFEST_OVERLAY_OVERRIDE_KEYS:
-    if key in overlay:
-      manifest[key] = overlay[key]
+  if "process-group" in base:
+    parent["process-group"] = base["process-group"]
 
 
 def main():
@@ -72,10 +62,18 @@ def main():
   parser.add_argument("--parent")
   parser.add_argument("--output")
   parser.add_argument("--name")
-  parser.add_argument("--overlays", nargs="+", dest="overlays", default=[])
+  parser.add_argument("--base-manifest", default=None)
   args, children = parser.parse_known_args()
 
   parent = ParseJSONFile(args.parent)
+  if parent == None:
+    return 1
+
+  if args.base_manifest:
+    base = ParseJSONFile(args.base_manifest)
+    if base == None:
+      return 1
+    MergeBaseManifest(parent, base)
 
   service_path = parent['name'].split(':')[1]
   if service_path.startswith('//'):
@@ -89,13 +87,13 @@ def main():
 
   services = []
   for child in children:
-    services.append(ParseJSONFile(child))
+    service = ParseJSONFile(child)
+    if service == None:
+      return 1
+    services.append(service)
 
   if len(services) > 0:
     parent['services'] = services
-
-  for overlay_path in args.overlays:
-    MergeManifestOverlay(parent, ParseJSONFile(overlay_path))
 
   with open(args.output, 'w') as output_file:
     json.dump(parent, output_file)

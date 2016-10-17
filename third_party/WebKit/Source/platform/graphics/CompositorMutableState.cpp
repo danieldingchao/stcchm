@@ -45,11 +45,11 @@ void CompositorMutableState::setTransform(const SkMatrix44& matrix) {
   m_mutation->setTransform(matrix);
 }
 
-float CompositorMutableState::scrollLeft() const {
+double CompositorMutableState::scrollLeft() const {
   return m_scrollLayer ? m_scrollLayer->CurrentScrollOffset().x() : 0.0;
 }
 
-void CompositorMutableState::setScrollLeft(float scrollLeft) {
+void CompositorMutableState::setScrollLeft(double scrollLeft) {
   if (!m_scrollLayer)
     return;
 
@@ -64,11 +64,11 @@ void CompositorMutableState::setScrollLeft(float scrollLeft) {
   m_mutation->setScrollLeft(scrollLeft);
 }
 
-float CompositorMutableState::scrollTop() const {
+double CompositorMutableState::scrollTop() const {
   return m_scrollLayer ? m_scrollLayer->CurrentScrollOffset().y() : 0.0;
 }
 
-void CompositorMutableState::setScrollTop(float scrollTop) {
+void CompositorMutableState::setScrollTop(double scrollTop) {
   if (!m_scrollLayer)
     return;
   gfx::ScrollOffset offset = m_scrollLayer->CurrentScrollOffset();

@@ -55,7 +55,7 @@ ExecutionContext* DOMVisualViewport::getExecutionContext() const {
   return m_window->getExecutionContext();
 }
 
-float DOMVisualViewport::scrollLeft() {
+double DOMVisualViewport::scrollLeft() {
   LocalFrame* frame = m_window->frame();
   if (!frame || !frame->isMainFrame())
     return 0;
@@ -66,7 +66,7 @@ float DOMVisualViewport::scrollLeft() {
   return 0;
 }
 
-float DOMVisualViewport::scrollTop() {
+double DOMVisualViewport::scrollTop() {
   LocalFrame* frame = m_window->frame();
   if (!frame || !frame->isMainFrame())
     return 0;
@@ -77,7 +77,7 @@ float DOMVisualViewport::scrollTop() {
   return 0;
 }
 
-float DOMVisualViewport::pageX() {
+double DOMVisualViewport::pageX() {
   LocalFrame* frame = m_window->frame();
   if (!frame)
     return 0;
@@ -87,11 +87,11 @@ float DOMVisualViewport::pageX() {
     return 0;
 
   frame->document()->updateStyleAndLayoutIgnorePendingStylesheets();
-  float viewportX = view->getScrollableArea()->scrollOffset().width();
+  double viewportX = view->getScrollableArea()->scrollPositionDouble().x();
   return adjustScrollForAbsoluteZoom(viewportX, frame->pageZoomFactor());
 }
 
-float DOMVisualViewport::pageY() {
+double DOMVisualViewport::pageY() {
   LocalFrame* frame = m_window->frame();
   if (!frame)
     return 0;
@@ -101,7 +101,7 @@ float DOMVisualViewport::pageY() {
     return 0;
 
   frame->document()->updateStyleAndLayoutIgnorePendingStylesheets();
-  float viewportY = view->getScrollableArea()->scrollOffset().height();
+  double viewportY = view->getScrollableArea()->scrollPositionDouble().y();
   return adjustScrollForAbsoluteZoom(viewportY, frame->pageZoomFactor());
 }
 

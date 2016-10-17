@@ -83,8 +83,7 @@ DeviceLight status=experimental
 DisplayList2dCanvas status=stable
 DocumentWriteEvaluator
 DOMConvenienceAPI status=stable
-DurableStorage status=experimental, origin_trial_feature_name=DurableStorage
-ExpensiveBackgroundTimerThrottling status=experimental
+DurableStorage status=stable
 FontCacheScaling status=test
 ForceDisplayList2dCanvas
 // See crbug.com/585250.

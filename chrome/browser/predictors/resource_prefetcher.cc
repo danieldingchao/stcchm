@@ -22,7 +22,6 @@ static const size_t kResourceBufferSizeBytes = 50000;
 }  // namespace
 
 namespace predictors {
-
 ResourcePrefetcher::ResourcePrefetcher(
     Delegate* delegate,
     const ResourcePrefetchPredictorConfig& config,
@@ -138,19 +137,33 @@ void ResourcePrefetcher::FinishRequest(net::URLRequest* request) {
 }
 
 void ResourcePrefetcher::ReadFullResponse(net::URLRequest* request) {
-  int bytes_read = 0;
-  do {
+  bool status = true;
+  while (status) {
+    int bytes_read = 0;
     scoped_refptr<net::IOBuffer> buffer(new net::IOBuffer(
         kResourceBufferSizeBytes));
-    bytes_read = request->Read(buffer.get(), kResourceBufferSizeBytes);
-    if (bytes_read == net::ERR_IO_PENDING) {
-      return;
-    } else if (bytes_read <= 0) {
+    status = request->Read(buffer.get(), kResourceBufferSizeBytes, &bytes_read);
+
+    if (status) {
+      status = ShouldContinueReadingRequest(request, bytes_read);
+    } else if (!request->status().is_success()) {
       FinishRequest(request);
       return;
     }
+  }
+}
 
-  } while (bytes_read > 0);
+bool ResourcePrefetcher::ShouldContinueReadingRequest(net::URLRequest* request,
+                                                      int bytes_read) {
+  if (bytes_read == 0) {  // When bytes_read == 0, no more data.
+    if (request->was_cached())
+      FinishRequest(request);
+    else
+      FinishRequest(request);
+    return false;
+  }
+
+  return true;
 }
 
 void ResourcePrefetcher::OnReceivedRedirect(
@@ -177,29 +190,22 @@ void ResourcePrefetcher::OnSSLCertificateError(net::URLRequest* request,
   FinishRequest(request);
 }
 
-void ResourcePrefetcher::OnResponseStarted(net::URLRequest* request,
-                                           int net_error) {
-  DCHECK_NE(net::ERR_IO_PENDING, net_error);
-
-  if (net_error != net::OK) {
-    FinishRequest(request);
-    return;
-  }
-
+void ResourcePrefetcher::OnResponseStarted(net::URLRequest* request) {
   // TODO(shishir): Do not read cached entries, or ones that are not cacheable.
-  ReadFullResponse(request);
+  if (request->status().is_success())
+    ReadFullResponse(request);
+  else
+    FinishRequest(request);
 }
 
 void ResourcePrefetcher::OnReadCompleted(net::URLRequest* request,
                                          int bytes_read) {
-  DCHECK_NE(net::ERR_IO_PENDING, bytes_read);
-
-  if (bytes_read <= 0) {
+  if (!request->status().is_success()) {
     FinishRequest(request);
     return;
   }
 
-  if (bytes_read > 0)
+  if (ShouldContinueReadingRequest(request, bytes_read))
     ReadFullResponse(request);
 }
 

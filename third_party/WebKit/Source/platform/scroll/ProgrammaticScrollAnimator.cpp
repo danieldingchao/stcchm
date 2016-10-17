@@ -6,7 +6,7 @@
 
 #include "platform/animation/CompositorAnimation.h"
 #include "platform/animation/CompositorScrollOffsetAnimationCurve.h"
-#include "platform/geometry/IntSize.h"
+#include "platform/geometry/IntPoint.h"
 #include "platform/graphics/GraphicsLayer.h"
 #include "platform/scroll/ScrollableArea.h"
 #include "public/platform/Platform.h"
@@ -28,18 +28,18 @@ void ProgrammaticScrollAnimator::resetAnimationState() {
   m_startTime = 0.0;
 }
 
-void ProgrammaticScrollAnimator::notifyOffsetChanged(
-    const ScrollOffset& offset) {
-  scrollOffsetChanged(offset, ProgrammaticScroll);
+void ProgrammaticScrollAnimator::notifyPositionChanged(
+    const DoublePoint& offset) {
+  scrollPositionChanged(offset, ProgrammaticScroll);
 }
 
 void ProgrammaticScrollAnimator::scrollToOffsetWithoutAnimation(
-    const ScrollOffset& offset) {
+    const FloatPoint& offset) {
   cancelAnimation();
-  notifyOffsetChanged(offset);
+  notifyPositionChanged(offset);
 }
 
-void ProgrammaticScrollAnimator::animateToOffset(const ScrollOffset& offset) {
+void ProgrammaticScrollAnimator::animateToOffset(FloatPoint offset) {
   if (m_runState == RunState::PostAnimationCleanup)
     resetAnimationState();
 
@@ -52,7 +52,7 @@ void ProgrammaticScrollAnimator::animateToOffset(const ScrollOffset& offset) {
   m_scrollableArea->registerForAnimation();
   if (!m_scrollableArea->scheduleAnimation()) {
     resetAnimationState();
-    notifyOffsetChanged(offset);
+    notifyPositionChanged(IntPoint(offset.x(), offset.y()));
   }
   m_runState = RunState::WaitingToSendToCompositor;
 }
@@ -70,14 +70,14 @@ void ProgrammaticScrollAnimator::tickAnimation(double monotonicTime) {
     m_startTime = monotonicTime;
   double elapsedTime = monotonicTime - m_startTime;
   bool isFinished = (elapsedTime > m_animationCurve->duration());
-  ScrollOffset offset =
+  FloatPoint offset =
       blinkOffsetFromCompositorOffset(m_animationCurve->getValue(elapsedTime));
-  notifyOffsetChanged(offset);
+  notifyPositionChanged(IntPoint(offset.x(), offset.y()));
 
   if (isFinished) {
     m_runState = RunState::PostAnimationCleanup;
   } else if (!m_scrollableArea->scheduleAnimation()) {
-    notifyOffsetChanged(offset);
+    notifyPositionChanged(IntPoint(m_targetOffset.x(), m_targetOffset.y()));
     resetAnimationState();
   }
 }
@@ -133,10 +133,10 @@ void ProgrammaticScrollAnimator::updateCompositorAnimations() {
 
     if (!sentToCompositor) {
       m_runState = RunState::RunningOnMainThread;
-      m_animationCurve->setInitialValue(
-          compositorOffsetFromBlinkOffset(m_scrollableArea->scrollOffset()));
+      m_animationCurve->setInitialValue(compositorOffsetFromBlinkOffset(
+          FloatPoint(m_scrollableArea->scrollPosition())));
       if (!m_scrollableArea->scheduleAnimation()) {
-        notifyOffsetChanged(m_targetOffset);
+        notifyPositionChanged(IntPoint(m_targetOffset.x(), m_targetOffset.y()));
         resetAnimationState();
       }
     }
@@ -154,12 +154,12 @@ void ProgrammaticScrollAnimator::layerForCompositedScrollingDidChange(
     m_runState = RunState::RunningOnMainThread;
     m_compositorAnimationId = 0;
     m_compositorAnimationGroupId = 0;
-    m_animationCurve->setInitialValue(
-        compositorOffsetFromBlinkOffset(m_scrollableArea->scrollOffset()));
+    m_animationCurve->setInitialValue(compositorOffsetFromBlinkOffset(
+        FloatPoint(m_scrollableArea->scrollPosition())));
     m_scrollableArea->registerForAnimation();
     if (!m_scrollableArea->scheduleAnimation()) {
       resetAnimationState();
-      notifyOffsetChanged(m_targetOffset);
+      notifyPositionChanged(IntPoint(m_targetOffset.x(), m_targetOffset.y()));
     }
   }
 }

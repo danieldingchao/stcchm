@@ -74,7 +74,7 @@ void FramePainter::paint(GraphicsContext& context,
                           frameView().visibleContentRect());
 
     documentDirtyRect.moveBy(-frameView().location() +
-                             frameView().scrollOffsetInt());
+                             frameView().scrollPosition());
     paintContents(context, globalPaintFlags, documentDirtyRect);
   }
 

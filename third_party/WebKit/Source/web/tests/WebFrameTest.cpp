@@ -167,10 +167,10 @@ const int touchPointPadding = 32;
     EXPECT_EQ(expected.height(), actual.height()); \
   } while (false)
 
-#define EXPECT_SIZE_EQ(expected, actual)           \
-  do {                                             \
-    EXPECT_EQ(expected.width(), actual.width());   \
-    EXPECT_EQ(expected.height(), actual.height()); \
+#define EXPECT_POINT_EQ(expected, actual) \
+  do {                                    \
+    EXPECT_EQ(expected.x(), actual.x());  \
+    EXPECT_EQ(expected.y(), actual.y());  \
   } while (false)
 
 #define EXPECT_FLOAT_POINT_EQ(expected, actual) \
@@ -2939,10 +2939,9 @@ void setScaleAndScrollAndLayout(WebViewImpl* webView,
 }
 
 void simulatePageScale(WebViewImpl* webViewImpl, float& scale) {
-  ScrollOffset scrollDelta =
-      toScrollOffset(
-          webViewImpl->fakePageScaleAnimationTargetPositionForTesting()) -
-      webViewImpl->mainFrameImpl()->frameView()->scrollOffset();
+  IntSize scrollDelta =
+      webViewImpl->fakePageScaleAnimationTargetPositionForTesting() -
+      webViewImpl->mainFrameImpl()->frameView()->scrollPosition();
   float scaleDelta = webViewImpl->fakePageScaleAnimationPageScaleForTesting() /
                      webViewImpl->pageScaleFactor();
   webViewImpl->applyViewportDeltas(WebFloatSize(), FloatSize(scrollDelta),
@@ -5758,14 +5757,14 @@ TEST_F(WebFrameTest, DisambiguationPopupVisualViewport) {
 
   // Scroll main frame to the bottom of the document
   webViewImpl->mainFrame()->setScrollOffset(WebSize(0, 400));
-  EXPECT_SIZE_EQ(ScrollOffset(0, 400), frame->view()->scrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 400), frame->view()->scrollPosition());
 
   webViewImpl->setPageScaleFactor(2.0);
 
   // Scroll visual viewport to the top of the main frame.
   VisualViewport& visualViewport = frame->page()->frameHost().visualViewport();
   visualViewport.setLocation(FloatPoint(0, 0));
-  EXPECT_SIZE_EQ(ScrollOffset(0, 0), visualViewport.scrollOffset());
+  EXPECT_FLOAT_POINT_EQ(FloatPoint(0, 0), visualViewport.location());
 
   // Tap at the top: there is nothing there.
   client.resetTriggered();
@@ -5774,7 +5773,7 @@ TEST_F(WebFrameTest, DisambiguationPopupVisualViewport) {
 
   // Scroll visual viewport to the bottom of the main frame.
   visualViewport.setLocation(FloatPoint(0, 200));
-  EXPECT_SIZE_EQ(ScrollOffset(0, 200), visualViewport.scrollOffset());
+  EXPECT_FLOAT_POINT_EQ(FloatPoint(0, 200), visualViewport.location());
 
   // Now the tap with the same coordinates should hit two elements.
   client.resetTriggered();
@@ -7307,24 +7306,24 @@ TEST_F(WebFrameTest, FrameViewScrollAccountsForTopControls) {
   webView->updateAllLifecyclePhases();
 
   webView->mainFrame()->setScrollOffset(WebSize(0, 2000));
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1900), frameView->scrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1900), IntPoint(frameView->scrollOffset()));
 
   // Simulate the top controls showing by 20px, thus shrinking the viewport
   // and allowing it to scroll an additional 20px.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, 20.0f / topControlsHeight);
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1920), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1920), frameView->maximumScrollPosition());
 
   // Show more, make sure the scroll actually gets clamped.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, 20.0f / topControlsHeight);
   webView->mainFrame()->setScrollOffset(WebSize(0, 2000));
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1940), frameView->scrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1940), IntPoint(frameView->scrollOffset()));
 
   // Hide until there's 10px showing.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, -30.0f / topControlsHeight);
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1910), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1910), frameView->maximumScrollPosition());
 
   // Simulate a LayoutPart::resize. The frame is resized to accomodate
   // the top controls and Blink's view of the top controls matches that of
@@ -7333,19 +7332,19 @@ TEST_F(WebFrameTest, FrameViewScrollAccountsForTopControls) {
                                1.0f, 30.0f / topControlsHeight);
   webView->resizeWithTopControls(WebSize(100, 60), 40.0f, true);
   webView->updateAllLifecyclePhases();
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1940), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1940), frameView->maximumScrollPosition());
 
   // Now simulate hiding.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, -10.0f / topControlsHeight);
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1930), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1930), frameView->maximumScrollPosition());
 
   // Reset to original state: 100px widget height, top controls fully hidden.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, -30.0f / topControlsHeight);
   webView->resizeWithTopControls(WebSize(100, 100), topControlsHeight, false);
   webView->updateAllLifecyclePhases();
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1900), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1900), frameView->maximumScrollPosition());
 
   // Show the top controls by just 1px, since we're zoomed in to 2X, that
   // should allow an extra 0.5px of scrolling in the visual viewport. Make
@@ -7353,11 +7352,11 @@ TEST_F(WebFrameTest, FrameViewScrollAccountsForTopControls) {
   // main frame.
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, 1.0f / topControlsHeight);
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1901), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1901), frameView->maximumScrollPosition());
 
   webView->applyViewportDeltas(WebFloatSize(), WebFloatSize(), WebFloatSize(),
                                1.0f, 2.0f / topControlsHeight);
-  EXPECT_SIZE_EQ(ScrollOffset(0, 1903), frameView->maximumScrollOffset());
+  EXPECT_POINT_EQ(IntPoint(0, 1903), frameView->maximumScrollPosition());
 }
 
 TEST_F(WebFrameTest, MaximumScrollPositionCanBeNegative) {
@@ -7380,7 +7379,7 @@ TEST_F(WebFrameTest, MaximumScrollPositionCanBeNegative) {
   webViewHelper.webView()->updateAllLifecyclePhases();
 
   FrameView* frameView = webViewHelper.webView()->mainFrameImpl()->frameView();
-  EXPECT_LT(frameView->maximumScrollOffset().width(), 0);
+  EXPECT_LT(frameView->maximumScrollPosition().x(), 0);
 }
 
 TEST_P(ParameterizedWebFrameTest, FullscreenLayerSize) {

@@ -51,7 +51,7 @@ StyleEngineTest::scheduleInvalidationsForRules(TreeScope& treeScope,
   StyleSheetContents* sheet =
       StyleSheetContents::create(CSSParserContext(HTMLStandardMode, nullptr));
   sheet->parseString(cssText);
-  HeapVector<Member<RuleSet>> ruleSets;
+  HeapVector<Member<const RuleSet>> ruleSets;
   RuleSet& ruleSet = sheet->ensureRuleSet(MediaQueryEvaluator(),
                                           RuleHasDocumentSecurityOrigin);
   ruleSet.compactRulesIfNeeded();

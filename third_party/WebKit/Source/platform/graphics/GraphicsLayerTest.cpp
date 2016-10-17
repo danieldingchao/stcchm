@@ -178,23 +178,24 @@ class FakeScrollableArea : public GarbageCollectedFinalized<FakeScrollableArea>,
   bool userInputScrollable(ScrollbarOrientation) const override { return true; }
   bool shouldPlaceVerticalScrollbarOnLeft() const override { return false; }
   int pageStep(ScrollbarOrientation) const override { return 0; }
-  IntSize minimumScrollOffsetInt() const override { return IntSize(); }
-  IntSize maximumScrollOffsetInt() const override {
-    return contentsSize() - IntSize(visibleWidth(), visibleHeight());
+  IntPoint minimumScrollPosition() const override { return IntPoint(); }
+  IntPoint maximumScrollPosition() const override {
+    return IntPoint(contentsSize().width() - visibleWidth(),
+                    contentsSize().height() - visibleHeight());
   }
 
-  void updateScrollOffset(const ScrollOffset& offset, ScrollType) override {
-    m_scrollOffset = offset;
+  void setScrollOffset(const DoublePoint& offset, ScrollType) override {
+    m_scrollPosition = offset;
   }
-  ScrollOffset scrollOffset() const override { return m_scrollOffset; }
-  IntSize scrollOffsetInt() const override {
-    return flooredIntSize(m_scrollOffset);
+  DoublePoint scrollPositionDouble() const override { return m_scrollPosition; }
+  IntPoint scrollPosition() const override {
+    return flooredIntPoint(m_scrollPosition);
   }
 
   DEFINE_INLINE_VIRTUAL_TRACE() { ScrollableArea::trace(visitor); }
 
  private:
-  ScrollOffset m_scrollOffset;
+  DoublePoint m_scrollPosition;
 };
 
 TEST_F(GraphicsLayerTest, applyScrollToScrollableArea) {
@@ -205,8 +206,8 @@ TEST_F(GraphicsLayerTest, applyScrollToScrollableArea) {
   m_platformLayer->setScrollPositionDouble(scrollPosition);
   m_graphicsLayer->didScroll();
 
-  EXPECT_FLOAT_EQ(scrollPosition.x, scrollableArea->scrollOffset().width());
-  EXPECT_FLOAT_EQ(scrollPosition.y, scrollableArea->scrollOffset().height());
+  EXPECT_FLOAT_EQ(scrollPosition.x, scrollableArea->scrollPositionDouble().x());
+  EXPECT_FLOAT_EQ(scrollPosition.y, scrollableArea->scrollPositionDouble().y());
 }
 
 }  // namespace blink

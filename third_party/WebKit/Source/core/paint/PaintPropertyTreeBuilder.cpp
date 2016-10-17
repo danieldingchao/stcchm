@@ -170,7 +170,7 @@ void PaintPropertyTreeBuilder::buildTreeNodes(
   createOrUpdateFrameViewContentClip(frameView, context.current.clip,
                                      frameView.preTranslation(), contentClip);
 
-  ScrollOffset scrollOffset = frameView.scrollOffset();
+  DoubleSize scrollOffset = frameView.scrollOffsetDouble();
   if (frameView.isScrollable() || !scrollOffset.isZero()) {
     TransformationMatrix frameScroll;
     frameScroll.translate(-scrollOffset.width(), -scrollOffset.height());
@@ -574,7 +574,7 @@ void PaintPropertyTreeBuilder::updateScrollAndScrollTranslation(
   if (object.hasOverflowClip()) {
     const LayoutBox& box = toLayoutBox(object);
     const PaintLayerScrollableArea* scrollableArea = box.getScrollableArea();
-    IntSize scrollOffset = box.scrolledContentOffset();
+    DoubleSize scrollOffset = box.scrolledContentOffset();
     if (!scrollOffset.isZero() || scrollableArea->scrollsOverflow()) {
       TransformationMatrix matrix = TransformationMatrix().translate(
           -scrollOffset.width(), -scrollOffset.height());

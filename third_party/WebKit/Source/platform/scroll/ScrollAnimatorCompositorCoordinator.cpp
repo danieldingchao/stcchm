@@ -237,14 +237,15 @@ ScrollAnimatorCompositorCoordinator::compositorPlayer() const {
 }
 
 FloatPoint ScrollAnimatorCompositorCoordinator::compositorOffsetFromBlinkOffset(
-    ScrollOffset offset) {
-  return getScrollableArea()->scrollOrigin() + offset;
+    FloatPoint offset) {
+  offset.moveBy(getScrollableArea()->scrollOrigin());
+  return offset;
 }
 
-ScrollOffset
-ScrollAnimatorCompositorCoordinator::blinkOffsetFromCompositorOffset(
+FloatPoint ScrollAnimatorCompositorCoordinator::blinkOffsetFromCompositorOffset(
     FloatPoint offset) {
-  return offset - getScrollableArea()->scrollOrigin();
+  offset.moveBy(-getScrollableArea()->scrollOrigin());
+  return offset;
 }
 
 bool ScrollAnimatorCompositorCoordinator::hasImplOnlyAnimationUpdate() const {
@@ -280,17 +281,17 @@ void ScrollAnimatorCompositorCoordinator::updateCompositorAnimations() {
   updateImplOnlyCompositorAnimations();
 }
 
-void ScrollAnimatorCompositorCoordinator::scrollOffsetChanged(
-    const ScrollOffset& offset,
+void ScrollAnimatorCompositorCoordinator::scrollPositionChanged(
+    const DoublePoint& offset,
     ScrollType scrollType) {
-  getScrollableArea()->scrollOffsetChanged(offset, scrollType);
+  getScrollableArea()->scrollPositionChanged(offset, scrollType);
 }
 
-void ScrollAnimatorCompositorCoordinator::adjustAnimationAndSetScrollOffset(
-    const ScrollOffset& offset,
+void ScrollAnimatorCompositorCoordinator::adjustAnimationAndSetScrollPosition(
+    const DoublePoint& position,
     ScrollType scrollType) {
   // Subclasses should override this and adjust the animation as necessary.
-  scrollOffsetChanged(offset, scrollType);
+  scrollPositionChanged(position, scrollType);
 }
 
 void ScrollAnimatorCompositorCoordinator::adjustImplOnlyScrollOffsetAnimation(

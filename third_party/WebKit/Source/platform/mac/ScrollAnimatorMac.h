@@ -56,7 +56,7 @@ class PLATFORM_EXPORT ScrollAnimatorMac : public ScrollAnimatorBase {
 
   void dispose() override;
 
-  void immediateScrollToOffsetForScrollAnimation(const ScrollOffset& newOffset);
+  void immediateScrollToPointForScrollAnimation(const FloatPoint& newPosition);
   bool haveScrolledSincePageLoad() const { return m_haveScrolledSincePageLoad; }
 
   void updateScrollerStyle();
@@ -65,7 +65,7 @@ class PLATFORM_EXPORT ScrollAnimatorMac : public ScrollAnimatorBase {
   void startScrollbarPaintTimer();
   void stopScrollbarPaintTimer();
 
-  void sendContentAreaScrolledSoon(const ScrollOffset& scrollDelta);
+  void sendContentAreaScrolledSoon(const FloatSize& scrollDelta);
 
   void setVisibleScrollerThumbRect(const IntRect&);
 
@@ -87,11 +87,10 @@ class PLATFORM_EXPORT ScrollAnimatorMac : public ScrollAnimatorBase {
   void sendContentAreaScrolledTask();
   std::unique_ptr<CancellableTaskFactory> m_sendContentAreaScrolledTaskFactory;
   std::unique_ptr<WebTaskRunner> m_taskRunner;
-  ScrollOffset m_contentAreaScrolledTimerScrollDelta;
+  FloatSize m_contentAreaScrolledTimerScrollDelta;
 
-  ScrollResult userScroll(ScrollGranularity,
-                          const ScrollOffset& delta) override;
-  void scrollToOffsetWithoutAnimation(const ScrollOffset&) override;
+  ScrollResult userScroll(ScrollGranularity, const FloatSize& delta) override;
+  void scrollToOffsetWithoutAnimation(const FloatPoint&) override;
 
   void handleWheelEventPhase(PlatformWheelEventPhase) override;
 
@@ -119,13 +118,13 @@ class PLATFORM_EXPORT ScrollAnimatorMac : public ScrollAnimatorBase {
 
   bool shouldScrollbarParticipateInHitTesting(Scrollbar&) override;
 
-  void notifyContentAreaScrolled(const ScrollOffset& delta) override;
+  void notifyContentAreaScrolled(const FloatSize& delta) override;
 
   bool setScrollbarsVisibleForTesting(bool) override;
 
-  ScrollOffset adjustScrollOffsetIfNecessary(const ScrollOffset&) const;
+  FloatPoint adjustScrollPositionIfNecessary(const FloatPoint&) const;
 
-  void immediateScrollTo(const ScrollOffset&);
+  void immediateScrollTo(const FloatPoint&);
 
   bool m_haveScrolledSincePageLoad;
   bool m_needsScrollerStyleUpdate;

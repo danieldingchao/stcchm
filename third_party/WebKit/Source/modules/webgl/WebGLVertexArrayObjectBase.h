@@ -45,7 +45,6 @@ class WebGLVertexArrayObjectBase : public WebGLContextObject {
                                      const v8::Persistent<v8::Object>&);
 
   DECLARE_VIRTUAL_TRACE();
-  DECLARE_VIRTUAL_TRACE_WRAPPERS();
 
  protected:
   WebGLVertexArrayObjectBase(WebGLRenderingContextBase*, VaoType);

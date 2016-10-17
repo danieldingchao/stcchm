@@ -437,8 +437,8 @@ const char* const kSafePermissionStrings[] = {
 
     "contentSettings",
 
-    // Privacy sensitive URL access.
-    // "contextMenus",
+    // Provides access to URLs.
+    "contextMenus",
 
     // This would provie access to auth cookies, so needs to be blocked.
     // "cookies",
@@ -512,8 +512,8 @@ const char* const kSafePermissionStrings[] = {
     // However, keyboards and mice are apparently not surfaced via this API.
     "hid",
 
-    // Privacy sensitive URL access.
-    // "history",
+    // Just URLs and meta data.
+    "history",
 
     // Not really useful as there's no signed-in user, so OK to allow.
     "identity",
@@ -598,8 +598,8 @@ const char* const kSafePermissionStrings[] = {
     // that serial input devices are exceedingly rare, OK to allow.
     "serial",
 
-    // Privacy sensitive URL access.
-    // "sessions",
+    // Access to URLs.
+    "sessions",
 
     "socket",
 
@@ -629,11 +629,11 @@ const char* const kSafePermissionStrings[] = {
     // for user consent or (2) return blank capture.
     // "tabCapture",
 
-    // Privacy sensitive URL access.
-    // "tabs",
+    // URLs and page titles.
+    "tabs",
 
-    // Privacy sensitive URL access.
-    // "topSites",
+    // URLs and page titles.
+    "topSites",
 
     // Allows to generate TTS, but no content access. Just UX.
     "tts",
@@ -660,8 +660,8 @@ const char* const kSafePermissionStrings[] = {
     // Just UX.
     "wallpaper",
 
-    // Privacy sensitive URL access.
-    // "webNavigation",
+    // Access to URLs.
+    "webNavigation",
 
     // Provides access to cookies and form upload data. Options: (1) block,
     // (2) strip all content in events.

@@ -208,7 +208,7 @@ TEST_F(RootScrollerTest, TestSetRootScroller) {
     webViewImpl()->handleInputEvent(
         generateTouchGestureEvent(WebInputEvent::GestureScrollUpdate, 0, -100));
     EXPECT_FLOAT_EQ(100, container->scrollTop());
-    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollOffset().height());
+    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollPositionDouble().y());
   }
 
   {
@@ -219,7 +219,7 @@ TEST_F(RootScrollerTest, TestSetRootScroller) {
     webViewImpl()->handleInputEvent(
         generateTouchGestureEvent(WebInputEvent::GestureScrollUpdate, 0, -550));
     EXPECT_FLOAT_EQ(maximumScroll, container->scrollTop());
-    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollOffset().height());
+    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollPositionDouble().y());
     Mock::VerifyAndClearExpectations(&client);
   }
 
@@ -230,7 +230,7 @@ TEST_F(RootScrollerTest, TestSetRootScroller) {
     webViewImpl()->handleInputEvent(
         generateTouchGestureEvent(WebInputEvent::GestureScrollUpdate, 0, -20));
     EXPECT_FLOAT_EQ(maximumScroll, container->scrollTop());
-    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollOffset().height());
+    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollPositionDouble().y());
     Mock::VerifyAndClearExpectations(&client);
   }
 
@@ -248,7 +248,7 @@ TEST_F(RootScrollerTest, TestSetRootScroller) {
     webViewImpl()->handleInputEvent(
         generateTouchGestureEvent(WebInputEvent::GestureScrollUpdate, 0, -30));
     EXPECT_FLOAT_EQ(maximumScroll, container->scrollTop());
-    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollOffset().height());
+    EXPECT_FLOAT_EQ(0, mainFrameView()->scrollPositionDouble().y());
     Mock::VerifyAndClearExpectations(&client);
 
     webViewImpl()->handleInputEvent(
@@ -907,6 +907,26 @@ TEST_F(RootScrollerTest, RemoveRootScrollerFromDom) {
     EXPECT_EQ(iframe->contentDocument()->documentElement(),
               effectiveRootScroller(iframe->contentDocument()));
   }
+}
+
+// Tests that we still have a global root scroller layer when the HTML element
+// has no layout object. crbug.com/637036.
+TEST_F(RootScrollerTest, DocumentElementHasNoLayoutObject) {
+  initialize("overflow-scrolling.html");
+
+  // There's no rootScroller set on this page so we should default to the <html>
+  // element, which means we should use the layout viewport. Ensure this happens
+  // even if the <html> element has no LayoutObject.
+  executeScript("document.documentElement.style.display = 'none';");
+
+  const TopDocumentRootScrollerController& globalController =
+      mainFrame()->document()->frameHost()->globalRootScrollerController();
+
+  EXPECT_EQ(mainFrame()->document()->documentElement(),
+            globalController.globalRootScroller());
+  EXPECT_EQ(
+      mainFrameView()->layoutViewportScrollableArea()->layerForScrolling(),
+      globalController.rootScrollerLayer());
 }
 
 }  // namespace

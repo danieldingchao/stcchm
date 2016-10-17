@@ -656,7 +656,7 @@ enum AcceleratedFixedRootBackgroundHistogramBuckets {
 
 void PaintLayerCompositor::frameViewDidScroll() {
   FrameView* frameView = m_layoutView.frameView();
-  IntSize scrollOffset = frameView->scrollOffsetInt();
+  IntPoint scrollPosition = frameView->scrollPosition();
 
   if (!m_scrollLayer)
     return;
@@ -674,7 +674,7 @@ void PaintLayerCompositor::frameViewDidScroll() {
   if (scrollingCoordinatorHandlesOffset)
     m_scrollLayer->setPosition(frameView->scrollOrigin());
   else
-    m_scrollLayer->setPosition(IntPoint(-scrollOffset));
+    m_scrollLayer->setPosition(-scrollPosition);
 
   DEFINE_STATIC_LOCAL(EnumerationHistogram, acceleratedBackgroundHistogram,
                       ("Renderer.AcceleratedFixedRootBackground",

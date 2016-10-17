@@ -56,8 +56,10 @@ DateTimeHandler* DateTimeHandler::Create(
   html_source->AddBoolean("systemTimeZoneDetectionManaged",
       system_time_zone_automatic_detection_managed);
   if (system_time_zone_automatic_detection_managed) {
-    html_source->AddInteger("systemTimeZoneDetectionPolicyValue",
+    base::DictionaryValue dict;
+    dict.SetInteger("systemTimeZoneDetectionPolicyValue",
         GetSystemTimezoneAutomaticDetectionPolicyValue());
+    html_source->AddLocalizedStrings(dict);
   }
 
   if (base::CommandLine::ForCurrentProcess()->HasSwitch(

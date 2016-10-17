@@ -38,7 +38,6 @@
 #include "core/dom/SpaceSplitString.h"
 #include "core/html/CollectionType.h"
 #include "platform/heap/Handle.h"
-#include "platform/scroll/ScrollTypes.h"
 #include "public/platform/WebFocusType.h"
 
 namespace blink {
@@ -664,8 +663,8 @@ class CORE_EXPORT Element : public ContainerNode {
   bool hasClass() const;
   const SpaceSplitString& classNames() const;
 
-  ScrollOffset savedLayerScrollOffset() const;
-  void setSavedLayerScrollOffset(const ScrollOffset&);
+  IntSize savedLayerScrollOffset() const;
+  void setSavedLayerScrollOffset(const IntSize&);
 
   ElementAnimations* elementAnimations() const;
   ElementAnimations& ensureElementAnimations();

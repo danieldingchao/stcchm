@@ -67,12 +67,12 @@ ScrollAnimator::ScrollAnimator(ScrollableArea* scrollableArea,
 
 ScrollAnimator::~ScrollAnimator() {}
 
-ScrollOffset ScrollAnimator::desiredTargetOffset() const {
+FloatPoint ScrollAnimator::desiredTargetPosition() const {
   if (m_runState == RunState::WaitingToCancelOnCompositor)
-    return currentOffset();
+    return currentPosition();
   return (m_animationCurve || m_runState == RunState::WaitingToSendToCompositor)
              ? m_targetOffset
-             : currentOffset();
+             : currentPosition();
 }
 
 bool ScrollAnimator::hasRunningAnimation() const {
@@ -81,10 +81,10 @@ bool ScrollAnimator::hasRunningAnimation() const {
           m_runState == RunState::WaitingToSendToCompositor);
 }
 
-ScrollOffset ScrollAnimator::computeDeltaToConsume(
-    const ScrollOffset& delta) const {
-  ScrollOffset pos = desiredTargetOffset();
-  ScrollOffset newPos = m_scrollableArea->clampScrollOffset(pos + delta);
+FloatSize ScrollAnimator::computeDeltaToConsume(const FloatSize& delta) const {
+  FloatPoint pos = desiredTargetPosition();
+  FloatPoint newPos =
+      toFloatPoint(m_scrollableArea->clampScrollPosition(pos + delta));
   return newPos - pos;
 }
 
@@ -96,7 +96,7 @@ void ScrollAnimator::resetAnimationState() {
 }
 
 ScrollResult ScrollAnimator::userScroll(ScrollGranularity granularity,
-                                        const ScrollOffset& delta) {
+                                        const FloatSize& delta) {
   if (!m_scrollableArea->scrollAnimatorEnabled())
     return ScrollAnimatorBase::userScroll(granularity, delta);
 
@@ -113,11 +113,11 @@ ScrollResult ScrollAnimator::userScroll(ScrollGranularity granularity,
   if (m_runState == RunState::PostAnimationCleanup)
     resetAnimationState();
 
-  ScrollOffset consumedDelta = computeDeltaToConsume(delta);
-  ScrollOffset targetOffset = desiredTargetOffset();
-  targetOffset += consumedDelta;
+  FloatSize consumedDelta = computeDeltaToConsume(delta);
+  FloatPoint targetPos = desiredTargetPosition();
+  targetPos.move(consumedDelta);
 
-  if (willAnimateToOffset(targetOffset)) {
+  if (willAnimateToOffset(targetPos)) {
     m_lastGranularity = granularity;
     // Report unused delta only if there is no animation running. See
     // comment below regarding scroll latching.
@@ -138,24 +138,24 @@ ScrollResult ScrollAnimator::userScroll(ScrollGranularity granularity,
   return ScrollResult(false, false, delta.width(), delta.height());
 }
 
-bool ScrollAnimator::willAnimateToOffset(const ScrollOffset& targetOffset) {
+bool ScrollAnimator::willAnimateToOffset(const FloatPoint& targetPos) {
   if (m_runState == RunState::PostAnimationCleanup)
     resetAnimationState();
 
   if (m_runState == RunState::WaitingToCancelOnCompositor ||
       m_runState == RunState::WaitingToCancelOnCompositorButNewScroll) {
     ASSERT(m_animationCurve);
-    m_targetOffset = targetOffset;
+    m_targetOffset = targetPos;
     if (registerAndScheduleAnimation())
       m_runState = RunState::WaitingToCancelOnCompositorButNewScroll;
     return true;
   }
 
   if (m_animationCurve) {
-    if ((targetOffset - m_targetOffset).isZero())
+    if ((targetPos - m_targetOffset).isZero())
       return true;
 
-    m_targetOffset = targetOffset;
+    m_targetOffset = targetPos;
     ASSERT(m_runState == RunState::RunningOnMainThread ||
            m_runState == RunState::RunningOnCompositor ||
            m_runState == RunState::RunningOnCompositorButNeedsUpdate ||
@@ -166,7 +166,7 @@ bool ScrollAnimator::willAnimateToOffset(const ScrollOffset& targetOffset) {
     if (m_runState == RunState::RunningOnMainThread) {
       m_animationCurve->updateTarget(
           m_timeFunction() - m_startTime,
-          compositorOffsetFromBlinkOffset(targetOffset));
+          compositorOffsetFromBlinkOffset(targetPos));
       return true;
     }
 
@@ -175,10 +175,10 @@ bool ScrollAnimator::willAnimateToOffset(const ScrollOffset& targetOffset) {
     return true;
   }
 
-  if ((targetOffset - currentOffset()).isZero())
+  if ((targetPos - currentPosition()).isZero())
     return false;
 
-  m_targetOffset = targetOffset;
+  m_targetOffset = targetPos;
   m_startTime = m_timeFunction();
 
   if (registerAndScheduleAnimation())
@@ -187,17 +187,19 @@ bool ScrollAnimator::willAnimateToOffset(const ScrollOffset& targetOffset) {
   return true;
 }
 
-void ScrollAnimator::adjustAnimationAndSetScrollOffset(
-    const ScrollOffset& offset,
+void ScrollAnimator::adjustAnimationAndSetScrollPosition(
+    const DoublePoint& position,
     ScrollType scrollType) {
   IntSize adjustment =
-      roundedIntSize(offset) - roundedIntSize(m_scrollableArea->scrollOffset());
-  scrollOffsetChanged(offset, scrollType);
+      roundedIntPoint(position) -
+      roundedIntPoint(m_scrollableArea->scrollPositionDouble());
+
+  scrollPositionChanged(position, scrollType);
 
   if (m_runState == RunState::Idle) {
     adjustImplOnlyScrollOffsetAnimation(adjustment);
   } else if (hasRunningAnimation()) {
-    m_targetOffset += ScrollOffset(adjustment);
+    m_targetOffset += toFloatSize(adjustment);
     if (m_animationCurve) {
       m_animationCurve->applyAdjustment(adjustment);
       if (m_runState != RunState::RunningOnMainThread &&
@@ -207,12 +209,11 @@ void ScrollAnimator::adjustAnimationAndSetScrollOffset(
   }
 }
 
-void ScrollAnimator::scrollToOffsetWithoutAnimation(
-    const ScrollOffset& offset) {
-  m_currentOffset = offset;
+void ScrollAnimator::scrollToOffsetWithoutAnimation(const FloatPoint& offset) {
+  m_currentPos = offset;
 
   resetAnimationState();
-  notifyOffsetChanged();
+  notifyPositionChanged();
 }
 
 void ScrollAnimator::tickAnimation(double monotonicTime) {
@@ -223,21 +224,21 @@ void ScrollAnimator::tickAnimation(double monotonicTime) {
   double elapsedTime = monotonicTime - m_startTime;
 
   bool isFinished = (elapsedTime > m_animationCurve->duration());
-  ScrollOffset offset = blinkOffsetFromCompositorOffset(
+  FloatPoint offset = blinkOffsetFromCompositorOffset(
       isFinished ? m_animationCurve->targetValue()
                  : m_animationCurve->getValue(elapsedTime));
 
-  offset = m_scrollableArea->clampScrollOffset(offset);
+  offset = FloatPoint(m_scrollableArea->clampScrollPosition(offset));
 
-  m_currentOffset = offset;
+  m_currentPos = offset;
 
   if (isFinished)
     m_runState = RunState::PostAnimationCleanup;
   else
     getScrollableArea()->scheduleAnimation();
 
-  TRACE_EVENT0("blink", "ScrollAnimator::notifyOffsetChanged");
-  notifyOffsetChanged();
+  TRACE_EVENT0("blink", "ScrollAnimator::notifyPositionChanged");
+  notifyPositionChanged();
 }
 
 void ScrollAnimator::postAnimationCleanupAndReset() {
@@ -283,7 +284,7 @@ void ScrollAnimator::createAnimationCurve() {
           ? CompositorScrollOffsetAnimationCurve::ScrollDurationInverseDelta
           : CompositorScrollOffsetAnimationCurve::ScrollDurationConstant);
   m_animationCurve->setInitialValue(
-      compositorOffsetFromBlinkOffset(currentOffset()));
+      compositorOffsetFromBlinkOffset(currentPosition()));
 }
 
 void ScrollAnimator::updateCompositorAnimations() {
@@ -328,10 +329,9 @@ void ScrollAnimator::updateCompositorAnimations() {
           compositorOffsetFromBlinkOffset(m_targetOffset));
     }
 
-    if (m_runState == RunState::WaitingToCancelOnCompositorButNewScroll) {
+    if (m_runState == RunState::WaitingToCancelOnCompositorButNewScroll)
       m_animationCurve->setInitialValue(
-          compositorOffsetFromBlinkOffset(currentOffset()));
-    }
+          compositorOffsetFromBlinkOffset(currentPosition()));
 
     m_runState = RunState::WaitingToSendToCompositor;
   }
@@ -397,8 +397,8 @@ void ScrollAnimator::notifyAnimationTakeover(
 
   cc::ScrollOffsetAnimationCurve* scrollOffsetAnimationCurve =
       curve->ToScrollOffsetAnimationCurve();
-  ScrollOffset targetValue(scrollOffsetAnimationCurve->target_value().x(),
-                           scrollOffsetAnimationCurve->target_value().y());
+  FloatPoint targetValue(scrollOffsetAnimationCurve->target_value().x(),
+                         scrollOffsetAnimationCurve->target_value().y());
   if (willAnimateToOffset(targetValue)) {
     m_animationCurve = CompositorScrollOffsetAnimationCurve::create(
         std::move(scrollOffsetAnimationCurve));

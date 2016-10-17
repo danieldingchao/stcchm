@@ -188,8 +188,7 @@ goog.require('__crWeb.message');
           // Found a link.
           return {
             href: element.href,
-            referrerPolicy: getReferrerPolicy_(element),
-            innerText: element.innerText
+            referrerPolicy: getReferrerPolicy_(element)
           };
         }
 

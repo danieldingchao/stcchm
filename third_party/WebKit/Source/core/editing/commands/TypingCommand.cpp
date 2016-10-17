@@ -512,10 +512,9 @@ bool TypingCommand::makeEditableRootEmpty(EditingState* editingState) {
   addBlockPlaceholderIfNeeded(root, editingState);
   if (editingState->isAborted())
     return false;
-  document().updateStyleAndLayoutIgnorePendingStylesheets();
-  setEndingSelection(createVisibleSelection(Position::firstPositionInNode(root),
-                                            TextAffinity::Downstream,
-                                            endingSelection().isDirectional()));
+  setEndingSelection(createVisibleSelectionDeprecated(
+      Position::firstPositionInNode(root), TextAffinity::Downstream,
+      endingSelection().isDirectional()));
 
   return true;
 }
@@ -558,7 +557,7 @@ void TypingCommand::deleteKeyPressed(TextGranularity granularity,
         selectionModifier.modify(FrameSelection::AlterationExtend,
                                  DirectionBackward, CharacterGranularity);
 
-      VisiblePosition visibleStart(endingSelection().visibleStart());
+      VisiblePosition visibleStart(endingSelection().visibleStartDeprecated());
       if (previousPositionOf(visibleStart, CannotCrossEditingBoundary)
               .isNull()) {
         // When the caret is at the start of the editable area in an empty list
@@ -594,7 +593,7 @@ void TypingCommand::deleteKeyPressed(TextGranularity granularity,
 
       // If the caret is at the start of a paragraph after a table, move content
       // into the last table cell.
-      if (isStartOfParagraph(visibleStart) &&
+      if (isStartOfParagraphDeprecated(visibleStart) &&
           tableElementJustBefore(
               previousPositionOf(visibleStart, CannotCrossEditingBoundary))) {
         // Unless the caret is just before a table.  We don't want to move a
@@ -608,7 +607,7 @@ void TypingCommand::deleteKeyPressed(TextGranularity granularity,
         // If the caret is just after a table, select the table and don't delete
         // anything.
       } else if (Element* table = tableElementJustBefore(visibleStart)) {
-        setEndingSelection(createVisibleSelection(
+        setEndingSelection(createVisibleSelectionDeprecated(
             Position::beforeNode(table), endingSelection().start(),
             TextAffinity::Downstream, endingSelection().isDirectional()));
         typingAddedToOpenCommand(DeleteKey);
@@ -708,7 +707,7 @@ void TypingCommand::forwardDeleteKeyPressed(TextGranularity granularity,
 
       Position downstreamEnd =
           mostForwardCaretPosition(endingSelection().end());
-      VisiblePosition visibleEnd = endingSelection().visibleEnd();
+      VisiblePosition visibleEnd = endingSelection().visibleEndDeprecated();
       Node* enclosingTableCell =
           enclosingNodeOfType(visibleEnd.deepEquivalent(), &isTableCell);
       if (enclosingTableCell &&
@@ -717,7 +716,7 @@ void TypingCommand::forwardDeleteKeyPressed(TextGranularity granularity,
                   .deepEquivalent())
         return;
       if (visibleEnd.deepEquivalent() ==
-          endOfParagraph(visibleEnd).deepEquivalent())
+          endOfParagraphDeprecated(visibleEnd).deepEquivalent())
         downstreamEnd = mostForwardCaretPosition(
             nextPositionOf(visibleEnd, CannotCrossEditingBoundary)
                 .deepEquivalent());
@@ -725,7 +724,7 @@ void TypingCommand::forwardDeleteKeyPressed(TextGranularity granularity,
       if (isDisplayInsideTable(downstreamEnd.computeContainerNode()) &&
           downstreamEnd.computeOffsetInContainerNode() <=
               caretMinOffset(downstreamEnd.computeContainerNode())) {
-        setEndingSelection(createVisibleSelection(
+        setEndingSelection(createVisibleSelectionDeprecated(
             endingSelection().end(),
             Position::afterNode(downstreamEnd.computeContainerNode()),
             TextAffinity::Downstream, endingSelection().isDirectional()));
@@ -737,7 +736,8 @@ void TypingCommand::forwardDeleteKeyPressed(TextGranularity granularity,
       // the next paragraph (if any)
       if (granularity == ParagraphBoundary &&
           selectionModifier.selection().isCaret() &&
-          isEndOfParagraph(selectionModifier.selection().visibleEnd()))
+          isEndOfParagraphDeprecated(
+              selectionModifier.selection().visibleEndDeprecated()))
         selectionModifier.modify(FrameSelection::AlterationExtend,
                                  DirectionForward, CharacterGranularity);
 

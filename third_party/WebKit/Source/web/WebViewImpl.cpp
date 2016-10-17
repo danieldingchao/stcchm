@@ -882,7 +882,7 @@ WebInputEventResult WebViewImpl::handleGestureEvent(
         // TODO(bokan): We shouldn't pass details of the VisualViewport offset
         // to render_view_impl.  crbug.com/459591
         WebSize visualViewportOffset =
-            flooredIntSize(visualViewport.scrollOffset());
+            flooredIntSize(visualViewport.location());
 
         if (m_webSettings->multiTargetTapNotificationEnabled()) {
           Vector<IntRect> goodTargets;
@@ -1029,10 +1029,9 @@ bool WebViewImpl::startPageScaleAnimation(const IntPoint& targetPosition,
       setPageScaleFactor(newScale);
 
       FrameView* view = mainFrameImpl()->frameView();
-      if (view && view->getScrollableArea()) {
-        view->getScrollableArea()->setScrollOffset(
-            ScrollOffset(clampedPoint.x, clampedPoint.y), ProgrammaticScroll);
-      }
+      if (view && view->getScrollableArea())
+        view->getScrollableArea()->setScrollPosition(
+            DoublePoint(clampedPoint.x, clampedPoint.y), ProgrammaticScroll);
 
       return false;
     }
@@ -3392,7 +3391,7 @@ void WebViewImpl::scrollAndRescaleViewports(
   // Order is important: visual viewport location is clamped based on
   // main frame scroll position and visual viewport scale.
 
-  view->setScrollOffset(toScrollOffset(mainFrameOrigin), ProgrammaticScroll);
+  view->setScrollPosition(mainFrameOrigin, ProgrammaticScroll);
 
   setPageScaleFactor(scaleFactor);
 
@@ -3704,8 +3703,9 @@ void WebViewImpl::resetScrollAndScaleState() {
   if (FrameView* frameView = toLocalFrame(page()->mainFrame())->view()) {
     ScrollableArea* scrollableArea = frameView->layoutViewportScrollableArea();
 
-    if (!scrollableArea->scrollOffset().isZero())
-      scrollableArea->setScrollOffset(ScrollOffset(), ProgrammaticScroll);
+    if (scrollableArea->scrollPositionDouble() != DoublePoint::zero())
+      scrollableArea->setScrollPosition(DoublePoint::zero(),
+                                        ProgrammaticScroll);
   }
 
   pageScaleConstraintsSet().setNeedsReset(true);
@@ -3766,10 +3766,6 @@ void WebViewImpl::performPluginAction(const WebPluginAction& action,
       }
     }
   }
-}
-
-void WebViewImpl::audioStateChanged(bool isAudioPlaying) {
-  m_scheduler->audioStateChanged(isAudioPlaying);
 }
 
 WebHitTestResult WebViewImpl::hitTestResultAt(const WebPoint& point) {

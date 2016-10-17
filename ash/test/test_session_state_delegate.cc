@@ -166,7 +166,7 @@ void TestSessionStateDelegate::SetHasActiveUser(bool has_active_user) {
     session_state_ = SESSION_STATE_LOGIN_PRIMARY;
   } else {
     session_state_ = SESSION_STATE_ACTIVE;
-    WmShell::Get()->ShowShelf();
+    Shell::GetInstance()->ShowShelf();
   }
 }
 

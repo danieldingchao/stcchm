@@ -33,8 +33,8 @@
 
 #include "core/CoreExport.h"
 #include "core/events/Event.h"
+#include "platform/geometry/FloatPoint.h"
 #include "platform/geometry/FloatRect.h"
-#include "platform/geometry/FloatSize.h"
 #include "platform/geometry/IntSize.h"
 #include "platform/graphics/GraphicsLayerClient.h"
 #include "platform/scroll/ScrollableArea.h"
@@ -94,7 +94,9 @@ class CORE_EXPORT VisualViewport final
   // The coordinates are in partial CSS pixels.
   void setLocation(const FloatPoint&);
   // FIXME: This should be called moveBy
-  void move(const ScrollOffset&);
+  void move(const FloatPoint&);
+  void move(const FloatSize&);
+  FloatPoint location() const { return m_offset; }
 
   // Sets the size of the inner viewport when unscaled in CSS pixels.
   void setSize(const IntSize&);
@@ -127,6 +129,7 @@ class CORE_EXPORT VisualViewport final
   FloatRect visibleRect() const;
 
   // The viewport rect relative to the document origin, in partial CSS pixels.
+  // FIXME: This should be a DoubleRect since scroll offsets are now doubles.
   FloatRect visibleRectInDocument() const;
 
   // Convert the given rect in the main FrameView's coordinates into a rect
@@ -164,10 +167,14 @@ class CORE_EXPORT VisualViewport final
 
   // ScrollableArea implementation
   HostWindow* getHostWindow() const override;
+  DoubleRect visibleContentRectDouble(
+      IncludeScrollbarsInRect = ExcludeScrollbars) const override;
+  IntRect visibleContentRect(
+      IncludeScrollbarsInRect = ExcludeScrollbars) const override;
   bool shouldUseIntegerScrollOffset() const override;
-  void setScrollOffset(const ScrollOffset&,
-                       ScrollType,
-                       ScrollBehavior = ScrollBehaviorInstant) override;
+  void setScrollPosition(const DoublePoint&,
+                         ScrollType,
+                         ScrollBehavior = ScrollBehaviorInstant) override;
   LayoutRect visualRectForScrollbarParts() const override {
     ASSERT_NOT_REACHED();
     return LayoutRect();
@@ -176,11 +183,11 @@ class CORE_EXPORT VisualViewport final
   int scrollSize(ScrollbarOrientation) const override;
   bool isScrollCornerVisible() const override { return false; }
   IntRect scrollCornerRect() const override { return IntRect(); }
-  IntSize scrollOffsetInt() const override { return flooredIntSize(m_offset); }
-  ScrollOffset scrollOffset() const override { return m_offset; }
-  IntSize minimumScrollOffsetInt() const override;
-  IntSize maximumScrollOffsetInt() const override;
-  ScrollOffset maximumScrollOffset() const override;
+  IntPoint scrollPosition() const override { return flooredIntPoint(m_offset); }
+  DoublePoint scrollPositionDouble() const override { return m_offset; }
+  IntPoint minimumScrollPosition() const override;
+  IntPoint maximumScrollPosition() const override;
+  DoublePoint maximumScrollPositionDouble() const override;
   int visibleHeight() const override { return visibleRect().height(); }
   int visibleWidth() const override { return visibleRect().width(); }
   IntSize contentsSize() const override;
@@ -190,7 +197,7 @@ class CORE_EXPORT VisualViewport final
   bool shouldPlaceVerticalScrollbarOnLeft() const override { return false; }
   bool scrollAnimatorEnabled() const override;
   void scrollControlWasSetNeedsPaintInvalidation() override {}
-  void updateScrollOffset(const ScrollOffset&, ScrollType) override;
+  void setScrollOffset(const DoublePoint&, ScrollType) override;
   GraphicsLayer* layerForContainer() const override;
   GraphicsLayer* layerForScrolling() const override;
   GraphicsLayer* layerForHorizontalScrollbar() const override;
@@ -239,6 +246,7 @@ class CORE_EXPORT VisualViewport final
   String debugName(const GraphicsLayer*) const override;
 
   void setupScrollbar(WebScrollbar::Orientation);
+  FloatPoint clampOffsetToBoundaries(const FloatPoint&);
 
   void notifyRootFrameViewport() const;
 
@@ -261,7 +269,7 @@ class CORE_EXPORT VisualViewport final
   std::unique_ptr<WebScrollbarLayer> m_webOverlayScrollbarVertical;
 
   // Offset of the visual viewport from the main frame's origin, in CSS pixels.
-  ScrollOffset m_offset;
+  FloatPoint m_offset;
   float m_scale;
   IntSize m_size;
   float m_topControlsAdjustment;

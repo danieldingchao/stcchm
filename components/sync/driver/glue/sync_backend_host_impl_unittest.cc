@@ -21,7 +21,6 @@
 #include "components/invalidation/public/invalidator_state.h"
 #include "components/invalidation/public/object_id_invalidation_map.h"
 #include "components/sync/base/experiments.h"
-#include "components/sync/base/sync_prefs.h"
 #include "components/sync/base/test_unrecoverable_error_handler.h"
 #include "components/sync/core/http_bridge_network_resources.h"
 #include "components/sync/core/network_resources.h"
@@ -30,6 +29,7 @@
 #include "components/sync/device_info/device_info.h"
 #include "components/sync/driver/fake_sync_client.h"
 #include "components/sync/driver/sync_frontend.h"
+#include "components/sync/driver/sync_prefs.h"
 #include "components/sync/engine/cycle/commit_counters.h"
 #include "components/sync/engine/cycle/status_counters.h"
 #include "components/sync/engine/cycle/update_counters.h"
@@ -93,7 +93,7 @@ class MockSyncFrontend : public SyncFrontend {
                void(ModelType, const CommitCounters&));
   MOCK_METHOD2(OnDirectoryTypeUpdateCounterUpdated,
                void(ModelType, const UpdateCounters&));
-  MOCK_METHOD2(OnDatatypeStatusCounterUpdated,
+  MOCK_METHOD2(OnDirectoryTypeStatusCounterUpdated,
                void(ModelType, const StatusCounters&));
   MOCK_METHOD1(OnExperimentsChanged, void(const Experiments&));
   MOCK_METHOD1(OnActionableError, void(const SyncProtocolError& sync_error));

@@ -92,7 +92,7 @@ Output = function() {
    * @type {boolean}
    * @private
    */
-  this.outputContextFirst_ = false;
+  this.outputContextFirst_ = localStorage['outputContextFirst'] == 'true';
 };
 
 /**
@@ -106,11 +106,11 @@ Output.SPACE = ' ';
  * @const {Object<{msgId: string,
  *                 earconId: (string|undefined),
  *                 inherits: (string|undefined),
- *                 outputContextFirst: (boolean|undefined)}>}
+ *                 ignoreAncestry: (boolean|undefined)}>}
  * msgId: the message id of the role.
  * earconId: an optional earcon to play when encountering the role.
  * inherits: inherits rules from this role.
- * outputContextFirst: where to place the context output.
+ * ignoreAncestry: don't output ancestry changes when encountering this role.
  * @private
  */
 Output.ROLE_INFO_ = {
@@ -119,8 +119,7 @@ Output.ROLE_INFO_ = {
     earconId: 'ALERT_NONMODAL'
   },
   alertDialog: {
-    msgId: 'role_alertdialog',
-    outputContextFirst: true
+    msgId: 'role_alertdialog'
   },
   article: {
     msgId: 'role_article',
@@ -150,8 +149,7 @@ Output.ROLE_INFO_ = {
     inherits: 'cell'
   },
   comboBox: {
-    msgId: 'role_combobox',
-    earconId: 'LISTBOX'
+    msgId: 'role_combobox'
   },
   complementary: {
     msgId: 'role_complementary',
@@ -170,8 +168,7 @@ Output.ROLE_INFO_ = {
     inherits: 'abstractContainer'
   },
   dialog: {
-    msgId: 'role_dialog',
-    outputContextFirst: true
+    msgId: 'role_dialog'
   },
   directory: {
     msgId: 'role_directory',
@@ -233,8 +230,7 @@ Output.ROLE_INFO_ = {
     inherits: 'abstractContainer'
   },
   menu: {
-    msgId: 'role_menu',
-    outputContextFirst: true
+    msgId: 'role_menu'
   },
   menuBar: {
     msgId: 'role_menubar',
@@ -271,9 +267,6 @@ Output.ROLE_INFO_ = {
   },
   radioGroup: {
     msgId: 'role_radiogroup',
-  },
-  rootWebArea: {
-    outputContextFirst: true
   },
   row: {
     msgId: 'role_row',
@@ -905,24 +898,21 @@ Output.prototype = {
    */
   go: function() {
     // Speech.
-    var queueMode = cvox.QueueMode.FLUSH;
-    if (Output.forceModeForNextSpeechUtterance_ !== undefined)
-      queueMode = Output.forceModeForNextSpeechUtterance_;
-    else if (this.queueMode_ !== undefined)
-      queueMode = this.queueMode_;
+    var queueMode = this.queueMode_;
+    this.speechBuffer_.forEach(function(buff, i, a) {
+      if (Output.forceModeForNextSpeechUtterance_ !== undefined &&
+          buff.length > 0) {
+        queueMode = Output.forceModeForNextSpeechUtterance_;
+        Output.forceModeForNextSpeechUtterance_ = undefined;
+      }
 
-    if (this.speechBuffer_.length > 0)
-      Output.forceModeForNextSpeechUtterance_ = undefined;
-
-    for (var i = 0; i < this.speechBuffer_.length; i++) {
-      var buff = this.speechBuffer_[i];
-      var speechProps = /** @type {Object} */(
-          buff.getSpanInstanceOf(Output.SpeechProperties)) || {};
-
-      speechProps.category = this.speechCategory_;
-
+      var speechProps = {};
       (function() {
         var scopedBuff = buff;
+        speechProps =
+            scopedBuff.getSpanInstanceOf(Output.SpeechProperties) || {};
+        speechProps.category = this.speechCategory_;
+
         speechProps['startCallback'] = function() {
           var actions = scopedBuff.getSpansInstanceOf(Output.Action);
           if (actions) {
@@ -931,15 +921,16 @@ Output.prototype = {
             });
           }
         };
-      }());
+      }.bind(this)());
 
-      if (i == this.speechBuffer_.length - 1)
+      if (this.speechEndCallback_ && i == a.length - 1)
         speechProps['endCallback'] = this.speechEndCallback_;
-
+      else
+        speechProps['endCallback'] = null;
       cvox.ChromeVox.tts.speak(
           buff.toString(), queueMode, speechProps);
       queueMode = cvox.QueueMode.QUEUE;
-    }
+    }.bind(this));
 
     // Braille.
     if (this.brailleBuffer_.length) {
@@ -982,17 +973,6 @@ Output.prototype = {
   render_: function(range, prevRange, type, buff) {
     if (prevRange && !prevRange.isValid())
       prevRange = null;
-
-    // Scan ancestors to get the value of |outputContextFirst|.
-    var parent = range.start.node;
-    while (parent && parent.root && parent.root.role != RoleType.desktop) {
-      if (Output.ROLE_INFO_[parent.role] &&
-          Output.ROLE_INFO_[parent.role].outputContextFirst) {
-        this.outputContextFirst_ = true;
-        break;
-      }
-      parent = parent.parent;
-    }
 
     if (range.isSubNode())
       this.subNode_(range, prevRange, type, buff);
@@ -1391,6 +1371,11 @@ Output.prototype = {
    * @private
    */
   ancestry_: function(node, prevNode, type, buff) {
+    // Check to see if ancestry output is ignored.
+    if (Output.ROLE_INFO_[node.role] &&
+        Output.ROLE_INFO_[node.role].ignoreAncestry)
+      return;
+
     var prevUniqueAncestors =
         AutomationUtil.getUniqueAncestors(node, prevNode);
     var uniqueAncestors = AutomationUtil.getUniqueAncestors(prevNode, node);

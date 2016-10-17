@@ -25,27 +25,63 @@ namespace offline_pages {
 
 namespace {
 const bool kUserRequest = true;
+const int kMinDurationSeconds = 1;
+const int kMaxDurationSeconds = 7 * 24 * 60 * 60;  // 7 days
+const int kDurationBuckets = 50;
+const int kDisabledTaskRecheckSeconds = 5;
+
+// TODO(dougarnett): Move to util location and share with model impl.
+std::string AddHistogramSuffix(const ClientId& client_id,
+                               const char* histogram_name) {
+  if (client_id.name_space.empty()) {
+    NOTREACHED();
+    return histogram_name;
+  }
+  std::string adjusted_histogram_name(histogram_name);
+  adjusted_histogram_name += "." + client_id.name_space;
+  return adjusted_histogram_name;
+}
 
 // Records the final request status UMA for an offlining request. This should
 // only be called once per Offliner::LoadAndSave request.
 void RecordOfflinerResultUMA(const ClientId& client_id,
+                             const base::Time& request_creation_time,
                              Offliner::RequestStatus request_status) {
-  // TODO(dougarnett): Consider exposing AddHistogramSuffix from
-  // offline_page_model_impl.cc as visible utility method.
-  std::string histogram_name("OfflinePages.Background.OfflinerRequestStatus");
-  if (!client_id.name_space.empty()) {
-    histogram_name += "." + client_id.name_space;
-  }
-
   // The histogram below is an expansion of the UMA_HISTOGRAM_ENUMERATION
   // macro adapted to allow for a dynamically suffixed histogram name.
   // Note: The factory creates and owns the histogram.
   base::HistogramBase* histogram = base::LinearHistogram::FactoryGet(
-      histogram_name, 1,
-      static_cast<int>(Offliner::RequestStatus::STATUS_COUNT),
+      AddHistogramSuffix(client_id,
+                         "OfflinePages.Background.OfflinerRequestStatus"),
+      1, static_cast<int>(Offliner::RequestStatus::STATUS_COUNT),
       static_cast<int>(Offliner::RequestStatus::STATUS_COUNT) + 1,
       base::HistogramBase::kUmaTargetedHistogramFlag);
   histogram->Add(static_cast<int>(request_status));
+
+  // For successful requests also record time from request to save.
+  if (request_status == Offliner::RequestStatus::SAVED) {
+    // Using regular histogram (with dynamic suffix) rather than time-oriented
+    // one to record samples in seconds rather than milliseconds.
+    base::HistogramBase* histogram = base::Histogram::FactoryGet(
+        AddHistogramSuffix(client_id, "OfflinePages.Background.TimeToSaved"),
+        kMinDurationSeconds, kMaxDurationSeconds, kDurationBuckets,
+        base::HistogramBase::kUmaTargetedHistogramFlag);
+    base::TimeDelta duration = base::Time::Now() - request_creation_time;
+    histogram->Add(duration.InSeconds());
+  }
+}
+
+void RecordCancelTimeUMA(const SavePageRequest& canceled_request) {
+  // Using regular histogram (with dynamic suffix) rather than time-oriented
+  // one to record samples in seconds rather than milliseconds.
+  base::HistogramBase* histogram = base::Histogram::FactoryGet(
+      AddHistogramSuffix(canceled_request.client_id(),
+                         "OfflinePages.Background.TimeToCanceled"),
+      kMinDurationSeconds, kMaxDurationSeconds, kDurationBuckets,
+      base::HistogramBase::kUmaTargetedHistogramFlag);
+  base::TimeDelta duration =
+      base::Time::Now() - canceled_request.creation_time();
+  histogram->Add(duration.InSeconds());
 }
 
 // Records the number of started attempts for completed requests (whether
@@ -124,6 +160,11 @@ int64_t RequestCoordinator::SavePageLater(const GURL& url,
   offline_pages::SavePageRequest request(id, url, client_id, base::Time::Now(),
                                          user_requested);
 
+  // If the download manager is not done with the request, put it on the
+  // disabled list.
+  if (availability == RequestAvailability::DISABLED_FOR_OFFLINER)
+    disabled_requests_.insert(id);
+
   // Put the request on the request queue.
   queue_->AddRequest(request,
                      base::Bind(&RequestCoordinator::AddRequestResultCallback,
@@ -160,6 +201,7 @@ void RequestCoordinator::StopPrerendering(Offliner::RequestStatus stop_status) {
                                        last_offlining_status_,
                                        active_request_->request_id());
     RecordOfflinerResultUMA(active_request_->client_id(),
+                            active_request_->creation_time(),
                             last_offlining_status_);
     is_busy_ = false;
     active_request_.reset();
@@ -315,10 +357,21 @@ void RequestCoordinator::UpdateMultipleRequestsCallback(
     StartProcessingIfConnected();
 }
 
+// When we successfully remove a request that completed successfully, move on to
+// the next request.
+void RequestCoordinator::CompletedRequestCallback(
+    const MultipleItemStatuses& status) {
+  TryNextRequest();
+}
+
 void RequestCoordinator::HandleRemovedRequestsAndCallback(
     const RemoveRequestsCallback& callback,
     BackgroundSavePageResult status,
     std::unique_ptr<UpdateRequestsResult> result) {
+  // TODO(dougarnett): Define status code for user/api cancel and use here
+  // to determine whether to record cancel time UMA.
+  for (const auto& request : result->updated_items)
+    RecordCancelTimeUMA(request);
   callback.Run(result->item_statuses);
   HandleRemovedRequests(status, std::move(result));
 }
@@ -433,7 +486,8 @@ void RequestCoordinator::TryNextRequest() {
                                         weak_ptr_factory_.GetWeakPtr()),
                              base::Bind(&RequestCoordinator::RequestNotPicked,
                                         weak_ptr_factory_.GetWeakPtr()),
-                             current_conditions_.get());
+                             current_conditions_.get(),
+                             disabled_requests_);
 }
 
 // Called by the request picker when a request has been picked.
@@ -454,8 +508,15 @@ void RequestCoordinator::RequestNotPicked(
   // Clear the outstanding "safety" task in the scheduler.
   scheduler_->Unschedule();
 
-  if (non_user_requested_tasks_remaining)
+  // If disabled tasks remain, post a new safety task for 5 sec from now.
+  if (disabled_requests_.size() > 0) {
+    scheduler_->BackupSchedule(GetTriggerConditions(kUserRequest),
+                               kDisabledTaskRecheckSeconds);
+  } else if (non_user_requested_tasks_remaining) {
+    // If we don't have any of those, check for non-user-requested tasks.
     scheduler_->Schedule(GetTriggerConditions(!kUserRequest));
+  }
+
   // Let the scheduler know we are done processing.
   scheduler_callback_.Run(true);
 }
@@ -509,7 +570,8 @@ void RequestCoordinator::OfflinerDoneCallback(const SavePageRequest& request,
   event_logger_.RecordOfflinerResult(request.client_id().name_space, status,
                                      request.request_id());
   last_offlining_status_ = status;
-  RecordOfflinerResultUMA(request.client_id(), last_offlining_status_);
+  RecordOfflinerResultUMA(request.client_id(), request.creation_time(),
+                          last_offlining_status_);
   watchdog_timer_.Stop();
 
   is_busy_ = false;
@@ -575,9 +637,33 @@ void RequestCoordinator::OfflinerDoneCallback(const SavePageRequest& request,
   }
 }
 
-void RequestCoordinator::EnableForOffliner(int64_t request_id) {}
+void RequestCoordinator::EnableForOffliner(int64_t request_id) {
+  // Since the recent tab helper might call multiple times, ignore subsequent
+  // calls for a particular request_id.
+  if (disabled_requests_.find(request_id) == disabled_requests_.end())
+    return;
+  disabled_requests_.erase(request_id);
+  // If we are not busy, start processing right away.
+  StartProcessingIfConnected();
+}
 
-void RequestCoordinator::MarkRequestCompleted(int64_t request_id) {}
+void RequestCoordinator::MarkRequestCompleted(int64_t request_id) {
+  // Since the recent tab helper might call multiple times, ignore subsequent
+  // calls for a particular request_id.
+  if (disabled_requests_.find(request_id) == disabled_requests_.end())
+    return;
+  disabled_requests_.erase(request_id);
+
+  // Remove the request, but send out SUCCEEDED instead of removed.
+  std::vector<int64_t> request_ids { request_id };
+    queue_->RemoveRequests(
+      request_ids,
+      base::Bind(&RequestCoordinator::HandleRemovedRequestsAndCallback,
+                 weak_ptr_factory_.GetWeakPtr(),
+                 base::Bind(&RequestCoordinator::CompletedRequestCallback,
+                            weak_ptr_factory_.GetWeakPtr()),
+                 BackgroundSavePageResult::SUCCESS));
+}
 
 const Scheduler::TriggerConditions RequestCoordinator::GetTriggerConditions(
     const bool user_requested) {

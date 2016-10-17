@@ -9,9 +9,8 @@ if (is_android) {
 
 source_set("switches") {
   visibility = [
-    "//blimp/client/app:*",  # TODO(nyquist): Remove this. See crbug/651964.
-    "//blimp/client/core/*",
-    "//blimp/engine:browser_tests",  # TODO(nyquist): Remove this. See crbug/653789.
+    "//blimp/client/*",
+    "//blimp/engine:browser_tests",
   ]
 
   sources = [
@@ -22,7 +21,7 @@ source_set("switches") {
 
 if (is_android) {
   android_library("switches_java") {
-    visibility = [ "//blimp/client/core/*" ]
+    visibility = [ "//blimp/client/*" ]
 
     java_files =
         [ "android/java/src/org/chromium/blimp/core/BlimpClientSwitches.java" ]

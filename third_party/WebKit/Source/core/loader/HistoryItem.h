@@ -33,7 +33,6 @@
 #include "platform/geometry/FloatPoint.h"
 #include "platform/geometry/IntPoint.h"
 #include "platform/heap/Handle.h"
-#include "platform/scroll/ScrollTypes.h"
 #include "platform/weborigin/Referrer.h"
 #include "wtf/text/WTFString.h"
 
@@ -60,10 +59,10 @@ class CORE_EXPORT HistoryItem final
   EncodedFormData* formData();
   const AtomicString& formContentType() const;
 
-  const ScrollOffset& visualViewportScrollOffset() const;
-  void setVisualViewportScrollOffset(const ScrollOffset&);
-  const ScrollOffset& scrollOffset() const;
-  void setScrollOffset(const ScrollOffset&);
+  const FloatPoint& visualViewportScrollPoint() const;
+  void setVisualViewportScrollPoint(const FloatPoint&);
+  const IntPoint& scrollPoint() const;
+  void setScrollPoint(const IntPoint&);
 
   float pageScaleFactor() const;
   void setPageScaleFactor(float);
@@ -114,8 +113,8 @@ class CORE_EXPORT HistoryItem final
   Referrer m_referrer;
   String m_target;
 
-  ScrollOffset m_visualViewportScrollOffset;
-  ScrollOffset m_scrollOffset;
+  FloatPoint m_visualViewportScrollPoint;
+  IntPoint m_scrollPoint;
   float m_pageScaleFactor;
   Vector<String> m_documentStateVector;
   Member<DocumentState> m_documentState;

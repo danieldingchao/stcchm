@@ -24,7 +24,6 @@
 #include "components/arc/common/intent_helper.mojom.h"
 #include "components/arc/intent_helper/activity_icon_loader.h"
 #include "components/arc/intent_helper/arc_intent_helper_bridge.h"
-#include "components/arc/intent_helper/intent_constants.h"
 #include "components/user_manager/user_manager.h"
 #include "content/public/browser/browser_thread.h"
 #include "extensions/browser/entry_info.h"
@@ -76,31 +75,27 @@ scoped_refptr<arc::ActivityIconLoader> GetArcActivityIconLoader() {
   return arc_service_manager->icon_loader();
 }
 
-// Converts an Android intent action (see kIntentAction* in
-// components/arc/intent_helper/intent_constants.h) to a file task action ID
-// (see chrome/browser/chromeos/file_manager/file_tasks.h).
-std::string ArcActionToFileTaskActionId(const std::string& action) {
-  if (action == arc::kIntentActionView)
-    return "view";
-  else if (action == arc::kIntentActionSend)
-    return "send";
-  else if (action == arc::kIntentActionSendMultiple)
-    return "send_multiple";
-  NOTREACHED() << "Unhandled ARC action \"" << action << "\"";
+std::string ArcActionTypeToString(arc::mojom::ActionType action_type) {
+  switch (action_type) {
+    case arc::mojom::ActionType::VIEW:
+      return "view";
+    case arc::mojom::ActionType::SEND:
+      return "send";
+    case arc::mojom::ActionType::SEND_MULTIPLE:
+      return "send_multiple";
+  }
+  NOTREACHED();
   return "";
 }
 
-// TODO(derat): Replace this with a FileTaskActionIdToArcAction method once
-// HandleUrlList has been updated to take a string action rather than an
-// ArcActionType.
-arc::mojom::ActionType FileTaskActionIdToArcActionType(const std::string& id) {
-  if (id == "view")
+arc::mojom::ActionType StringToArcActionType(const std::string& str) {
+  if (str == "view")
     return arc::mojom::ActionType::VIEW;
-  if (id == "send")
+  if (str == "send")
     return arc::mojom::ActionType::SEND;
-  if (id == "send_multiple")
+  if (str == "send_multiple")
     return arc::mojom::ActionType::SEND_MULTIPLE;
-  NOTREACHED() << "Unhandled file task action ID \"" << id << "\"";
+  NOTREACHED();
   return arc::mojom::ActionType::VIEW;
 }
 
@@ -258,8 +253,8 @@ void OnArcIconEncoded(
   for (const arc::mojom::IntentHandlerInfoPtr& handler : handlers) {
     std::string name(handler->name);
     Verb handler_verb = Verb::VERB_NONE;
-    if (handler->action == arc::kIntentActionSend ||
-        handler->action == arc::kIntentActionSendMultiple) {
+    if (handler->action_type == arc::mojom::ActionType::SEND ||
+        handler->action_type == arc::mojom::ActionType::SEND_MULTIPLE) {
       handler_verb = Verb::VERB_SHARE_WITH;
     }
     const GURL& icon_url = (*icons)[arc::ActivityIconLoader::ActivityName(
@@ -267,9 +262,9 @@ void OnArcIconEncoded(
     result_list->push_back(FullTaskDescriptor(
         TaskDescriptor(
             ActivityNameToAppId(handler->package_name, handler->activity_name),
-            TASK_TYPE_ARC_APP, ArcActionToFileTaskActionId(handler->action)),
+            TASK_TYPE_ARC_APP, ArcActionTypeToString(handler->action_type)),
         name, handler_verb, icon_url, false /* is_default */,
-        handler->action != arc::kIntentActionView /* is_generic */));
+        handler->action_type != arc::mojom::ActionType::VIEW /* is_generic */));
   }
   callback.Run(std::move(result_list));
 }
@@ -342,9 +337,9 @@ bool ExecuteArcTask(Profile* profile,
     urls.push_back(std::move(url_with_type));
   }
 
-  arc_intent_helper->HandleUrlList(
-      std::move(urls), AppIdToActivityName(task.app_id),
-      FileTaskActionIdToArcActionType(task.action_id));
+  arc_intent_helper->HandleUrlList(std::move(urls),
+                                   AppIdToActivityName(task.app_id),
+                                   StringToArcActionType(task.action_id));
   return true;
 }
 

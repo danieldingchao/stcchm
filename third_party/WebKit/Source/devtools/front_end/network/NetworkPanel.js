@@ -105,8 +105,6 @@ WebInspector.NetworkPanel = function()
     WebInspector.DataSaverInfobar.maybeShowInPanel(this);
 }
 
-WebInspector.NetworkPanel.displayScreenshotDelay = 1000;
-
 WebInspector.NetworkPanel.prototype = {
     /**
      * @param {!WebInspector.Event} event
@@ -275,7 +273,7 @@ WebInspector.NetworkPanel.prototype = {
     _load: function(event)
     {
         if (this._filmStripRecorder && this._filmStripRecorder.isRecording())
-            this._pendingStopTimer = setTimeout(this._stopFilmStripRecording.bind(this), WebInspector.NetworkPanel.displayScreenshotDelay);
+            this._pendingStopTimer = setTimeout(this._stopFilmStripRecording.bind(this), 1000);
     },
 
     _stopFilmStripRecording: function()

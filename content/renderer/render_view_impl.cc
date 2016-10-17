@@ -1363,7 +1363,6 @@ bool RenderViewImpl::OnMessageReceived(const IPC::Message& message) {
     IPC_MESSAGE_HANDLER(PageMsg_WasShown, OnPageWasShown)
     IPC_MESSAGE_HANDLER(PageMsg_SetHistoryOffsetAndLength,
                         OnSetHistoryOffsetAndLength)
-    IPC_MESSAGE_HANDLER(PageMsg_AudioStateChanged, OnAudioStateChanged)
 
 #if defined(OS_ANDROID)
     IPC_MESSAGE_HANDLER(ViewMsg_UpdateTopControlsState,
@@ -1453,10 +1452,6 @@ void RenderViewImpl::OnSetInitialFocus(bool reverse) {
 
 void RenderViewImpl::OnUpdateWindowScreenRect(gfx::Rect window_screen_rect) {
   RenderWidget::OnUpdateWindowScreenRect(window_screen_rect);
-}
-
-void RenderViewImpl::OnAudioStateChanged(bool is_audio_playing) {
-  webview()->audioStateChanged(is_audio_playing);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1631,6 +1626,16 @@ WebStorageNamespace* RenderViewImpl::createSessionStorageNamespace() {
 }
 
 void RenderViewImpl::printPage(WebLocalFrame* frame) {
+  UMA_HISTOGRAM_BOOLEAN("PrintPreview.InitiatedByScript",
+                        frame->top() == frame);
+
+  // Logging whether the top frame is remote is sufficient in this case. If
+  // the top frame is local, the printing code will function correctly and
+  // the frame itself will be printed, so the cases this histogram tracks is
+  // where printing of a subframe will fail as of now.
+  UMA_HISTOGRAM_BOOLEAN("PrintPreview.OutOfProcessSubframe",
+                        frame->top()->isWebRemoteFrame());
+
   FOR_EACH_OBSERVER(RenderViewObserver, observers_,
                     PrintPage(frame, input_handler().handling_input_event()));
 }

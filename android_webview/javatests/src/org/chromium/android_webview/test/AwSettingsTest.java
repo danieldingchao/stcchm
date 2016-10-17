@@ -22,7 +22,6 @@ import static org.chromium.base.test.util.ScalableTimeout.scaleTimeout;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
-
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.AwWebResourceResponse;
@@ -42,7 +41,7 @@ import org.chromium.content.browser.test.util.HistoryUtils;
 import org.chromium.content.browser.test.util.TestCallbackHelperContainer;
 import org.chromium.content_public.browser.WebContents;
 import org.chromium.net.test.util.TestWebServer;
-import org.chromium.ui.display.DisplayAndroid;
+import org.chromium.ui.gfx.DeviceDisplayInfo;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -959,9 +958,8 @@ public class AwSettingsTest extends AwTestBase {
         }
 
         protected String getData() {
-            DisplayAndroid displayAndroid = DisplayAndroid.get(mContext);
-            int displayWidth =
-                    (int) (displayAndroid.getDisplayWidth() / displayAndroid.getDIPScale());
+            DeviceDisplayInfo deviceInfo = DeviceDisplayInfo.create(mContext);
+            int displayWidth = (int) (deviceInfo.getDisplayWidth() / deviceInfo.getDIPScale());
             int layoutWidth = (int) (displayWidth * 2.5f); // Use 2.5 as autosizing layout tests do.
             StringBuilder sb = new StringBuilder();
             sb.append("<html>"
@@ -1466,10 +1464,10 @@ public class AwSettingsTest extends AwTestBase {
             loadDataSync(getData());
             final int reportedClientWidth = Integer.parseInt(getTitleOnUiThread());
             if (value) {
-                final DisplayAndroid displayAndroid = DisplayAndroid.get(mContext);
+                final DeviceDisplayInfo deviceInfo = DeviceDisplayInfo.create(mContext);
                 // The clientWidth is subject to pixel snapping.
                 final int displayWidth = (int) Math.ceil(
-                        displayAndroid.getDisplayWidth() / displayAndroid.getDIPScale());
+                        deviceInfo.getDisplayWidth() / deviceInfo.getDIPScale());
                 assertEquals(displayWidth, reportedClientWidth);
             } else {
                 assertEquals(3000, reportedClientWidth);
@@ -2538,8 +2536,8 @@ public class AwSettingsTest extends AwTestBase {
                 pageTemplate,
                 "<meta name='viewport' content='width=" + viewportTagSpecifiedWidth + "' />");
 
-        DisplayAndroid displayAndroid = DisplayAndroid.get(testContainer.getContext());
-        int displayWidth = (int) (displayAndroid.getDisplayWidth() / displayAndroid.getDIPScale());
+        DeviceDisplayInfo deviceInfo = DeviceDisplayInfo.create(testContainer.getContext());
+        int displayWidth = (int) (deviceInfo.getDisplayWidth() / deviceInfo.getDIPScale());
 
         settings.setJavaScriptEnabled(true);
         assertFalse(settings.getUseWideViewPort());
@@ -2606,9 +2604,9 @@ public class AwSettingsTest extends AwTestBase {
         AwSettings settings = getAwSettingsOnUiThread(awContents);
         settings.setBuiltInZoomControls(true);
 
-        DisplayAndroid displayAndroid =
-                DisplayAndroid.get(testContainerView.getContext());
-        int displayWidth = (int) (displayAndroid.getDisplayWidth() / displayAndroid.getDIPScale());
+        DeviceDisplayInfo deviceInfo =
+                DeviceDisplayInfo.create(testContainerView.getContext());
+        int displayWidth = (int) (deviceInfo.getDisplayWidth() / deviceInfo.getDIPScale());
         int layoutWidth = displayWidth * 2;
         final String page = "<html>"
                 + "<head><meta name='viewport' content='width=" + layoutWidth + "'>"

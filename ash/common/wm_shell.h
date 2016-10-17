@@ -323,9 +323,6 @@ class ASH_EXPORT WmShell {
 
   virtual std::unique_ptr<KeyEventWatcher> CreateKeyEventWatcher() = 0;
 
-  // Show shelf view if it was created hidden (before session has started).
-  void ShowShelf();
-
   void CreateShelfDelegate();
 
   // Called after maximize mode has started, windows might still animate though.

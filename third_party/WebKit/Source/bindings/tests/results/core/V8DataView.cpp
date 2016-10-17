@@ -66,7 +66,7 @@ TestDataView* V8DataView::toImpl(v8::Local<v8::Object> object)
         ASSERT_NOT_REACHED();
     }
     v8::Local<v8::Object> associatedWrapper = typedArray->associateWithWrapper(v8::Isolate::GetCurrent(), typedArray->wrapperTypeInfo(), object);
-    DCHECK(associatedWrapper == object);
+    ASSERT_UNUSED(associatedWrapper, associatedWrapper == object);
 
     return typedArray->toImpl<TestDataView>();
 }

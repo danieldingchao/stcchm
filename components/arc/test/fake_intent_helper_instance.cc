@@ -35,6 +35,11 @@ void FakeIntentHelperInstance::HandleUrlList(
     mojom::ActivityNamePtr activity,
     mojom::ActionType action) {}
 
+void FakeIntentHelperInstance::HandleUrlListDeprecated(
+    mojo::Array<mojom::UrlWithMimeTypePtr> urls,
+    const mojo::String& package_name,
+    mojom::ActionType action) {}
+
 void FakeIntentHelperInstance::Init(mojom::IntentHelperHostPtr host_ptr) {}
 
 void FakeIntentHelperInstance::RequestActivityIcons(

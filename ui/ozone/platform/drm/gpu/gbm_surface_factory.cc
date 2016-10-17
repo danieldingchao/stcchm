@@ -33,24 +33,20 @@ namespace {
 
 class GLOzoneEGLGbm : public GLOzoneEGL {
  public:
-  GLOzoneEGLGbm(GbmSurfaceFactory* surface_factory,
-                DrmThreadProxy* drm_thread_proxy)
-      : surface_factory_(surface_factory),
-        drm_thread_proxy_(drm_thread_proxy) {}
+  GLOzoneEGLGbm(GbmSurfaceFactory* surface_factory, DrmThreadProxy* drm_thread)
+      : surface_factory_(surface_factory), drm_thread_(drm_thread) {}
   ~GLOzoneEGLGbm() override {}
 
   scoped_refptr<gl::GLSurface> CreateViewGLSurface(
       gfx::AcceleratedWidget window) override {
     return gl::InitializeGLSurface(new GbmSurface(
-        surface_factory_, drm_thread_proxy_->CreateDrmWindowProxy(window),
-        window));
+        surface_factory_, drm_thread_->CreateDrmWindowProxy(window), window));
   }
 
   scoped_refptr<gl::GLSurface> CreateSurfacelessViewGLSurface(
       gfx::AcceleratedWidget window) override {
     return gl::InitializeGLSurface(new GbmSurfaceless(
-        surface_factory_, drm_thread_proxy_->CreateDrmWindowProxy(window),
-        window));
+        surface_factory_, drm_thread_->CreateDrmWindowProxy(window), window));
   }
 
   scoped_refptr<gl::GLSurface> CreateOffscreenGLSurface(
@@ -67,16 +63,16 @@ class GLOzoneEGLGbm : public GLOzoneEGL {
 
  private:
   GbmSurfaceFactory* surface_factory_;
-  DrmThreadProxy* drm_thread_proxy_;
+  DrmThreadProxy* drm_thread_;
 
   DISALLOW_COPY_AND_ASSIGN(GLOzoneEGLGbm);
 };
 
 }  // namespace
 
-GbmSurfaceFactory::GbmSurfaceFactory(DrmThreadProxy* drm_thread_proxy)
-    : egl_implementation_(new GLOzoneEGLGbm(this, drm_thread_proxy)),
-      drm_thread_proxy_(drm_thread_proxy) {}
+GbmSurfaceFactory::GbmSurfaceFactory(DrmThreadProxy* drm_thread)
+    : egl_implementation_(new GLOzoneEGLGbm(this, drm_thread)),
+      drm_thread_(drm_thread) {}
 
 GbmSurfaceFactory::~GbmSurfaceFactory() {
   DCHECK(thread_checker_.CalledOnValidThread());
@@ -130,7 +126,7 @@ std::unique_ptr<SurfaceOzoneCanvas> GbmSurfaceFactory::CreateCanvasForWidget(
 std::vector<gfx::BufferFormat> GbmSurfaceFactory::GetScanoutFormats(
     gfx::AcceleratedWidget widget) {
   std::vector<gfx::BufferFormat> scanout_formats;
-  drm_thread_proxy_->GetScanoutFormats(widget, &scanout_formats);
+  drm_thread_->GetScanoutFormats(widget, &scanout_formats);
   return scanout_formats;
 }
 
@@ -146,7 +142,7 @@ scoped_refptr<ui::NativePixmap> GbmSurfaceFactory::CreateNativePixmap(
 #endif
 
   scoped_refptr<GbmBuffer> buffer =
-      drm_thread_proxy_->CreateBuffer(widget, size, format, usage);
+      drm_thread_->CreateBuffer(widget, size, format, usage);
   if (!buffer.get())
     return nullptr;
 
@@ -174,7 +170,7 @@ scoped_refptr<ui::NativePixmap> GbmSurfaceFactory::CreateNativePixmapFromHandle(
     planes.push_back(plane);
   }
 
-  scoped_refptr<GbmBuffer> buffer = drm_thread_proxy_->CreateBufferFromFds(
+  scoped_refptr<GbmBuffer> buffer = drm_thread_->CreateBufferFromFds(
       widget, size, format, std::move(scoped_fds), planes);
   if (!buffer)
     return nullptr;

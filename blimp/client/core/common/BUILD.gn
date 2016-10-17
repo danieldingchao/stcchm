@@ -9,10 +9,7 @@ if (is_android) {
 
 if (is_android) {
   android_library("common_java") {
-    visibility = [
-      "//blimp/client/app/*",  # TODO(nyquist): Remove this. See crbug/651964.
-      "//blimp/client/core/*",
-    ]
+    visibility = [ "//blimp/client/*" ]
 
     java_files = [ "android/java/src/org/chromium/blimp/core/common/PreferencesUtil.java" ]
 

@@ -5,6 +5,7 @@
 #ifndef ProgrammaticScrollAnimator_h
 #define ProgrammaticScrollAnimator_h
 
+#include "platform/geometry/FloatPoint.h"
 #include "platform/heap/Handle.h"
 #include "platform/scroll/ScrollAnimatorCompositorCoordinator.h"
 #include "wtf/Allocator.h"
@@ -29,8 +30,8 @@ class ProgrammaticScrollAnimator : public ScrollAnimatorCompositorCoordinator {
 
   virtual ~ProgrammaticScrollAnimator();
 
-  void scrollToOffsetWithoutAnimation(const ScrollOffset&);
-  void animateToOffset(const ScrollOffset&);
+  void scrollToOffsetWithoutAnimation(const FloatPoint&);
+  void animateToOffset(FloatPoint);
 
   // ScrollAnimatorCompositorCoordinator implementation.
   void resetAnimationState() override;
@@ -51,11 +52,11 @@ class ProgrammaticScrollAnimator : public ScrollAnimatorCompositorCoordinator {
  private:
   explicit ProgrammaticScrollAnimator(ScrollableArea*);
 
-  void notifyOffsetChanged(const ScrollOffset&);
+  void notifyPositionChanged(const DoublePoint&);
 
   Member<ScrollableArea> m_scrollableArea;
   std::unique_ptr<CompositorScrollOffsetAnimationCurve> m_animationCurve;
-  ScrollOffset m_targetOffset;
+  FloatPoint m_targetOffset;
   double m_startTime;
 };
 

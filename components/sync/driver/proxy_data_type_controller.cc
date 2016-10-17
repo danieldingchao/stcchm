@@ -64,12 +64,6 @@ void ProxyDataTypeController::GetAllNodes(const AllNodesCallback& callback) {
   callback.Run(type(), base::MakeUnique<base::ListValue>());
 }
 
-void ProxyDataTypeController::GetStatusCounters(
-    const StatusCountersCallback& callback) {
-  syncer::StatusCounters counters;
-  callback.Run(type(), counters);
-}
-
 std::unique_ptr<DataTypeErrorHandler>
 ProxyDataTypeController::CreateErrorHandler() {
   NOTREACHED();

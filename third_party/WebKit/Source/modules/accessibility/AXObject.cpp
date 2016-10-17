@@ -1213,8 +1213,7 @@ IntPoint AXObject::scrollOffset() const {
   if (!area)
     return IntPoint();
 
-  return IntPoint(area->scrollOffsetInt().width(),
-                  area->scrollOffsetInt().height());
+  return IntPoint(area->scrollPosition().x(), area->scrollPosition().y());
 }
 
 IntPoint AXObject::minimumScrollOffset() const {
@@ -1222,8 +1221,8 @@ IntPoint AXObject::minimumScrollOffset() const {
   if (!area)
     return IntPoint();
 
-  return IntPoint(area->minimumScrollOffsetInt().width(),
-                  area->minimumScrollOffsetInt().height());
+  return IntPoint(area->minimumScrollPosition().x(),
+                  area->minimumScrollPosition().y());
 }
 
 IntPoint AXObject::maximumScrollOffset() const {
@@ -1231,8 +1230,8 @@ IntPoint AXObject::maximumScrollOffset() const {
   if (!area)
     return IntPoint();
 
-  return IntPoint(area->maximumScrollOffsetInt().width(),
-                  area->maximumScrollOffsetInt().height());
+  return IntPoint(area->maximumScrollPosition().x(),
+                  area->maximumScrollPosition().y());
 }
 
 void AXObject::setScrollOffset(const IntPoint& offset) const {
@@ -1241,8 +1240,8 @@ void AXObject::setScrollOffset(const IntPoint& offset) const {
     return;
 
   // TODO(bokan): This should potentially be a UserScroll.
-  area->setScrollOffset(ScrollOffset(offset.x(), offset.y()),
-                        ProgrammaticScroll);
+  area->setScrollPosition(DoublePoint(offset.x(), offset.y()),
+                          ProgrammaticScroll);
 }
 
 void AXObject::getRelativeBounds(AXObject** outContainer,
@@ -1302,8 +1301,9 @@ void AXObject::getRelativeBounds(AXObject** outContainer,
   // bounds to be relative to the *unscrolled* position of the container object.
   ScrollableArea* scrollableArea = container->getScrollableAreaIfScrollable();
   if (scrollableArea && !container->isWebArea()) {
-    ScrollOffset scrollOffset = scrollableArea->scrollOffset();
-    outBoundsInContainer.move(scrollOffset);
+    IntPoint scrollPosition = scrollableArea->scrollPosition();
+    outBoundsInContainer.move(
+        FloatSize(scrollPosition.x(), scrollPosition.y()));
   }
 
   // Compute the transform between the container's coordinate space and this
@@ -1469,25 +1469,25 @@ void AXObject::scrollToMakeVisibleWithSubFocus(const IntRect& subfocus) const {
     return;
 
   IntRect objectRect = pixelSnappedIntRect(getBoundsInFrameCoordinates());
-  IntSize scrollOffset = scrollableArea->scrollOffsetInt();
+  IntPoint scrollPosition = scrollableArea->scrollPosition();
   IntRect scrollVisibleRect = scrollableArea->visibleContentRect();
 
   // Convert the object rect into local coordinates.
   if (!scrollParent->isWebArea()) {
-    objectRect.moveBy(IntPoint(scrollOffset));
+    objectRect.moveBy(scrollPosition);
     objectRect.moveBy(
         -pixelSnappedIntRect(scrollParent->getBoundsInFrameCoordinates())
              .location());
   }
 
-  int desiredX = computeBestScrollOffset(
-      scrollOffset.width(), objectRect.x() + subfocus.x(),
-      objectRect.x() + subfocus.maxX(), objectRect.x(), objectRect.maxX(), 0,
-      scrollVisibleRect.width());
-  int desiredY = computeBestScrollOffset(
-      scrollOffset.height(), objectRect.y() + subfocus.y(),
-      objectRect.y() + subfocus.maxY(), objectRect.y(), objectRect.maxY(), 0,
-      scrollVisibleRect.height());
+  int desiredX =
+      computeBestScrollOffset(scrollPosition.x(), objectRect.x() + subfocus.x(),
+                              objectRect.x() + subfocus.maxX(), objectRect.x(),
+                              objectRect.maxX(), 0, scrollVisibleRect.width());
+  int desiredY =
+      computeBestScrollOffset(scrollPosition.y(), objectRect.y() + subfocus.y(),
+                              objectRect.y() + subfocus.maxY(), objectRect.y(),
+                              objectRect.maxY(), 0, scrollVisibleRect.height());
 
   scrollParent->setScrollOffset(IntPoint(desiredX, desiredY));
 
@@ -1532,12 +1532,12 @@ void AXObject::scrollToGlobalPoint(const IntPoint& globalPoint) const {
                   inner->parentObject()->getBoundsInFrameCoordinates())
             : pixelSnappedIntRect(inner->getBoundsInFrameCoordinates());
     IntRect objectRect = innerRect;
-    IntSize scrollOffset = scrollableArea->scrollOffsetInt();
+    IntPoint scrollPosition = scrollableArea->scrollPosition();
 
     // Convert the object rect into local coordinates.
     objectRect.move(offsetX, offsetY);
     if (!outer->isWebArea())
-      objectRect.move(scrollOffset.width(), scrollOffset.height());
+      objectRect.move(scrollPosition.x(), scrollPosition.y());
 
     int desiredX = computeBestScrollOffset(0, objectRect.x(), objectRect.maxX(),
                                            objectRect.x(), objectRect.maxX(),
@@ -1551,11 +1551,11 @@ void AXObject::scrollToGlobalPoint(const IntPoint& globalPoint) const {
       // If outer object we just scrolled is a web area (frame) but the inner
       // object is not, keep track of the coordinate transformation to apply to
       // future nested calculations.
-      scrollOffset = scrollableArea->scrollOffsetInt();
-      offsetX -= (scrollOffset.width() + point.x());
-      offsetY -= (scrollOffset.height() + point.y());
-      point.move(scrollOffset.width() - innerRect.width(),
-                 scrollOffset.height() - innerRect.y());
+      scrollPosition = scrollableArea->scrollPosition();
+      offsetX -= (scrollPosition.x() + point.x());
+      offsetY -= (scrollPosition.y() + point.y());
+      point.move(scrollPosition.x() - innerRect.x(),
+                 scrollPosition.y() - innerRect.y());
     } else if (inner->isWebArea()) {
       // Otherwise, if the inner object is a web area, reset the coordinate
       // transformation.

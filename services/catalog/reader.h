@@ -5,9 +5,7 @@
 #ifndef SERVICES_CATALOG_READER_H_
 #define SERVICES_CATALOG_READER_H_
 
-#include <map>
 #include <memory>
-#include <string>
 
 #include "base/callback.h"
 #include "base/files/file_path.h"
@@ -52,10 +50,6 @@ class Reader {
       EntryCache* cache,
       const CreateEntryForNameCallback& entry_created_callback);
 
-  // Overrides the manifest path used for a specific service name.
-  void OverrideManifestPath(const std::string& service_name,
-                            const base::FilePath& path);
-
  private:
   explicit Reader(ManifestProvider* manifest_provider);
 
@@ -66,7 +60,6 @@ class Reader {
   base::FilePath system_package_dir_;
   scoped_refptr<base::TaskRunner> file_task_runner_;
   ManifestProvider* const manifest_provider_;
-  std::map<std::string, base::FilePath> manifest_path_overrides_;
   base::WeakPtrFactory<Reader> weak_factory_;
 
   DISALLOW_COPY_AND_ASSIGN(Reader);

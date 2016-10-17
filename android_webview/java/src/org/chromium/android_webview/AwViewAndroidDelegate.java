@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import org.chromium.base.VisibleForTesting;
 import org.chromium.content.browser.RenderCoordinates;
 import org.chromium.ui.base.ViewAndroidDelegate;
-import org.chromium.ui.display.DisplayAndroid;
+import org.chromium.ui.gfx.DeviceDisplayInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -99,7 +99,8 @@ public class AwViewAndroidDelegate extends ViewAndroidDelegate {
             }
             containerView.addView(anchorView);
             if (position != null) {
-                float scale = (float) DisplayAndroid.get(containerView.getContext()).getDIPScale();
+                float scale = (float) DeviceDisplayInfo.create(containerView.getContext())
+                        .getDIPScale();
                 setViewPosition(anchorView, position.mX, position.mY,
                         position.mWidth, position.mHeight, scale,
                         position.mLeftMargin, position.mTopMargin);

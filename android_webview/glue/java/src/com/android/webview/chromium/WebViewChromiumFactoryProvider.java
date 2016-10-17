@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
@@ -46,11 +45,13 @@ import org.chromium.android_webview.AwQuotaManagerBridge;
 import org.chromium.android_webview.AwResource;
 import org.chromium.android_webview.AwSettings;
 import org.chromium.android_webview.HttpAuthDatabase;
+import org.chromium.android_webview.R;
 import org.chromium.android_webview.ResourcesContextWrapperFactory;
 import org.chromium.base.BuildConfig;
 import org.chromium.base.CommandLine;
 import org.chromium.base.ContextUtils;
 import org.chromium.base.MemoryPressureListener;
+import org.chromium.base.PackageUtils;
 import org.chromium.base.PathService;
 import org.chromium.base.PathUtils;
 import org.chromium.base.ThreadUtils;
@@ -61,6 +62,7 @@ import org.chromium.base.library_loader.LibraryProcessType;
 import org.chromium.base.library_loader.ProcessInitException;
 import org.chromium.content.browser.ContentViewStatics;
 import org.chromium.net.NetworkChangeNotifier;
+import org.chromium.ui.base.ResourceBundle;
 
 import java.io.File;
 import java.util.Queue;
@@ -390,6 +392,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         final String webViewPackageName = WebViewFactory.getLoadedPackageInfo().packageName;
         Context context = ContextUtils.getApplicationContext();
         setUpResources(webViewPackageName, context);
+        ResourceBundle.initializeLocalePaks(context, R.array.locale_paks);
         initPlatSupportLibrary();
         initNetworkChangeNotifier(context);
         final int extraBindFlags = Context.BIND_EXTERNAL_SERVICE;
@@ -529,30 +532,47 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
         return new WebViewChromium(this, webView, privateAccess, mShouldDisableThreadChecking);
     }
 
-    // Check this as a workaround for https://crbug.com/622151.
+    // Workaround for IME thread crashes on grandfathered OEM apps.
     private boolean shouldDisableThreadChecking(Context context) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) return false;
-        final String htcMailPackageId = "com.htc.android.mail";
-        if (!htcMailPackageId.equals(context.getPackageName())) return false;
-        try {
-            PackageInfo packageInfo =
-                    context.getPackageManager().getPackageInfo(htcMailPackageId, 0);
-            if (packageInfo == null) return false;
+        String appName = context.getPackageName();
+        int versionCode = PackageUtils.getPackageVersion(context, appName);
+        int appTargetSdkVersion = context.getApplicationInfo().targetSdkVersion;
 
-            // These values are provided by HTC.
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                    && packageInfo.versionCode >= 864021756) return false;
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M
-                    && packageInfo.versionCode >= 866001861) return false;
+        boolean shouldDisable = false;
 
-            Log.w(TAG, "Disabling thread check in WebView (http://crbug.com/622151). "
-                    + "APK name: " + htcMailPackageId + ", versionCode: "
-                    + packageInfo.versionCode);
-            return true;
-        } catch (NameNotFoundException e) {
-            // Ignore this exception and return false.
+        // crbug.com/651706
+        final String lgeMailPackageId = "com.lge.email";
+        if (lgeMailPackageId.equals(appName)) {
+            // The version code is provided by LGE.
+            if (versionCode == -1 || versionCode >= 67700000) return false;
+            shouldDisable = true;
         }
-        return false;
+
+        // crbug.com/655759
+        // Also want to cover ".att" variant suffix package name.
+        final String yahooMailPackageId = "com.yahoo.mobile.client.android.mail";
+        if (appName.startsWith(yahooMailPackageId)) {
+            if (appTargetSdkVersion > Build.VERSION_CODES.M) return false;
+            if (versionCode == -1 || versionCode > 1315849) return false;
+            shouldDisable = true;
+        }
+
+        // crbug.com/622151
+        final String htcMailPackageId = "com.htc.android.mail";
+        if (htcMailPackageId.equals(appName)) {
+            if (appTargetSdkVersion > Build.VERSION_CODES.M) return false;
+            if (versionCode == -1) return false;
+            // This value is provided by HTC.
+            if (versionCode >= 866001861) return false;
+            shouldDisable = true;
+        }
+
+        if (shouldDisable) {
+            Log.w(TAG, "Disabling thread check in WebView. "
+                            + "APK name: " + appName + ", versionCode: " + versionCode
+                            + ", targetSdkVersion: " + appTargetSdkVersion);
+        }
+        return shouldDisable;
     }
 
     @Override

@@ -5,18 +5,23 @@
 #ifndef IOS_CHROME_BROWSER_SUGGESTIONS_IOS_IMAGE_DECODER_IMPL_H_
 #define IOS_CHROME_BROWSER_SUGGESTIONS_IOS_IMAGE_DECODER_IMPL_H_
 
-#include "base/memory/ref_counted.h"
+#include "base/macros.h"
 #include "components/image_fetcher/image_decoder.h"
-
-namespace base {
-class TaskRunner;
-}
 
 namespace suggestions {
 
-// Factory for iOS specific implementation of image_fetcher::ImageDecoder.
-std::unique_ptr<image_fetcher::ImageDecoder> CreateIOSImageDecoder(
-    scoped_refptr<base::TaskRunner> task_runner);
+class IOSImageDecoderImpl : public image_fetcher::ImageDecoder {
+ public:
+  IOSImageDecoderImpl();
+  ~IOSImageDecoderImpl() override;
+
+  void DecodeImage(
+      const std::string& image_data,
+      const image_fetcher::ImageDecodedCallback& callback) override;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(IOSImageDecoderImpl);
+};
 
 }  // namespace suggestions
 

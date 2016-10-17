@@ -28,7 +28,6 @@
 #include "components/signin/core/browser/signin_manager_base.h"
 #include "components/sync/base/experiments.h"
 #include "components/sync/base/model_type.h"
-#include "components/sync/base/sync_prefs.h"
 #include "components/sync/base/unrecoverable_error_handler.h"
 #include "components/sync/core/network_time_update_callback.h"
 #include "components/sync/core/shutdown_reason.h"
@@ -44,6 +43,7 @@
 #include "components/sync/driver/startup_controller.h"
 #include "components/sync/driver/sync_client.h"
 #include "components/sync/driver/sync_frontend.h"
+#include "components/sync/driver/sync_prefs.h"
 #include "components/sync/driver/sync_service.h"
 #include "components/sync/driver/sync_stopped_reporter.h"
 #include "components/sync/engine/model_safe_worker.h"
@@ -310,7 +310,7 @@ class ProfileSyncService : public syncer::SyncService,
   base::string16 GetLastSyncedTimeString() const override;
   std::string GetBackendInitializationStateString() const override;
   syncer::SyncCycleSnapshot GetLastCycleSnapshot() const override;
-  base::Value* GetTypeStatusMap() override;
+  base::Value* GetTypeStatusMap() const override;
   const GURL& sync_service_url() const override;
   std::string unrecoverable_error_message() const override;
   tracked_objects::Location unrecoverable_error_location() const override;
@@ -374,7 +374,7 @@ class ProfileSyncService : public syncer::SyncService,
   void OnDirectoryTypeUpdateCounterUpdated(
       syncer::ModelType type,
       const syncer::UpdateCounters& counters) override;
-  void OnDatatypeStatusCounterUpdated(
+  void OnDirectoryTypeStatusCounterUpdated(
       syncer::ModelType type,
       const syncer::StatusCounters& counters) override;
   void OnConnectionStatusChange(syncer::ConnectionStatus status) override;

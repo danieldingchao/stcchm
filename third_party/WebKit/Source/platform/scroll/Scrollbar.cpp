@@ -254,15 +254,15 @@ void Scrollbar::moveThumb(int pos, bool draggingDocument) {
     if (m_draggingDocument)
       delta = pos - m_documentDragPos;
     m_draggingDocument = true;
-    ScrollOffset currentPosition =
-        m_scrollableArea->scrollAnimator().currentOffset();
+    FloatPoint currentPosition =
+        m_scrollableArea->scrollAnimator().currentPosition();
     float destinationPosition =
-        (m_orientation == HorizontalScrollbar ? currentPosition.width()
-                                              : currentPosition.height()) +
+        (m_orientation == HorizontalScrollbar ? currentPosition.x()
+                                              : currentPosition.y()) +
         delta;
-    destinationPosition =
-        m_scrollableArea->clampScrollOffset(m_orientation, destinationPosition);
-    m_scrollableArea->setScrollOffsetSingleAxis(
+    destinationPosition = m_scrollableArea->clampScrollPosition(
+        m_orientation, destinationPosition);
+    m_scrollableArea->setScrollPositionSingleAxis(
         m_orientation, destinationPosition, UserScroll);
     m_documentDragPos = pos;
     return;
@@ -286,14 +286,14 @@ void Scrollbar::moveThumb(int pos, bool draggingDocument) {
   else if (delta < 0)
     delta = std::max(-thumbPos, delta);
 
-  float minOffset = m_scrollableArea->minimumScrollOffset(m_orientation);
-  float maxOffset = m_scrollableArea->maximumScrollOffset(m_orientation);
+  float minPos = m_scrollableArea->minimumScrollPosition(m_orientation);
+  float maxPos = m_scrollableArea->maximumScrollPosition(m_orientation);
   if (delta) {
-    float newOffset = static_cast<float>(thumbPos + delta) *
-                          (maxOffset - minOffset) / (trackLen - thumbLen) +
-                      minOffset;
-    m_scrollableArea->setScrollOffsetSingleAxis(m_orientation, newOffset,
-                                                UserScroll);
+    float newPosition = static_cast<float>(thumbPos + delta) *
+                            (maxPos - minPos) / (trackLen - thumbLen) +
+                        minPos;
+    m_scrollableArea->setScrollPositionSingleAxis(m_orientation, newPosition,
+                                                  UserScroll);
   }
 }
 
@@ -412,9 +412,10 @@ void Scrollbar::mouseMoved(const PlatformMouseEvent& evt) {
   if (m_pressedPart == ThumbPart) {
     if (theme().shouldSnapBackToDragOrigin(*this, evt)) {
       if (m_scrollableArea) {
-        m_scrollableArea->setScrollOffsetSingleAxis(
+        m_scrollableArea->setScrollPositionSingleAxis(
             m_orientation,
-            m_dragOrigin + m_scrollableArea->minimumScrollOffset(m_orientation),
+            m_dragOrigin +
+                m_scrollableArea->minimumScrollPosition(m_orientation),
             UserScroll);
       }
     } else {
@@ -587,26 +588,24 @@ float Scrollbar::scrollableAreaCurrentPos() const {
   if (!m_scrollableArea)
     return 0;
 
-  if (m_orientation == HorizontalScrollbar) {
-    return m_scrollableArea->scrollOffset().width() -
-           m_scrollableArea->minimumScrollOffset().width();
-  }
+  if (m_orientation == HorizontalScrollbar)
+    return m_scrollableArea->scrollPosition().x() -
+           m_scrollableArea->minimumScrollPosition().x();
 
-  return m_scrollableArea->scrollOffset().height() -
-         m_scrollableArea->minimumScrollOffset().height();
+  return m_scrollableArea->scrollPosition().y() -
+         m_scrollableArea->minimumScrollPosition().y();
 }
 
 float Scrollbar::scrollableAreaTargetPos() const {
   if (!m_scrollableArea)
     return 0;
 
-  if (m_orientation == HorizontalScrollbar) {
-    return m_scrollableArea->scrollAnimator().desiredTargetOffset().width() -
-           m_scrollableArea->minimumScrollOffset().width();
-  }
+  if (m_orientation == HorizontalScrollbar)
+    return m_scrollableArea->scrollAnimator().desiredTargetPosition().x() -
+           m_scrollableArea->minimumScrollPosition().x();
 
-  return m_scrollableArea->scrollAnimator().desiredTargetOffset().height() -
-         m_scrollableArea->minimumScrollOffset().height();
+  return m_scrollableArea->scrollAnimator().desiredTargetPosition().y() -
+         m_scrollableArea->minimumScrollPosition().y();
 }
 
 LayoutRect Scrollbar::visualRect() const {

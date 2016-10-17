@@ -47,20 +47,22 @@ class CORE_EXPORT RootFrameViewport final
   LayoutRect rootContentsToLayoutViewportContents(FrameView& rootFrameView,
                                                   const LayoutRect&) const;
 
-  void restoreToAnchor(const ScrollOffset&);
+  void restoreToAnchor(const DoublePoint&);
 
   // Callback whenever the visual viewport changes scroll position or scale.
   void didUpdateVisualViewport();
 
   // ScrollableArea Implementation
   bool isRootFrameViewport() const override { return true; }
-  void setScrollOffset(const ScrollOffset&,
-                       ScrollType,
-                       ScrollBehavior = ScrollBehaviorInstant) override;
+  void setScrollPosition(const DoublePoint&,
+                         ScrollType,
+                         ScrollBehavior = ScrollBehaviorInstant) override;
   LayoutRect scrollIntoView(const LayoutRect& rectInContent,
                             const ScrollAlignment& alignX,
                             const ScrollAlignment& alignY,
                             ScrollType = ProgrammaticScroll) override;
+  DoubleRect visibleContentRectDouble(
+      IncludeScrollbarsInRect = ExcludeScrollbars) const override;
   IntRect visibleContentRect(
       IncludeScrollbarsInRect = ExcludeScrollbars) const override;
   bool shouldUseIntegerScrollOffset() const override;
@@ -72,12 +74,12 @@ class CORE_EXPORT RootFrameViewport final
   int scrollSize(ScrollbarOrientation) const override;
   bool isScrollCornerVisible() const override;
   IntRect scrollCornerRect() const override;
-  void updateScrollOffset(const ScrollOffset&, ScrollType) override;
-  IntSize scrollOffsetInt() const override;
-  ScrollOffset scrollOffset() const override;
-  IntSize minimumScrollOffsetInt() const override;
-  IntSize maximumScrollOffsetInt() const override;
-  ScrollOffset maximumScrollOffset() const override;
+  void setScrollOffset(const DoublePoint&, ScrollType) override;
+  IntPoint scrollPosition() const override;
+  DoublePoint scrollPositionDouble() const override;
+  IntPoint minimumScrollPosition() const override;
+  IntPoint maximumScrollPosition() const override;
+  DoublePoint maximumScrollPositionDouble() const override;
   IntSize contentsSize() const override;
   bool scrollbarsCanBeActive() const override;
   IntRect scrollableAreaBoundingBox() const override;
@@ -106,9 +108,9 @@ class CORE_EXPORT RootFrameViewport final
 
   enum ViewportToScrollFirst { VisualViewport, LayoutViewport };
 
-  ScrollOffset scrollOffsetFromScrollAnimators() const;
+  DoublePoint scrollOffsetFromScrollAnimators() const;
 
-  void distributeScrollBetweenViewports(const ScrollOffset&,
+  void distributeScrollBetweenViewports(const DoublePoint&,
                                         ScrollType,
                                         ScrollBehavior,
                                         ViewportToScrollFirst);

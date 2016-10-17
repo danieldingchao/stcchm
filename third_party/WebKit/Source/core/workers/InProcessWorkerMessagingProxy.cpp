@@ -100,9 +100,7 @@ InProcessWorkerMessagingProxy::~InProcessWorkerMessagingProxy() {
 void InProcessWorkerMessagingProxy::startWorkerGlobalScope(
     const KURL& scriptURL,
     const String& userAgent,
-    const String& sourceCode,
-    ContentSecurityPolicy* contentSecurityPolicy,
-    const String& referrerPolicy) {
+    const String& sourceCode) {
   DCHECK(isParentContextThread());
   if (askedToTerminate()) {
     // Worker.terminate() could be called from JS before the thread was
@@ -113,8 +111,8 @@ void InProcessWorkerMessagingProxy::startWorkerGlobalScope(
   Document* document = toDocument(getExecutionContext());
   SecurityOrigin* starterOrigin = document->getSecurityOrigin();
 
-  ContentSecurityPolicy* csp = contentSecurityPolicy
-                                   ? contentSecurityPolicy
+  ContentSecurityPolicy* csp = m_workerObject->contentSecurityPolicy()
+                                   ? m_workerObject->contentSecurityPolicy()
                                    : document->contentSecurityPolicy();
   DCHECK(csp);
 
@@ -125,7 +123,7 @@ void InProcessWorkerMessagingProxy::startWorkerGlobalScope(
   std::unique_ptr<WorkerThreadStartupData> startupData =
       WorkerThreadStartupData::create(
           scriptURL, userAgent, sourceCode, nullptr, startMode,
-          csp->headers().get(), referrerPolicy, starterOrigin,
+          csp->headers().get(), m_workerObject->referrerPolicy(), starterOrigin,
           m_workerClients.release(), document->addressSpace(),
           OriginTrialContext::getTokens(document).get(),
           std::move(workerSettings));

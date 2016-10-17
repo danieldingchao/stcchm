@@ -14,7 +14,7 @@ KeyboardUIMus::KeyboardUIMus(::shell::Connector* connector)
     : is_enabled_(false), observer_binding_(this) {
   if (connector) {
     // TODO(sky): should be something like mojo:keyboard, but need mapping.
-    connector->ConnectToInterface("service:content_browser", &keyboard_);
+    connector->ConnectToInterface("exe:chrome", &keyboard_);
     keyboard_->AddObserver(observer_binding_.CreateInterfacePtrAndBind());
   }
 }

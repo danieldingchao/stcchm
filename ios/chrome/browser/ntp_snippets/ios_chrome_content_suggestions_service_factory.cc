@@ -9,7 +9,6 @@
 #include "base/json/json_reader.h"
 #include "base/memory/ptr_util.h"
 #include "base/memory/singleton.h"
-#include "base/threading/sequenced_worker_pool.h"
 #include "base/threading/thread_task_runner_handle.h"
 #include "base/values.h"
 #include "components/bookmarks/browser/bookmark_model.h"
@@ -51,8 +50,8 @@ using ntp_snippets::NTPSnippetsFetcher;
 using ntp_snippets::NTPSnippetsScheduler;
 using ntp_snippets::NTPSnippetsService;
 using ntp_snippets::NTPSnippetsStatusService;
-using suggestions::CreateIOSImageDecoder;
 using suggestions::ImageFetcherImpl;
+using suggestions::IOSImageDecoderImpl;
 
 namespace {
 
@@ -163,7 +162,7 @@ IOSChromeContentSuggestionsServiceFactory::BuildServiceInstanceFor(
                     : google_apis::GetNonStableAPIKey()),
             base::MakeUnique<ImageFetcherImpl>(
                 request_context.get(), web::WebThread::GetBlockingPool()),
-            CreateIOSImageDecoder(task_runner),
+            base::MakeUnique<IOSImageDecoderImpl>(),
             base::MakeUnique<NTPSnippetsDatabase>(database_dir, task_runner),
             base::MakeUnique<NTPSnippetsStatusService>(signin_manager, prefs));
     service->set_ntp_snippets_service(ntp_snippets_service.get());

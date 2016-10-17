@@ -253,9 +253,15 @@ void LaunchURL(
 #if !defined(DISABLE_NACL)
 void AppendComponentUpdaterThrottles(
     net::URLRequest* request,
+    const ResourceRequestInfo& info,
     content::ResourceContext* resource_context,
     ResourceType resource_type,
     ScopedVector<content::ResourceThrottle>* throttles) {
+  bool is_prerendering =
+      info.GetVisibilityState() == blink::WebPageVisibilityStatePrerender;
+  if (is_prerendering)
+    return;
+
   const char* crx_id = NULL;
   component_updater::ComponentUpdateService* cus =
       g_browser_process->component_updater();
@@ -422,6 +428,14 @@ void ChromeResourceDispatcherHostDelegate::RequestBeginning(
     safe_browsing_->OnResourceRequest(request);
 
   const ResourceRequestInfo* info = ResourceRequestInfo::ForRequest(request);
+
+// The lowering of request priority causes issues with scheduling, since
+// content::ResourceScheduler uses it to delay and throttle requests. This is
+// disabled only on Android, as the prerenders are not likely to compete with
+// page loads there.
+// See https://crbug.com/652746 for details.
+// TODO(lizeb,droger): Fix the issue on all platforms.
+#if !defined(OS_ANDROID)
   bool is_prerendering =
       info->GetVisibilityState() == blink::WebPageVisibilityStatePrerender;
   if (is_prerendering) {
@@ -433,6 +447,7 @@ void ChromeResourceDispatcherHostDelegate::RequestBeginning(
       request->SetPriority(net::IDLE);
     }
   }
+#endif  // OS_ANDROID
 
   ProfileIOData* io_data = ProfileIOData::FromResourceContext(
       resource_context);
@@ -482,13 +497,9 @@ void ChromeResourceDispatcherHostDelegate::RequestBeginning(
                                   resource_type,
                                   throttles);
 #if !defined(DISABLE_NACL)
-  if (!is_prerendering) {
-    AppendComponentUpdaterThrottles(request,
-                                    resource_context,
-                                    resource_type,
-                                    throttles);
-  }
-#endif
+  AppendComponentUpdaterThrottles(request, *info, resource_context,
+                                  resource_type, throttles);
+#endif  // !defined(DISABLE_NACL)
 
   if (io_data->resource_prefetch_predictor_observer()) {
     io_data->resource_prefetch_predictor_observer()->OnRequestStarted(
@@ -793,16 +804,14 @@ void ChromeResourceDispatcherHostDelegate::RequestComplete(
     net::URLRequest* url_request) {
   if (!url_request)
     return;
-  // TODO(maksims): remove this and use net_error argument in RequestComplete
-  // once ResourceDispatcherHostDelegate is modified.
-  int net_error = url_request->status().error();
   const ResourceRequestInfo* info =
       ResourceRequestInfo::ForRequest(url_request);
   BrowserThread::PostTask(
       BrowserThread::UI, FROM_HERE,
       base::Bind(&NotifyUIThreadOfRequestComplete,
                  info->GetWebContentsGetterForRequest(), url_request->url(),
-                 info->GetResourceType(), url_request->was_cached(), net_error,
+                 info->GetResourceType(), url_request->was_cached(),
+                 url_request->status().error(),
                  url_request->GetTotalReceivedBytes(),
                  base::TimeTicks::Now() - url_request->creation_time()));
 }

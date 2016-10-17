@@ -95,11 +95,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'b72737924a910b6ababc32c1786b39689e69665b',
+  'catapult_revision': '22570732fbb1a1cdac615cc5ef301df742646e96',
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling libFuzzer
   # and whatever else without interference from each other.
-  'libfuzzer_revision': '3e02228ebfee620dd4a2db0ee15a8084ca349183',
+  'libfuzzer_revision': '11256fd0aa00523e65b8c4ec507150041c4bab91',
 }
 
 # Only these hosts are allowed for dependencies in this DEPS file.

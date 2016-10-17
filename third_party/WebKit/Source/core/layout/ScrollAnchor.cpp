@@ -112,7 +112,7 @@ static LayoutRect relativeBounds(const LayoutObject* layoutObject,
   // LayoutBox::scrolledContentOffset.
   if (!RuntimeEnabledFeatures::rootLayerScrollingEnabled() &&
       scrollerBox->isLayoutView())
-    relativeBounds.moveBy(IntPoint(-scroller->scrollOffsetInt()));
+    relativeBounds.moveBy(-flooredIntPoint(scroller->scrollPositionDouble()));
   return relativeBounds;
 }
 
@@ -216,12 +216,12 @@ void ScrollAnchor::save() {
     return;
   m_saved = true;
   DCHECK(m_scroller);
-  ScrollOffset scrollOffset = m_scroller->scrollOffset();
-  float blockDirectionScrollOffset =
+
+  ScrollbarOrientation blockLayoutAxis =
       scrollerLayoutBox(m_scroller)->isHorizontalWritingMode()
-          ? scrollOffset.height()
-          : scrollOffset.width();
-  if (blockDirectionScrollOffset == 0) {
+          ? VerticalScrollbar
+          : HorizontalScrollbar;
+  if (m_scroller->scrollPosition(blockLayoutAxis) == 0) {
     clear();
     return;
   }
@@ -287,8 +287,8 @@ void ScrollAnchor::restore() {
     return;
   }
 
-  m_scroller->setScrollOffset(
-      m_scroller->scrollOffset() + FloatSize(adjustment), AnchoringScroll);
+  m_scroller->setScrollPosition(m_scroller->scrollPositionDouble() + adjustment,
+                                AnchoringScroll);
 
   // Update UMA metric.
   DEFINE_STATIC_LOCAL(EnumerationHistogram, adjustedOffsetHistogram,

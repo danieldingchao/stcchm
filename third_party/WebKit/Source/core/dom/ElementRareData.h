@@ -115,11 +115,9 @@ class ElementRareData : public NodeRareData {
     m_minimumSizeForResizing = size;
   }
 
-  ScrollOffset savedLayerScrollOffset() const {
-    return m_savedLayerScrollOffset;
-  }
-  void setSavedLayerScrollOffset(ScrollOffset offset) {
-    m_savedLayerScrollOffset = offset;
+  IntSize savedLayerScrollOffset() const { return m_savedLayerScrollOffset; }
+  void setSavedLayerScrollOffset(IntSize size) {
+    m_savedLayerScrollOffset = size;
   }
 
   ElementAnimations* elementAnimations() { return m_elementAnimations.get(); }
@@ -184,7 +182,7 @@ class ElementRareData : public NodeRareData {
   short m_tabindex;
 
   LayoutSize m_minimumSizeForResizing;
-  ScrollOffset m_savedLayerScrollOffset;
+  IntSize m_savedLayerScrollOffset;
 
   Member<DatasetDOMStringMap> m_dataset;
   Member<ElementShadow> m_shadow;

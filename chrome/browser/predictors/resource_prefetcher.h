@@ -81,6 +81,10 @@ class ResourcePrefetcher : public net::URLRequest::Delegate {
   // be cached correctly. Stubbed out during testing.
   virtual void ReadFullResponse(net::URLRequest* request);
 
+  // Returns true if the request has more data that needs to be read. If it
+  // returns false, the request should not be referenced again.
+  bool ShouldContinueReadingRequest(net::URLRequest* request, int bytes_read);
+
   // net::URLRequest::Delegate methods.
   void OnReceivedRedirect(net::URLRequest* request,
                           const net::RedirectInfo& redirect_info,
@@ -93,7 +97,7 @@ class ResourcePrefetcher : public net::URLRequest::Delegate {
   void OnSSLCertificateError(net::URLRequest* request,
                              const net::SSLInfo& ssl_info,
                              bool fatal) override;
-  void OnResponseStarted(net::URLRequest* request, int net_error) override;
+  void OnResponseStarted(net::URLRequest* request) override;
   void OnReadCompleted(net::URLRequest* request, int bytes_read) override;
 
   enum PrefetcherState {

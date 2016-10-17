@@ -32,7 +32,6 @@
 #include "chrome/browser/custom_handlers/protocol_handler_registry.h"
 #include "chrome/browser/net/chrome_extensions_network_delegate.h"
 #include "chrome/browser/net/request_source_bandwidth_histograms.h"
-#include "chrome/browser/net/safe_search_util.h"
 #include "chrome/browser/profiles/profile_manager.h"
 #include "chrome/browser/task_manager/task_manager_interface.h"
 #include "chrome/common/features.h"
@@ -127,15 +126,15 @@ void ReportInvalidReferrerSend(const GURL& target_url,
 
 // Record network errors that HTTP requests complete with, including OK and
 // ABORTED.
-void RecordNetworkErrorHistograms(const net::URLRequest* request,
-                                  int net_error) {
+void RecordNetworkErrorHistograms(const net::URLRequest* request) {
   if (request->url().SchemeIs("http")) {
     UMA_HISTOGRAM_SPARSE_SLOWLY("Net.HttpRequestCompletionErrorCodes",
-                                std::abs(net_error));
+                                std::abs(request->status().error()));
 
     if (request->load_flags() & net::LOAD_MAIN_FRAME_DEPRECATED) {
       UMA_HISTOGRAM_SPARSE_SLOWLY(
-          "Net.HttpRequestCompletionErrorCodes.MainFrame", std::abs(net_error));
+          "Net.HttpRequestCompletionErrorCodes.MainFrame",
+          std::abs(request->status().error()));
     }
   }
 }
@@ -146,14 +145,14 @@ ChromeNetworkDelegate::ChromeNetworkDelegate(
     extensions::EventRouterForwarder* event_router,
     BooleanPrefMember* enable_referrers,
     const metrics::UpdateUsagePrefCallbackType& metrics_data_use_forwarder)
-    : profile_(NULL),
+    : profile_(nullptr),
       enable_referrers_(enable_referrers),
-      enable_do_not_track_(NULL),
-      force_google_safe_search_(NULL),
-      force_youtube_safety_mode_(NULL),
+      enable_do_not_track_(nullptr),
+      force_google_safe_search_(nullptr),
+      force_youtube_restrict_(nullptr),
       allowed_domains_for_apps_(nullptr),
-      url_blacklist_manager_(NULL),
-      domain_reliability_monitor_(NULL),
+      url_blacklist_manager_(nullptr),
+      domain_reliability_monitor_(nullptr),
       data_use_measurement_(metrics_data_use_forwarder),
       experimental_web_platform_features_enabled_(
           base::CommandLine::ForCurrentProcess()->HasSwitch(
@@ -194,7 +193,7 @@ void ChromeNetworkDelegate::InitializePrefsOnUIThread(
     BooleanPrefMember* enable_referrers,
     BooleanPrefMember* enable_do_not_track,
     BooleanPrefMember* force_google_safe_search,
-    BooleanPrefMember* force_youtube_safety_mode,
+    IntegerPrefMember* force_youtube_restrict,
     StringPrefMember* allowed_domains_for_apps,
     PrefService* pref_service) {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
@@ -211,10 +210,9 @@ void ChromeNetworkDelegate::InitializePrefsOnUIThread(
     force_google_safe_search->MoveToThread(
         BrowserThread::GetTaskRunnerForThread(BrowserThread::IO));
   }
-  if (force_youtube_safety_mode) {
-    force_youtube_safety_mode->Init(prefs::kForceYouTubeSafetyMode,
-                                    pref_service);
-    force_youtube_safety_mode->MoveToThread(
+  if (force_youtube_restrict) {
+    force_youtube_restrict->Init(prefs::kForceYouTubeRestrict, pref_service);
+    force_youtube_restrict->MoveToThread(
         BrowserThread::GetTaskRunnerForThread(BrowserThread::IO));
   }
   if (allowed_domains_for_apps) {
@@ -317,8 +315,16 @@ int ChromeNetworkDelegate::OnBeforeStartTransaction(
     net::URLRequest* request,
     const net::CompletionCallback& callback,
     net::HttpRequestHeaders* headers) {
-  if (force_youtube_safety_mode_ && force_youtube_safety_mode_->GetValue())
-    safe_search_util::ForceYouTubeSafetyMode(request, headers);
+  if (force_youtube_restrict_) {
+    int value = force_youtube_restrict_->GetValue();
+    static_assert(safe_search_util::YOUTUBE_RESTRICT_OFF == 0,
+                  "OFF must be first");
+    if (value > safe_search_util::YOUTUBE_RESTRICT_OFF &&
+        value < safe_search_util::YOUTUBE_RESTRICT_COUNT) {
+      safe_search_util::ForceYouTubeRestrict(request, headers,
+          static_cast<safe_search_util::YouTubeRestrictMode>(value));
+    }
+  }
 
   return extensions_delegate_->OnBeforeStartTransaction(request, callback,
                                                         headers);
@@ -352,9 +358,9 @@ void ChromeNetworkDelegate::OnBeforeRedirect(net::URLRequest* request,
   extensions_delegate_->OnBeforeRedirect(request, new_location);
 }
 
-void ChromeNetworkDelegate::OnResponseStarted(net::URLRequest* request,
-                                              int net_error) {
-  extensions_delegate_->OnResponseStarted(request, net_error);
+
+void ChromeNetworkDelegate::OnResponseStarted(net::URLRequest* request) {
+  extensions_delegate_->OnResponseStarted(request);
 }
 
 void ChromeNetworkDelegate::OnNetworkBytesReceived(net::URLRequest* request,
@@ -376,26 +382,25 @@ void ChromeNetworkDelegate::OnNetworkBytesSent(net::URLRequest* request,
 }
 
 void ChromeNetworkDelegate::OnCompleted(net::URLRequest* request,
-                                        bool started,
-                                        int net_error) {
-  DCHECK_NE(net::ERR_IO_PENDING, net_error);
-
-  // TODO(amohammadkhan): Verify that there is no double recording in data use
-  // of redirected requests.
+                                        bool started) {
   data_use_measurement_.OnCompleted(*request, started);
-  RecordNetworkErrorHistograms(request, net_error);
+  RecordNetworkErrorHistograms(request);
 
-  if (net_error == net::OK) {
+  if (request->status().status() == net::URLRequestStatus::SUCCESS) {
 #if BUILDFLAG(ANDROID_JAVA_UI)
     precache::UpdatePrecacheMetricsAndState(request, profile_);
 #endif  // BUILDFLAG(ANDROID_JAVA_UI)
+    extensions_delegate_->OnCompleted(request, started);
+  } else if (request->status().status() == net::URLRequestStatus::FAILED ||
+             request->status().status() == net::URLRequestStatus::CANCELED) {
+    extensions_delegate_->OnCompleted(request, started);
+  } else {
+    NOTREACHED();
   }
-
-  extensions_delegate_->OnCompleted(request, started, net_error);
   if (domain_reliability_monitor_)
     domain_reliability_monitor_->OnCompleted(request, started);
   RecordRequestSourceBandwidth(request, started);
-  extensions_delegate_->ForwardProxyErrors(request, net_error);
+  extensions_delegate_->ForwardProxyErrors(request);
   extensions_delegate_->ForwardDoneRequestStatus(request);
 }
 
@@ -421,7 +426,7 @@ ChromeNetworkDelegate::OnAuthRequired(
 bool ChromeNetworkDelegate::OnCanGetCookies(
     const net::URLRequest& request,
     const net::CookieList& cookie_list) {
-  // NULL during tests, or when we're running in the system context.
+  // nullptr during tests, or when we're running in the system context.
   if (!cookie_settings_.get())
     return true;
 
@@ -444,7 +449,7 @@ bool ChromeNetworkDelegate::OnCanGetCookies(
 bool ChromeNetworkDelegate::OnCanSetCookie(const net::URLRequest& request,
                                            const std::string& cookie_line,
                                            net::CookieOptions* options) {
-  // NULL during tests, or when we're running in the system context.
+  // nullptr during tests, or when we're running in the system context.
   if (!cookie_settings_.get())
     return true;
 
@@ -539,7 +544,7 @@ bool ChromeNetworkDelegate::OnCanAccessFile(const net::URLRequest& request,
 bool ChromeNetworkDelegate::OnCanEnablePrivacyMode(
     const GURL& url,
     const GURL& first_party_for_cookies) const {
-  // NULL during tests, or when we're running in the system context.
+  // nullptr during tests, or when we're running in the system context.
   if (!cookie_settings_.get())
     return false;
 

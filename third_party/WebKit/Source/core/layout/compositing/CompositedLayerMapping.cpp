@@ -1109,10 +1109,9 @@ void CompositedLayerMapping::updateOverflowControlsHostLayerGeometry(
       transformState.flatten();
       hostLayerPosition = LayoutPoint(transformState.lastPlanarPoint());
       if (PaintLayerScrollableArea* scrollableArea =
-              compositingStackingContext->getScrollableArea()) {
+              compositingStackingContext->getScrollableArea())
         hostLayerPosition.move(
-            LayoutSize(toFloatSize(scrollableArea->scrollPosition())));
-      }
+            LayoutSize(scrollableArea->adjustedScrollOffset()));
       hostLayerPosition.move(-stackingOffsetFromLayoutObject);
     }
   } else {
@@ -1222,8 +1221,8 @@ void CompositedLayerMapping::updateScrollingLayerGeometry(
   LayoutBox* layoutBox = toLayoutBox(layoutObject());
   IntRect overflowClipRect =
       enclosingIntRect(layoutBox->overflowClipRect(LayoutPoint()));
-  FloatPoint scrollPosition =
-      m_owningLayer.getScrollableArea()->scrollPosition();
+  DoubleSize adjustedScrollOffset =
+      m_owningLayer.getScrollableArea()->adjustedScrollOffset();
   m_scrollingLayer->setPosition(FloatPoint(
       overflowClipRect.location() - localCompositingBounds.location() +
       roundedIntSize(m_owningLayer.subpixelAccumulation())));
@@ -1250,8 +1249,8 @@ void CompositedLayerMapping::updateScrollingLayerGeometry(
     m_scrollingContentsLayer->setNeedsDisplay();
 
   DoubleSize scrollingContentsOffset(
-      overflowClipRect.location().x() - scrollPosition.x(),
-      overflowClipRect.location().y() - scrollPosition.y());
+      overflowClipRect.location().x() - adjustedScrollOffset.width(),
+      overflowClipRect.location().y() - adjustedScrollOffset.height());
   // The scroll offset change is compared using floating point so that
   // fractional scroll offset change can be propagated to compositor.
   if (scrollingContentsOffset != m_scrollingContentsOffset ||
@@ -1259,8 +1258,9 @@ void CompositedLayerMapping::updateScrollingLayerGeometry(
     bool coordinatorHandlesOffset =
         compositor()->scrollingLayerDidChange(&m_owningLayer);
     m_scrollingContentsLayer->setPosition(
-        coordinatorHandlesOffset ? FloatPoint()
-                                 : FloatPoint(-toFloatSize(scrollPosition)));
+        coordinatorHandlesOffset
+            ? FloatPoint()
+            : FloatPoint(-toFloatSize(adjustedScrollOffset)));
   }
   m_scrollingContentsOffset = scrollingContentsOffset;
 
@@ -2893,11 +2893,10 @@ void CompositedLayerMapping::adjustForCompositedScrolling(
     if (PaintLayerScrollableArea* scrollableArea =
             m_owningLayer.getScrollableArea()) {
       if (scrollableArea->usesCompositedScrolling()) {
-        // Note: this is the offset from the beginning of flow of the block, not
-        // the offset from the top/left of the overflow rect.
-        // offsetFromLayoutObject adds the origin offset from top/left to the
-        // beginning of flow.
-        ScrollOffset scrollOffset = scrollableArea->scrollOffset();
+        // Note: this is just the scroll offset, *not* the "adjusted scroll
+        // offset". Scroll offset does not include the origin adjustment. That
+        // is instead baked already into offsetFromLayoutObject.
+        DoubleSize scrollOffset = scrollableArea->scrollOffset();
         offset.expand(-scrollOffset.width(), -scrollOffset.height());
       }
     }

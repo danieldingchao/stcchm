@@ -140,7 +140,7 @@ TEST_F(MapCoordinatesTest, OverflowClip) {
 
   LayoutObject* target = getLayoutObjectByElementId("target");
   LayoutObject* overflow = getLayoutObjectByElementId("overflow");
-  toLayoutBox(overflow)->scrollToPosition(FloatPoint(32, 54));
+  toLayoutBox(overflow)->scrollToOffset(DoubleSize(32, 54));
 
   FloatPoint mappedPoint = mapLocalToAncestor(
       target, toLayoutBoxModelObject(target->parent()), FloatPoint(100, 100));
@@ -513,9 +513,10 @@ TEST_F(MapCoordinatesTest, FixedPosInTransform) {
       "<div id='container'><div class='fixed' id='target'></div></div>"
       "<div class='spacer'></div>");
 
-  document().view()->setScrollOffset(ScrollOffset(0.0, 50), ProgrammaticScroll);
+  document().view()->setScrollPosition(DoublePoint(0.0, 50),
+                                       ProgrammaticScroll);
   document().view()->updateAllLifecyclePhases();
-  EXPECT_EQ(50, document().view()->scrollOffsetInt().height());
+  EXPECT_EQ(50, document().view()->scrollPosition().y());
 
   LayoutBox* target = toLayoutBox(getLayoutObjectByElementId("target"));
   LayoutBox* container = toLayoutBox(getLayoutObjectByElementId("container"));
@@ -549,9 +550,10 @@ TEST_F(MapCoordinatesTest, FixedPosInContainPaint) {
       "<div id='container'><div class='fixed' id='target'></div></div>"
       "<div class='spacer'></div>");
 
-  document().view()->setScrollOffset(ScrollOffset(0.0, 50), ProgrammaticScroll);
+  document().view()->setScrollPosition(DoublePoint(0.0, 50),
+                                       ProgrammaticScroll);
   document().view()->updateAllLifecyclePhases();
-  EXPECT_EQ(50, document().view()->scrollOffsetInt().height());
+  EXPECT_EQ(50, document().view()->scrollPosition().y());
 
   LayoutBox* target = toLayoutBox(getLayoutObjectByElementId("target"));
   LayoutBox* container = toLayoutBox(getLayoutObjectByElementId("container"));
@@ -591,8 +593,8 @@ TEST_F(MapCoordinatesTest, FixedPosInIFrameWhenMainFrameScrolled) {
       "<style>body { margin: 0; } #target { width: 200px; height: 200px; "
       "position:fixed}</style><div id=target></div>");
 
-  document().view()->setScrollOffset(ScrollOffset(0.0, 1000),
-                                     ProgrammaticScroll);
+  document().view()->setScrollPosition(DoublePoint(0.0, 1000),
+                                       ProgrammaticScroll);
   document().view()->updateAllLifecyclePhases();
 
   Element* target = frameDocument.getElementById("target");
@@ -622,8 +624,8 @@ TEST_F(MapCoordinatesTest, IFrameTransformed) {
 
   document().view()->updateAllLifecyclePhases();
 
-  frameDocument.view()->setScrollOffset(ScrollOffset(0.0, 1000),
-                                        ProgrammaticScroll);
+  frameDocument.view()->setScrollPosition(DoublePoint(0.0, 1000),
+                                          ProgrammaticScroll);
   frameDocument.view()->updateAllLifecyclePhases();
 
   Element* target = frameDocument.getElementById("target");
@@ -658,8 +660,8 @@ TEST_F(MapCoordinatesTest, FixedPosInScrolledIFrameWithTransform) {
       "<div style='width: 200; height: 8000px'></div>");
 
   document().view()->updateAllLifecyclePhases();
-  frameDocument.view()->setScrollOffset(ScrollOffset(0.0, 1000),
-                                        ProgrammaticScroll);
+  frameDocument.view()->setScrollPosition(DoublePoint(0.0, 1000),
+                                          ProgrammaticScroll);
 
   Element* target = frameDocument.getElementById("target");
   ASSERT_TRUE(target);

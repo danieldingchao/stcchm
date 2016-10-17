@@ -268,7 +268,5 @@ DEFINE_TRACE_WRAPPERS(WebGLRenderingContext) {
   visitor->traceWrappers(m_webglCompressedTextureS3TC);
   visitor->traceWrappers(m_webglCompressedTextureS3TCsRGB);
   visitor->traceWrappers(m_webglDepthTexture);
-  WebGLRenderingContextBase::traceWrappers(visitor);
 }
-
 }  // namespace blink

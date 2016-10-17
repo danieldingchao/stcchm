@@ -8,8 +8,4 @@ mojom("interfaces") {
   sources = [
     "catalog.mojom",
   ]
-
-  public_deps = [
-    "//mojo/common:common_custom_types",
-  ]
 }

@@ -35,6 +35,7 @@
 #include "platform/animation/CompositorAnimationDelegate.h"
 #include "platform/animation/CompositorAnimationPlayerClient.h"
 #include "platform/animation/CompositorScrollOffsetAnimationCurve.h"
+#include "platform/geometry/FloatPoint.h"
 #include "platform/scroll/ScrollAnimatorBase.h"
 #include <memory>
 
@@ -50,18 +51,17 @@ class PLATFORM_EXPORT ScrollAnimator : public ScrollAnimatorBase {
   ~ScrollAnimator() override;
 
   bool hasRunningAnimation() const override;
-  ScrollOffset computeDeltaToConsume(const ScrollOffset& delta) const override;
+  FloatSize computeDeltaToConsume(const FloatSize& delta) const override;
 
-  ScrollResult userScroll(ScrollGranularity,
-                          const ScrollOffset& delta) override;
-  void scrollToOffsetWithoutAnimation(const ScrollOffset&) override;
-  ScrollOffset desiredTargetOffset() const override;
+  ScrollResult userScroll(ScrollGranularity, const FloatSize& delta) override;
+  void scrollToOffsetWithoutAnimation(const FloatPoint&) override;
+  FloatPoint desiredTargetPosition() const override;
 
   // ScrollAnimatorCompositorCoordinator implementation.
   void tickAnimation(double monotonicTime) override;
   void cancelAnimation() override;
-  void adjustAnimationAndSetScrollOffset(const ScrollOffset&,
-                                         ScrollType) override;
+  void adjustAnimationAndSetScrollPosition(const DoublePoint& position,
+                                           ScrollType) override;
   void takeOverCompositorAnimation() override;
   void resetAnimationState() override;
   void updateCompositorAnimations() override;
@@ -96,12 +96,12 @@ class PLATFORM_EXPORT ScrollAnimator : public ScrollAnimatorBase {
   void addMainThreadScrollingReason();
   void removeMainThreadScrollingReason();
 
-  // Returns true if will animate to the given target offset. Returns false
+  // Returns true if will animate to the given target position. Returns false
   // only when there is no animation running and we are not starting one
   // because we are already at targetPos.
-  bool willAnimateToOffset(const ScrollOffset& targetPos);
+  bool willAnimateToOffset(const FloatPoint& targetPos);
 
-  ScrollOffset m_targetOffset;
+  FloatPoint m_targetOffset;
   ScrollGranularity m_lastGranularity;
 };
 

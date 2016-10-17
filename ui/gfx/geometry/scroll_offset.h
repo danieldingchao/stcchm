@@ -14,22 +14,18 @@
 
 namespace gfx {
 
-// TODO(szager): Reconcile terminology with blink.  An 'offset' here corresponds
-// to a 'position' in blink.  In blink, 'offset' means something else.  See
-// third_party/WebKit/Source/core/layout/README.md for more information.
-
 class GFX_EXPORT ScrollOffset {
  public:
   ScrollOffset() : x_(0), y_(0) {}
-  ScrollOffset(float x, float y) : x_(x), y_(y) {}
+  ScrollOffset(double x, double y) : x_(x), y_(y) {}
   explicit ScrollOffset(const Vector2dF& v) : x_(v.x()), y_(v.y()) {}
   explicit ScrollOffset(const Vector2d& v) : x_(v.x()), y_(v.y()) {}
 
-  float x() const { return x_; }
-  void set_x(float x) { x_ = x; }
+  double x() const { return x_; }
+  void set_x(double x) { x_ = x; }
 
-  float y() const { return y_; }
-  void set_y(float y) { y_ = y; }
+  double y() const { return y_; }
+  void set_y(double y) { y_ = y; }
 
   // True if both components are 0.
   bool IsZero() const {
@@ -66,8 +62,8 @@ class GFX_EXPORT ScrollOffset {
     y_ = y_ >= other.y_ ? y_ : other.y_;
   }
 
-  void Scale(float scale) { Scale(scale, scale); }
-  void Scale(float x_scale, float y_scale) {
+  void Scale(double scale) { Scale(scale, scale); }
+  void Scale(double x_scale, double y_scale) {
     x_ *= x_scale;
     y_ *= y_scale;
   }
@@ -75,8 +71,8 @@ class GFX_EXPORT ScrollOffset {
   std::string ToString() const;
 
  private:
-  float x_;
-  float y_;
+  double x_;
+  double y_;
 };
 
 inline bool operator==(const ScrollOffset& lhs, const ScrollOffset& rhs) {

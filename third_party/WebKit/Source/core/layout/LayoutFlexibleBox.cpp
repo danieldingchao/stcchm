@@ -396,7 +396,7 @@ void LayoutFlexibleBox::layoutBlock(bool relayoutChildren) {
   LayoutUnit previousHeight = logicalHeight();
   setLogicalHeight(borderAndPaddingLogicalHeight() + scrollbarLogicalHeight());
 
-  PaintLayerScrollableArea::DelayScrollOffsetClampScope delayClampScope;
+  PaintLayerScrollableArea::DelayScrollPositionClampScope delayClampScope;
 
   {
     TextAutosizer::LayoutScope textAutosizerLayoutScope(this, &layoutScope);

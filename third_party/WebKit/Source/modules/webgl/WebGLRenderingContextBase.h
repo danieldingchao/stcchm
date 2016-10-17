@@ -577,8 +577,6 @@ class MODULES_EXPORT WebGLRenderingContextBase : public CanvasRenderingContext {
   DECLARE_EAGER_FINALIZATION_OPERATOR_NEW();
   DECLARE_VIRTUAL_TRACE();
 
-  DECLARE_VIRTUAL_TRACE_WRAPPERS();
-
   // Returns approximate gpu memory allocated per pixel.
   int externallyAllocatedBytesPerPixel() override;
 

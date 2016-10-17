@@ -12,7 +12,6 @@
 #include "chrome/browser/ui/website_settings/website_settings_ui.h"
 #include "chrome/grit/generated_resources.h"
 #include "ui/accessibility/ax_view_state.h"
-#include "ui/base/l10n/l10n_util.h"
 #include "ui/base/material_design/material_design_controller.h"
 #include "ui/base/models/combobox_model.h"
 #include "ui/gfx/image/image.h"
@@ -25,6 +24,11 @@
 #include "ui/views/layout/grid_layout.h"
 #include "ui/views/view.h"
 #include "ui/views/widget/widget.h"
+
+namespace {
+// Minimum distance between the label and its corresponding menu.
+const int kMinSeparationBetweenLabelAndMenu = 16;
+}
 
 namespace internal {
 
@@ -227,32 +231,23 @@ void PermissionCombobox::OnPerformAction(Combobox* combobox) {
 ///////////////////////////////////////////////////////////////////////////////
 
 PermissionSelectorRow::PermissionSelectorRow(
+    Profile* profile,
     const GURL& url,
     const WebsiteSettingsUI::PermissionInfo& permission)
-    : icon_(NULL), menu_button_(NULL), combobox_(NULL) {
+    : profile_(profile), icon_(NULL), menu_button_(NULL), combobox_(NULL) {
   views::GridLayout* layout = new views::GridLayout(this);
   SetLayoutManager(layout);
   const int column_set_id = 0;
   views::ColumnSet* column_set = layout->AddColumnSet(column_set_id);
-  column_set->AddColumn(views::GridLayout::FILL,
-                        views::GridLayout::FILL,
-                        1,
-                        views::GridLayout::FIXED,
-                        kPermissionIconColumnWidth,
+  column_set->AddColumn(views::GridLayout::FILL, views::GridLayout::FILL, 0,
+                        views::GridLayout::FIXED, kPermissionIconColumnWidth,
                         0);
   column_set->AddPaddingColumn(0, kPermissionIconMarginLeft);
-  column_set->AddColumn(views::GridLayout::FILL,
-                        views::GridLayout::FILL,
-                        1,
-                        views::GridLayout::USE_PREF,
-                        0,
-                        0);
-  column_set->AddColumn(views::GridLayout::FILL,
-                        views::GridLayout::FILL,
-                        1,
-                        views::GridLayout::USE_PREF,
-                        0,
-                        0);
+  column_set->AddColumn(views::GridLayout::FILL, views::GridLayout::FILL, 0,
+                        views::GridLayout::USE_PREF, 0, 0);
+  column_set->AddPaddingColumn(1, kMinSeparationBetweenLabelAndMenu);
+  column_set->AddColumn(views::GridLayout::TRAILING, views::GridLayout::FILL, 0,
+                        views::GridLayout::USE_PREF, 0, 0);
 
   layout->StartRow(1, column_set_id);
   // Create the permission icon.
@@ -265,9 +260,8 @@ PermissionSelectorRow::PermissionSelectorRow(
                   views::GridLayout::CENTER,
                   views::GridLayout::CENTER);
   // Create the label that displays the permission type.
-  views::Label* label = new views::Label(l10n_util::GetStringFUTF16(
-      IDS_WEBSITE_SETTINGS_PERMISSION_TYPE,
-      WebsiteSettingsUI::PermissionTypeToUIString(permission.type)));
+  views::Label* label = new views::Label(
+      WebsiteSettingsUI::PermissionTypeToUIString(permission.type));
   layout->AddView(label,
                   1,
                   1,
@@ -275,8 +269,7 @@ PermissionSelectorRow::PermissionSelectorRow(
                   views::GridLayout::CENTER);
   // Create the menu model.
   menu_model_.reset(new PermissionMenuModel(
-      url,
-      permission,
+      profile, url, permission,
       base::Bind(&PermissionSelectorRow::PermissionChanged,
                  base::Unretained(this))));
 
@@ -329,8 +322,8 @@ void PermissionSelectorRow::InitializeMenuButtonView(
       permission.source == content_settings::SETTING_SOURCE_USER;
   menu_button_ = new internal::PermissionMenuButton(
       WebsiteSettingsUI::PermissionActionToUIString(
-          permission.type, permission.setting, permission.default_setting,
-          permission.source),
+          profile_, permission.type, permission.setting,
+          permission.default_setting, permission.source),
       menu_model_.get(), button_enabled);
   menu_button_->SetEnabled(button_enabled);
   menu_button_->SetAccessibleName(
@@ -347,10 +340,9 @@ void PermissionSelectorRow::InitializeComboboxView(
       new internal::ComboboxModelAdapter(menu_model_.get()));
   combobox_ = new internal::PermissionCombobox(
       WebsiteSettingsUI::PermissionActionToUIString(
-          permission.type, permission.setting, permission.default_setting,
-          permission.source),
-      combobox_model_adapter_.get(), button_enabled,
-      true);
+          profile_, permission.type, permission.setting,
+          permission.default_setting, permission.source),
+      combobox_model_adapter_.get(), button_enabled, true);
   combobox_->SetEnabled(button_enabled);
   combobox_->SetAccessibleName(
       WebsiteSettingsUI::PermissionTypeToUIString(permission.type));
@@ -366,8 +358,8 @@ void PermissionSelectorRow::PermissionChanged(
   // Update the menu button text to reflect the new setting.
   if (menu_button_) {
     menu_button_->SetText(WebsiteSettingsUI::PermissionActionToUIString(
-        permission.type, permission.setting, permission.default_setting,
-        content_settings::SETTING_SOURCE_USER));
+        profile_, permission.type, permission.setting,
+        permission.default_setting, content_settings::SETTING_SOURCE_USER));
     menu_button_->SizeToPreferredSize();
   } else if (combobox_) {
     bool use_default = permission.setting == CONTENT_SETTING_DEFAULT;

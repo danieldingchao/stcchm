@@ -87,22 +87,20 @@ void WebHistoryItem::setTarget(const WebString& target) {
 }
 
 WebFloatPoint WebHistoryItem::visualViewportScrollOffset() const {
-  ScrollOffset offset = m_private->visualViewportScrollOffset();
-  return WebFloatPoint(offset.width(), offset.height());
+  return m_private->visualViewportScrollPoint();
 }
 
 void WebHistoryItem::setVisualViewportScrollOffset(
     const WebFloatPoint& scrollOffset) {
-  m_private->setVisualViewportScrollOffset(toScrollOffset(scrollOffset));
+  m_private->setVisualViewportScrollPoint(scrollOffset);
 }
 
 WebPoint WebHistoryItem::scrollOffset() const {
-  ScrollOffset offset = m_private->scrollOffset();
-  return WebPoint(offset.width(), offset.height());
+  return m_private->scrollPoint();
 }
 
 void WebHistoryItem::setScrollOffset(const WebPoint& scrollOffset) {
-  m_private->setScrollOffset(ScrollOffset(scrollOffset.x, scrollOffset.y));
+  m_private->setScrollPoint(scrollOffset);
 }
 
 float WebHistoryItem::pageScaleFactor() const {
