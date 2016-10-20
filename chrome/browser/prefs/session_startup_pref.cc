@@ -17,14 +17,17 @@
 #include "components/prefs/scoped_user_pref_update.h"
 #include "components/url_formatter/url_fixer.h"
 
+#include "chrome/common/chrome_constants.h"
+
 namespace {
 
 // Converts a SessionStartupPref::Type to an integer written to prefs.
 int TypeToPrefValue(SessionStartupPref::Type type) {
   switch (type) {
+    case SessionStartupPref::NEWTAB: return SessionStartupPref::kPrefValueNewTab;
     case SessionStartupPref::LAST: return SessionStartupPref::kPrefValueLast;
     case SessionStartupPref::URLS: return SessionStartupPref::kPrefValueURLs;
-    default:                       return SessionStartupPref::kPrefValueNewTab;
+    default:                       return SessionStartupPref::kPrefValueHomePage;
   }
 }
 
@@ -147,6 +150,7 @@ bool SessionStartupPref::TypeIsDefault(PrefService* prefs) {
 // static
 SessionStartupPref::Type SessionStartupPref::PrefValueToType(int pref_value) {
   switch (pref_value) {
+    case kPrefValueNewTab:  return SessionStartupPref::NEWTAB;
     case kPrefValueLast:     return SessionStartupPref::LAST;
     case kPrefValueURLs:     return SessionStartupPref::URLS;
     default:                 return SessionStartupPref::DEFAULT;

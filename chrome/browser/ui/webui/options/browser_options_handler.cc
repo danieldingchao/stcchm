@@ -380,6 +380,7 @@ void BrowserOptionsHandler::GetLocalizedValues(base::DictionaryValue* values) {
     { "startupRestoreLastSession", IDS_OPTIONS_STARTUP_RESTORE_LAST_SESSION },
     { "startupSetPages", IDS_OPTIONS_STARTUP_SET_PAGES },
     { "startupShowNewTab", IDS_OPTIONS_STARTUP_SHOW_NEWTAB },
+    { "startupHomePage", IDS_OPTIONS_STARTUP_HOMEPAGE },
     { "startupShowPages", IDS_OPTIONS_STARTUP_SHOW_PAGES },
     { "suggestPref", IDS_OPTIONS_SUGGEST_PREF },
     { "supervisedUserLabel", IDS_PROFILES_LIST_LEGACY_SUPERVISED_USER_LABEL },

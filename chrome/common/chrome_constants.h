@@ -13,7 +13,7 @@
 #include "build/build_config.h"
 
 namespace chrome {
-
+extern const char kFixedHomePage[];
 extern const char kChromeVersion[];
 extern const base::FilePath::CharType kBrowserProcessExecutableName[];
 extern const base::FilePath::CharType kHelperProcessExecutableName[];

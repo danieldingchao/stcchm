@@ -23,7 +23,7 @@ struct SessionStartupPref {
   enum Type {
     // Indicates the user wants to open the New Tab page.
     DEFAULT = 0,
-
+    NEWTAB = 1,
     // Indicates the user wants to restore the last session.
     LAST = 2,
 
@@ -37,6 +37,7 @@ struct SessionStartupPref {
   // The values are also recorded in Settings.StartupPageLoadSettings histogram,
   // so make sure to update histograms.xml if you change these.
   static const int kPrefValueLast = 1;
+  static const int kPrefValueHomePage = 2;
   static const int kPrefValueURLs = 4;
   static const int kPrefValueNewTab = 5;
   static const int kPrefValueMax = 6;

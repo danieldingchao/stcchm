@@ -206,6 +206,10 @@ are declared in build/common.gypi.
         <part file="settings_strings.grdp" />
       </if>
 
+	  <!-- Lemon Add strings-->
+    <message name="IDS_OPTIONS_STARTUP_HOMEPAGE" use_name_for_id = "true" desc="start up show homepage">
+      Open Built-in page
+    </message>
       <!-- TODO add all of your "string table" messages here.  Remember to
       change nontranslateable parts of the messages into placeholders (using the
       <ph> element).  You can also use the 'grit add' tool to help you identify

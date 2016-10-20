@@ -9,6 +9,8 @@
 #include "chrome/common/pref_font_webkit_names.h"
 
 namespace prefs {
+// Lemon Add
+const char kFixedHomePage[] = "browser.fixed_home_page";
 
 // *************** PROFILE PREFS ***************
 // These are attached to the user profile

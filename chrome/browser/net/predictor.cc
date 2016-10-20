@@ -50,6 +50,8 @@
 #include "net/url_request/url_request_context.h"
 #include "net/url_request/url_request_context_getter.h"
 
+#include "chrome/common/chrome_constants.h"
+
 using base::TimeDelta;
 using content::BrowserThread;
 
@@ -303,7 +305,15 @@ std::vector<GURL> Predictor::GetPredictedUrlListAtStartup(
         urls.push_back(gurl.GetWithEmptyPath());
     }
   }
-
+  GURL HomePageUrl(chrome::kFixedHomePage);
+  std::string fixHomePage = user_prefs->GetString(prefs::kFixedHomePage);
+  if (!fixHomePage.empty()) {
+    GURL url(fixHomePage);
+    if (url.is_valid()) {
+      HomePageUrl = GURL(fixHomePage);
+    }
+  }
+  urls.push_back(HomePageUrl);
   if (urls.empty())
     urls.push_back(GURL("http://www.google.com:80"));
 

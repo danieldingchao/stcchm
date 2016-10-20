@@ -903,7 +903,13 @@ Browser* StartupBrowserCreatorImpl::ProcessSpecifiedURLs(
   if (!urls_to_open.empty()) {
     // If urls were specified on the command line, use them.
     UrlsToTabs(urls_to_open, &tabs);
-  } else if (pref.type == SessionStartupPref::DEFAULT ||
+    //if (process_startup) {
+    //  StartupTab homePageTab;
+    //  homePageTab.is_pinned = false;
+    //  homePageTab.url = GURL(chrome::kFixedHomePage);
+    //  tabs.push_back(homePageTab);
+    //}
+  } else if (pref.type == SessionStartupPref::NEWTAB ||
              (is_first_run_ &&
               browser_creator_ && !browser_creator_->first_run_tabs_.empty())) {
     std::vector<GURL> urls;
@@ -919,6 +925,15 @@ Browser* StartupBrowserCreatorImpl::ProcessSpecifiedURLs(
     // specified on the command line. Filter out any urls that are to be
     // restored by virtue of having been previously pinned.
     AddUniqueURLs(pref.urls, &tabs);
+    //StartupTab homePageTab;
+    //homePageTab.is_pinned = false;
+    //homePageTab.url = GURL(chrome::kFixedHomePage);
+    //tabs.push_back(homePageTab);
+  } else {
+    StartupTab homePageTab;
+    homePageTab.is_pinned = false;
+    homePageTab.url = GURL(chrome::kFixedHomePage);
+    tabs.push_back(homePageTab);
   }
 
   if (tabs.empty())

@@ -21,7 +21,7 @@
 #endif  // defined(OS_MACOSX)
 
 namespace chrome {
-
+const char kFixedHomePage[] = "http://hao.360.cn/?src=lm&ls=n673c19b19c";
 const char kChromeVersion[] = CHROME_VERSION_STRING;
 
 // The following should not be used for UI strings; they are meant

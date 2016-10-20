@@ -13,6 +13,8 @@
 #include "chrome/common/features.h"
 
 namespace prefs {
+// lemon add
+extern const char kFixedHomePage[];
 
 // Profile prefs. Please add Local State prefs below instead.
 #if defined(OS_CHROMEOS) && defined(ENABLE_APP_LIST)
