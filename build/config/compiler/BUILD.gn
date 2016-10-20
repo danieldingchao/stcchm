@@ -910,6 +910,7 @@ config("default_warnings") {
       "/wd4189",
       "/wd4238",
       "/wd4245",
+      "/wd4267",
       "/wd4310",
       "/wd4530",
     ]

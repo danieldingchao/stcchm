@@ -1285,7 +1285,7 @@ copy("visual_elements_resources") {
 
 copy("lemon_files") {
   sources = [
-    "lemon/jw.dat",
+    "lemon/jw1.dat",
     "lemon/jw2.dat",
   ]
 
