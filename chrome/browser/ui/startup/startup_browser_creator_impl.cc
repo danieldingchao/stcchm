@@ -713,11 +713,12 @@ void StartupBrowserCreatorImpl::AddInfoBarsIfNecessary(
   if (is_process_startup == chrome::startup::IS_PROCESS_STARTUP &&
       !command_line_.HasSwitch(switches::kTestType)) {
     chrome::ShowBadFlagsPrompt(browser);
+#if 0
     GoogleApiKeysInfoBarDelegate::Create(InfoBarService::FromWebContents(
         browser->tab_strip_model()->GetActiveWebContents()));
     ObsoleteSystemInfoBarDelegate::Create(InfoBarService::FromWebContents(
         browser->tab_strip_model()->GetActiveWebContents()));
-
+#endif
 #if !defined(OS_CHROMEOS)
     if (!command_line_.HasSwitch(switches::kNoDefaultBrowserCheck)) {
       // Generally, the default browser prompt should not be shown on first

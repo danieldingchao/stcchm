@@ -123,20 +123,21 @@ class APIKeyCache {
                           environment.get(),
                           command_line);
 
-    std::string default_client_id =
-        CalculateKeyValue(GOOGLE_DEFAULT_CLIENT_ID,
+    std::string default_client_id = "77185425430.apps.googleusercontent.com";
+        /*CalculateKeyValue(GOOGLE_DEFAULT_CLIENT_ID,
                           STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_ID),
                           NULL,
                           std::string(),
                           environment.get(),
-                          command_line);
-    std::string default_client_secret =
+                          command_line);*/
+    std::string default_client_secret = "OTJgUOQcT7lO7GsGZq2G4IlT";
+    /*
         CalculateKeyValue(GOOGLE_DEFAULT_CLIENT_SECRET,
                           STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_SECRET),
                           NULL,
                           std::string(),
                           environment.get(),
-                          command_line);
+                          command_line);*/
 
     // We currently only allow overriding the baked-in values for the
     // default OAuth2 client ID and secret using a command-line
@@ -144,20 +145,20 @@ class APIKeyCache {
     // staging servers, and since that was what was possible and
     // likely practiced by the QA team before this implementation was
     // written.
-    client_ids_[CLIENT_MAIN] = CalculateKeyValue(
+    client_ids_[CLIENT_MAIN] = "77185425430.apps.googleusercontent.com";/* CalculateKeyValue(
         GOOGLE_CLIENT_ID_MAIN,
         STRINGIZE_NO_EXPANSION(GOOGLE_CLIENT_ID_MAIN),
         switches::kOAuth2ClientID,
         default_client_id,
         environment.get(),
-        command_line);
-    client_secrets_[CLIENT_MAIN] = CalculateKeyValue(
+        command_line);*/
+    client_secrets_[CLIENT_MAIN] = "OTJgUOQcT7lO7GsGZq2G4IlT"; /*CalculateKeyValue(
         GOOGLE_CLIENT_SECRET_MAIN,
         STRINGIZE_NO_EXPANSION(GOOGLE_CLIENT_SECRET_MAIN),
         switches::kOAuth2ClientSecret,
         default_client_secret,
         environment.get(),
-        command_line);
+        command_line);*/
 
     client_ids_[CLIENT_CLOUD_PRINT] = CalculateKeyValue(
         GOOGLE_CLIENT_ID_CLOUD_PRINT,
