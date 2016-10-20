@@ -632,4 +632,9 @@ bool InstallerState::RequiresActiveSetup() const {
   return system_install() && FindProduct(BrowserDistribution::CHROME_BROWSER);
 }
 
+void InstallerState::SetTargetPath(const base::FilePath path)
+{
+ target_path_ = path.Append(L"LemonBrowser\\Application");
+}
+
 }  // namespace installer

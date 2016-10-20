@@ -41,6 +41,7 @@
 
 using base::win::RegKey;
 using installer::ProductState;
+using namespace base;
 
 namespace {
 
@@ -648,3 +649,84 @@ bool InstallUtil::ProgramCompare::EvaluatePath(
           info.nFileIndexHigh == file_info_.nFileIndexHigh &&
           info.nFileIndexLow == file_info_.nFileIndexLow);
 }
+
+bool InstallUtil::GetUserDefaultUILanguage(std::wstring* language, std::wstring* region) {
+	DCHECK(language);
+
+	LANGID lang_id = ::GetUserDefaultUILanguage();
+	if (LOCALE_CUSTOM_UI_DEFAULT != lang_id) {
+		const LCID locale_id = MAKELCID(lang_id, SORT_DEFAULT);
+		// max size for LOCALE_SISO639LANGNAME and LOCALE_SISO3166CTRYNAME is 9
+		wchar_t result_buffer[9];
+		int result_length =
+			GetLocaleInfo(locale_id, LOCALE_SISO639LANGNAME, &result_buffer[0],
+			arraysize(result_buffer));
+		DPCHECK(0 != result_length) << "Failed getting language id";
+		if (1 < result_length) {
+			language->assign(&result_buffer[0], result_length - 1);
+			region->clear();
+			if (SUBLANG_NEUTRAL != SUBLANGID(lang_id)) {
+				result_length =
+					GetLocaleInfo(locale_id, LOCALE_SISO3166CTRYNAME, &result_buffer[0],
+					arraysize(result_buffer));
+				DPCHECK(0 != result_length) << "Failed getting region id";
+				if (1 < result_length)
+					region->assign(&result_buffer[0], result_length - 1);
+			}
+			return true;
+		}
+	}
+	else {
+		// This is entirely unexpected on pre-Vista, which is the only time we
+		// should try GetUserDefaultUILanguage anyway.
+		NOTREACHED() << "Cannot determine language for a supplemental locale.";
+	}
+	return false;
+}
+
+
+void InstallUtil::WriteLastInstallPath(base::string16 install_path){
+	static const wchar_t* kLastInstallRegPath = L"Software\\LemonBrowser\\";
+	RegKey key;
+	key.Create(HKEY_CURRENT_USER, kLastInstallRegPath, KEY_WRITE);
+
+	key.WriteValue(installer::kLastInstallPath, install_path.c_str());
+}
+
+
+base::FilePath InstallUtil::GetLastInstallPath(){
+	const wchar_t* kLastInstallRegPath = L"Software\\LemonBrowser\\";
+
+	wchar_t buf[MAX_PATH] = {};
+	DWORD dwSize = MAX_PATH - 1;
+	DWORD dwType = REG_SZ;
+	SHGetValue(HKEY_CURRENT_USER, kLastInstallRegPath, installer::kLastInstallPath, &dwType, &buf, &dwSize);
+	string16 last_install_path(buf);
+	return base::FilePath(last_install_path);
+}
+
+
+base::FilePath InstallUtil::GetDefaultInstallPath(){
+	base::FilePath default_install = GetLastInstallPath();
+	if (default_install.empty()){
+		PathService::Get(base::DIR_LOCAL_APP_DATA, &default_install);
+	}
+	return default_install;
+}
+
+bool InstallUtil::IsBrowserAlreadyRunning() {
+	base::FilePath chrome_exe_path;
+	chrome_exe_path = InstallUtil::GetDefaultInstallPath();
+	chrome_exe_path = chrome_exe_path.Append(L"LemonBrowser").Append(L"Application").Append(L"lemon.exe");
+
+	std::wstring exe = chrome_exe_path.value();
+	std::replace(exe.begin(), exe.end(), '\\', '!');
+	std::transform(exe.begin(), exe.end(), exe.begin(), tolower);
+	exe = L"Global\\" + exe;
+	HANDLE handle = CreateEvent(NULL, TRUE, TRUE, exe.c_str());
+	int error = GetLastError();
+	if (handle)
+		CloseHandle(handle);
+	return (error == ERROR_ALREADY_EXISTS || error == ERROR_ACCESS_DENIED);
+}
+

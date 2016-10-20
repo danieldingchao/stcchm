@@ -505,6 +505,16 @@ ProcessExitResult RunSetup(const Configuration& configuration,
     return ProcessExitResult(COMMAND_STRING_OVERFLOW);
   }
 
+  PathString exe_path;
+  if (!GetModuleFileName(NULL, exe_path.get(), exe_path.capacity()))
+	  return ProcessExitResult(COMMAND_STRING_OVERFLOW);
+
+  const wchar_t* kExePath = L" --exe-path";
+  if (!cmd_line.append(kExePath) ||
+	  !cmd_line.append(L"=\"") ||
+	  !cmd_line.append(exe_path.get()) ||
+	  !cmd_line.append(L"\" "))
+	  return ProcessExitResult(COMMAND_STRING_OVERFLOW);
   // Get any command line option specified for mini_installer and pass them
   // on to setup.exe
   AppendCommandLineFlags(configuration, &cmd_line);

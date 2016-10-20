@@ -19,6 +19,9 @@
 #include "chrome/installer/util/browser_distribution.h"
 #include "components/nacl/common/nacl_switches.h"
 
+#include "base/strings/string_util.h"
+
+using base::FilePath;
 namespace chrome {
 
 namespace {
@@ -42,6 +45,119 @@ bool GetUserDirectory(int csidl_folder, base::FilePath* result) {
 
 }  // namespace
 
+#if 1
+   // low case==
+const wchar_t kAppName[] = L"lemon.exe";
+const wchar_t kSubDirAppName[] = L"application\\lemon.exe";
+bool UserDataDirInApplicationFolder(FilePath &fpResult) {
+	if (!PathService::Get(base::FILE_EXE, &fpResult)) {
+		return false;
+	}
+
+	fpResult = fpResult.DirName();
+	fpResult = fpResult.Append(chrome::kUserDataDirname);
+
+	bool bExsist = false;
+
+	DWORD fileattr = GetFileAttributes(fpResult.value().c_str());
+	if (fileattr != INVALID_FILE_ATTRIBUTES) {
+		if ((fileattr & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+			bExsist = true;
+		}
+	}
+
+	if (!bExsist) {
+		fpResult.clear();
+	}
+
+	return bExsist;
+}
+
+base::FilePath ConvertToLongPath(const base::FilePath& path) {
+	const size_t length = GetLongPathName(path.value().c_str(), NULL, 0);
+	if (length != 0 && length != path.value().length()) {
+		std::vector<wchar_t> long_path(length);
+		if (GetLongPathName(path.value().c_str(), &long_path[0], length) != 0)
+			return base::FilePath(&long_path[0]);
+	}
+	return path;
+}
+
+FilePath GetChromeRootDirectory() {
+	bool ret = 0;
+	TCHAR system_buffer[MAX_PATH] = { 0 };
+	int iRet = GetModuleFileName(NULL, system_buffer, MAX_PATH);
+	if (iRet <= 0)
+		return FilePath();
+
+	FilePath cur = ConvertToLongPath(FilePath(system_buffer));
+	if (base::ToLowerASCII(cur.BaseName().value()) != kAppName)
+		return FilePath();
+
+	std::wstring strSubDir = base::ToLowerASCII(std::wstring(kSubDirAppName));
+	std::wstring strBasePath = base::ToLowerASCII(cur.value());
+
+	if (!base::EndsWith(strBasePath, strSubDir, base::CompareCase::INSENSITIVE_ASCII))
+		base::ReplaceSubstringsAfterOffset(&strBasePath, 0, kAppName, std::wstring(L""));
+	else
+		base::ReplaceSubstringsAfterOffset(&strBasePath, 0, strSubDir, std::wstring(L""));
+
+	return FilePath(strBasePath);
+}
+bool GetDefaultUserDataDirectory(base::FilePath* result) {
+	FilePath fpResult;
+	if (UserDataDirInApplicationFolder(fpResult)) {
+		*result = fpResult;
+		return true;
+	}
+
+	HMODULE hDll = GetModuleHandle(L"chrome.dll");
+	HMODULE hExe = GetModuleHandle(kAppName);
+	if (NULL != hExe) {
+		TCHAR szDll[MAX_PATH] = { 0 };
+		TCHAR szExe[MAX_PATH] = { 0 };
+
+		GetModuleFileName(hDll, szDll, _countof(szDll));
+		GetModuleFileName(hExe, szExe, _countof(szExe));
+
+		base::FilePath fpExe(szExe);
+		base::FilePath fpDll(szDll);
+
+		fpExe = fpExe.DirName();
+		fpDll = fpDll.DirName();
+
+		if (base::FilePath::CompareEqualIgnoreCase(fpExe.value(), fpDll.value())) {
+			*result = fpExe;
+			*result = result->Append(chrome::kUserDataDirname);
+			return true;
+		}
+	}
+	*result = GetChromeRootDirectory();
+	if (result->empty()) {
+		if (!PathService::Get(base::DIR_LOCAL_APP_DATA, result))
+			return false;
+	}
+	*result = result->Append(chrome::kUserDataDirname);
+	return true;
+}
+
+bool GetDefaultUserDataDirectoryInChromeExe(base::FilePath* result) {
+	FilePath fpResult;
+	if (UserDataDirInApplicationFolder(fpResult)) {
+		*result = fpResult;
+		return true;
+	}
+
+	*result = GetChromeRootDirectory();
+	if (result->empty()) {
+		if (!PathService::Get(base::DIR_APP_DATA, result)) {
+			return false;
+		}
+	}
+	*result = result->Append(chrome::kUserDataDirname);
+	return true;
+}
+#else
 bool GetDefaultUserDataDirectory(base::FilePath* result) {
   if (!PathService::Get(base::DIR_LOCAL_APP_DATA, result))
     return false;
@@ -50,6 +166,7 @@ bool GetDefaultUserDataDirectory(base::FilePath* result) {
   *result = result->Append(chrome::kUserDataDirname);
   return true;
 }
+#endif
 
 void GetUserCacheDirectory(const base::FilePath& profile_dir,
                            base::FilePath* result) {

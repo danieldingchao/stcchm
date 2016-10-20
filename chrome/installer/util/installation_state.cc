@@ -271,4 +271,5 @@ const ProductState* InstallationState::GetProductState(
       GetNonVersionedProductState(system_install, type);
   return product_state->version_.get() == NULL ? NULL : product_state;
 }
+
 }  // namespace installer

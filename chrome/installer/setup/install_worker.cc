@@ -150,6 +150,7 @@ void AddInstallerCopyTasks(const InstallerState& installer_state,
         WorkItem::ALWAYS);
   }
 
+#if 0
   base::FilePath archive_dst(installer_dir.Append(archive_path.BaseName()));
   if (archive_path != archive_dst) {
     // In the past, we copied rather than moved for system level installs so
@@ -172,6 +173,7 @@ void AddInstallerCopyTasks(const InstallerState& installer_state,
                                         WorkItem::ALWAYS);
     }
   }
+#endif
 }
 
 base::string16 GetRegCommandKey(BrowserDistribution* dist,
@@ -241,8 +243,10 @@ void AddProductSpecificWorkItems(const InstallationState& original_state,
     if (p.is_chrome()) {
       AddOsUpgradeWorkItems(installer_state, setup_path, new_version, p,
                             list);
+#if 0
       AddFirewallRulesWorkItems(installer_state, p.distribution(),
                                 current_version == nullptr, list);
+#endif
 
 #if defined(GOOGLE_CHROME_BUILD)
       if (!InstallUtil::IsChromeSxSProcess()) {
@@ -292,6 +296,7 @@ void AddChromeWorkItems(const InstallationState& original_state,
                         WorkItemList* install_list) {
   const base::FilePath& target_path = installer_state.target_path();
 
+#if 0
   if (current_version) {
     // Delete the archive from an existing install to save some disk space.
     base::FilePath old_installer_dir(
@@ -309,7 +314,7 @@ void AddChromeWorkItems(const InstallationState& original_state,
       delete_old_archive_work_item->set_rollback_enabled(false);
     }
   }
-
+#endif
   // Delete any new_chrome.exe if present (we will end up creating a new one
   // if required) and then copy chrome.exe
   base::FilePath new_chrome_exe(target_path.Append(installer::kChromeNewExe));

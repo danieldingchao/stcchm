@@ -1100,7 +1100,7 @@ InstallStatus UninstallProduct(const InstallationState& original_state,
     // If user-level chrome is self-destructing as a result of encountering a
     // system-level chrome, retarget owned non-default shortcuts (app shortcuts,
     // profile shortcuts, etc.) to the system-level chrome.
-    if (cmd_line.HasSwitch(installer::switches::kSelfDestruct) &&
+    if (
         !installer_state.system_install()) {
       const base::FilePath system_chrome_path(
           GetChromeInstallPath(true, browser_dist).
@@ -1271,7 +1271,10 @@ InstallStatus UninstallProduct(const InstallationState& original_state,
   // When deleting files, we must make sure that we're either a "single"
   // (aka non-multi) installation or we are the Chrome Binaries.
 
-  base::FilePath user_data_dir(GetUserDataDir(product));
+  //base::FilePath user_data_dir(GetUserDataDir(product));
+  base::FilePath user_data_dir(installer_state.target_path());
+  user_data_dir = user_data_dir.DirName().Append(chrome::kUserDataDirname);
+
   base::FilePath backup_state_file;
   if (!user_data_dir.empty()) {
     backup_state_file = BackupLocalStateFile(user_data_dir);

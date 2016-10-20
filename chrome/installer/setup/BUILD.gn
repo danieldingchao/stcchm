@@ -16,6 +16,8 @@ if (is_win) {
       "setup_resource.h",
       "uninstall.cc",
       "uninstall.h",
+      "InstallerWindow.cpp",
+      "InstallerWindow.h",
     ]
 
     configs -= [ "//build/config/win:console" ]
@@ -75,6 +77,7 @@ if (is_win) {
       "//rlz:rlz_lib",
       "//third_party/bspatch",
       "//third_party/zlib",
+      "//third_party/wtl",
     ]
   }
 

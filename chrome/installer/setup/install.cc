@@ -93,12 +93,14 @@ void LogShortcutOperation(ShellUtil::ShortcutLocation location,
       NOTREACHED();
   }
 
+#if 0
   message.push_back('"');
   if (properties.has_shortcut_name())
     message.append(base::UTF16ToUTF8(properties.shortcut_name));
   else
     message.append(base::UTF16ToUTF8(dist->GetDisplayName()));
   message.push_back('"');
+#endif
 
   message.append(" shortcut to ");
   message.append(base::UTF16ToUTF8(properties.target.value()));
@@ -248,6 +250,17 @@ installer::InstallStatus InstallNewVersion(
     }
     VLOG(1) << "Version updated to " << new_version;
     return installer::NEW_VERSION_UPDATED;
+  }
+
+  if (new_version.CompareTo(**current_version) < 0) {
+	  if (base::PathExists(new_chrome_exe)) {
+		  VLOG(1) << "Version updated to " << new_version.GetString()
+			   << " while running " << (*current_version)->GetString();
+		  return installer::IN_USE_UPDATED;
+		  
+	  }
+	  VLOG(1) << "Version updated to " << new_version.GetString();
+	  return installer::NEW_VERSION_UPDATED;
   }
 
   if (is_downgrade_allowed) {
@@ -438,7 +451,9 @@ void CreateOrUpdateShortcuts(
     const installer::Product& product,
     const MasterPreferences& prefs,
     InstallShortcutLevel install_level,
-    InstallShortcutOperation install_operation) {
+    InstallShortcutOperation install_operation,
+	const base::Version* new_version,
+	const base::Version* old_version) {
   bool do_not_create_any_shortcuts = false;
   prefs.GetBool(master_preferences::kDoNotCreateAnyShortcuts,
                 &do_not_create_any_shortcuts);
@@ -555,7 +570,7 @@ void RegisterChromeOnMachine(const installer::InstallerState& installer_state,
   // Try to add Chrome to Media Player shim inclusion list. We don't do any
   // error checking here because this operation will fail if user doesn't
   // have admin rights and we want to ignore the error.
-  AddChromeToMediaPlayerList();
+  //AddChromeToMediaPlayerList();
 
   // Make Chrome the default browser if desired when possible. Otherwise, only
   // register it with Windows.
@@ -648,8 +663,13 @@ InstallStatus InstallOrUpdateProduct(
         install_operation = INSTALL_SHORTCUT_CREATE_ALL;
       }
 
+	  const installer::ProductState* chrome_productstate = original_state.GetProductState(false, BrowserDistribution::CHROME_BROWSER);
+	  const base::Version *pold_version = NULL;
+	  if (chrome_productstate != NULL)
+		  pold_version = &chrome_productstate->version();
+	  
       CreateOrUpdateShortcuts(chrome_exe, *chrome_product, prefs, install_level,
-                              install_operation);
+                              install_operation, &new_version, pold_version);
     }
 
     if (chrome_product) {
@@ -753,7 +773,7 @@ void HandleOsUpgradeForBrowser(const installer::InstallerState& installer_state,
   const base::FilePath chrome_exe(
       installer_state.target_path().Append(kChromeExe));
   CreateOrUpdateShortcuts(chrome_exe, chrome, prefs, level,
-                          INSTALL_SHORTCUT_REPLACE_EXISTING);
+                          INSTALL_SHORTCUT_REPLACE_EXISTING, &installed_version);
 
   // Adapt Chrome registrations to this new OS.
   RegisterChromeOnMachine(installer_state, chrome, false);
@@ -827,7 +847,7 @@ void HandleActiveSetupForBrowser(const base::FilePath& installation_root,
   MasterPreferences prefs(installation_root.AppendASCII(kDefaultMasterPrefs));
   base::FilePath chrome_exe(installation_root.Append(kChromeExe));
   CreateOrUpdateShortcuts(
-      chrome_exe, chrome, prefs, CURRENT_USER, install_operation);
+      chrome_exe, chrome, prefs, CURRENT_USER, install_operation,NULL);
 
   UpdateDefaultBrowserBeaconForPath(chrome_exe);
 }

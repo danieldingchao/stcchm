@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include "setupdef.h"
 #include "chrome/installer/setup/setup_main.h"
+
 
 #include <windows.h>
 #include <msi.h>
@@ -15,6 +17,8 @@
 #include <string>
 
 #include "base/at_exit.h"
+#include "base/base64.h"
+#include "base/md5.h"
 #include "base/command_line.h"
 #include "base/file_version_info.h"
 #include "base/files/file_path.h"
@@ -85,6 +89,25 @@
 #if defined(GOOGLE_CHROME_BUILD)
 #include "chrome/installer/util/updating_app_registration_data.h"
 #endif
+
+#include "base/command_line.h"
+#include "base/strings/utf_string_conversions.h"
+#include "chrome/installer/setup/InstallerWindow.h"
+#include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
+
+BOOL _bIsWindowsVista = FALSE;
+HINSTANCE g_hInstance = NULL;
+HANDLE g_hStartInstallEvent = NULL;
+BOOL g_isClosed = FALSE;
+HWND g_hWnd = NULL;
+BOOL g_isSilent = FALSE;//静默安装
+BOOL g_Installing = false;
+
+
+std::wstring g_language, g_lan_region;
+std::wstring g_installPath;
+installer::InstallStatus g_uninstall_status = installer::UNINSTALL_CONFIRMED;
 
 using installer::InstallerState;
 using installer::InstallationState;
@@ -243,6 +266,24 @@ base::string16 FindMsiProductId(const InstallerState& installer_state,
     }
   }
   return base::string16();
+}
+
+void DoMigrateOldInstallPathUserData(base::FilePath& last_install_path, base::FilePath& current_install){
+
+	DCHECK(!last_install_path.empty() && !current_install.empty());
+
+	base::FilePath from_usr_data_dir = last_install_path.Append(L"LemonBrowser").Append(L"User Data");
+	if (!base::PathExists(from_usr_data_dir))
+		return;
+	base::FilePath to_dir = current_install.Append(L"LemonBrowser");
+	if (!base::PathExists(to_dir))
+		base::CreateDirectory(to_dir);
+
+	base::DeleteFile(from_usr_data_dir.Append(base::FilePath(L"Default\\Cache")), true);
+	base::Move(from_usr_data_dir, to_dir);
+
+	if (base::IsDirectoryEmpty(last_install_path.Append(L"LemonBrowser")))
+		base::DeleteFile(last_install_path.Append(L"LemonBrowser"), true);
 }
 
 // Workhorse for producing an uncompressed archive (chrome.7z) given a
@@ -737,10 +778,17 @@ installer::InstallStatus UninstallProduct(
 
 installer::InstallStatus UninstallProducts(
     const InstallationState& original_state,
-    const InstallerState& installer_state,
+    InstallerState& installer_state,
     const base::FilePath& setup_exe,
     const base::CommandLine& cmd_line) {
+  base::FilePath last_install_path = InstallUtil::GetLastInstallPath();
+	installer_state.SetTargetPath(last_install_path);
   const Products& products = installer_state.products();
+
+  WaitForSingleObject(g_hStartInstallEvent, INFINITE);
+  if (g_uninstall_status != installer::UNINSTALL_CONFIRMED &&
+	  g_uninstall_status != installer::UNINSTALL_DELETE_PROFILE)
+	  return g_uninstall_status;//取消卸载
 
   // System-level Chrome will be launched via this command if its program gets
   // set below.
@@ -755,7 +803,7 @@ installer::InstallStatus UninstallProducts(
     // other products.
     DCHECK(products[0]->is_chrome());
 
-    if (cmd_line.HasSwitch(installer::switches::kSelfDestruct) &&
+    if (
         !installer_state.system_install()) {
       BrowserDistribution* dist = chrome->distribution();
       const base::FilePath system_exe_path(
@@ -1509,13 +1557,63 @@ void UninstallMultiChromeFrameIfPresent(const base::CommandLine& cmd_line,
 
 }  // namespace
 
+enum{
+	NEW_INSTALL = 0,
+	COVER_INSTALL,
+};
+void SetNewInstallFlags(DWORD type){
+#define NAME_BUF_MAX_SIZE 50
+#define INSTALLER_PACKEGE_PREFIX L"TWInst_"
+#define INSTALLER_PACKEGE_PREFIX2 L"TWInst-"
+	base::CommandLine* cmd_line = base::CommandLine::ForCurrentProcess();
+	std::wstring exe_string = cmd_line->GetSwitchValueNative("exe-path");
+	base::FilePath exe_path = base::FilePath(exe_string);
+	base::FilePath base_path = exe_path.BaseName();
+	std::wstring file_name = base_path.value();
+	std::wstring name_base64;
+	//std::wstring name;
+	char name_buf[NAME_BUF_MAX_SIZE] = {};
+	base::win::RegKey key;
+	key.Create(HKEY_CURRENT_USER, L"Software\\LemonBrowser\\Installer\\", KEY_WRITE);
+
+	if (file_name.find(INSTALLER_PACKEGE_PREFIX) == 0){
+		name_base64 = file_name.substr(_countof(INSTALLER_PACKEGE_PREFIX) - 1);
+		name_base64 = name_base64.substr(0, name_base64.size() - (_countof(".exe") - 1));
+		std::string name_utf8 = base::WideToUTF8(name_base64);
+		std::string output;
+		base::Base64Decode(base::WideToUTF8(name_base64), &output);
+		std::string name;
+		if (output.size() < NAME_BUF_MAX_SIZE - 1){
+			strncpy(name_buf, output.c_str(), output.size());
+			name = std::string(name_buf);
+			name = name.substr(0, name.size() - 2);
+			std::string md5 = base::MD5String(name.c_str());
+
+			std::wstring widename = base::UTF8ToWide(name);
+
+			if (md5[2] == name_buf[output.size() - 2] && md5[5] == name_buf[output.size() - 1]){
+				key.WriteValue(L"encoded_name", name_base64.c_str());
+				key.WriteValue(L"installer_name", base::UTF8ToWide(name).c_str());
+			}
+		}
+	}
+	else if (file_name.find(INSTALLER_PACKEGE_PREFIX2) == 0) {
+		name_base64 = file_name.substr(_countof(INSTALLER_PACKEGE_PREFIX2) - 1);
+		name_base64 = name_base64.substr(0, name_base64.size() - (_countof(".exe") - 1));
+
+		key.WriteValue(L"installer_id", name_base64.c_str());
+	}
+
+	key.WriteValue(L"installer_type", &type, sizeof(DWORD), REG_DWORD);
+	key.WriteValue(L"valid", 1);
+}
 namespace installer {
 
 InstallStatus InstallProductsHelper(const InstallationState& original_state,
                                     const base::FilePath& setup_exe,
                                     const base::CommandLine& cmd_line,
                                     const MasterPreferences& prefs,
-                                    const InstallerState& installer_state,
+                                    InstallerState& installer_state,
                                     base::FilePath* installer_directory,
                                     ArchiveType* archive_type) {
   DCHECK(archive_type);
@@ -1531,6 +1629,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
     installer_state.WriteInstallerResult(TEMP_DIR_FAILED,
                                          IDS_INSTALL_TEMP_DIR_FAILED_BASE,
                                          NULL);
+	SendMessage(g_hWnd, WM_CLOSE, 0, 0);
     return TEMP_DIR_FAILED;
   }
 
@@ -1559,6 +1658,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
                                            &install_status,
                                            previous_version)) {
         DCHECK_NE(install_status, UNKNOWN_STATUS);
+		SendMessage(g_hWnd, WM_CLOSE, 0, 0);
         return install_status;
       }
       uncompressed_archive = archive_helper->target();
@@ -1578,6 +1678,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
       LOG(ERROR) << "Cannot install Chrome without an uncompressed archive.";
       installer_state.WriteInstallerResult(
           INVALID_ARCHIVE, IDS_INSTALL_INVALID_ARCHIVE_BASE, NULL);
+	  SendMessage(g_hWnd, WM_CLOSE, 0, 0);
       return INVALID_ARCHIVE;
     }
     *archive_type = FULL_ARCHIVE_TYPE;
@@ -1593,6 +1694,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
         UNPACKING_FAILED,
         IDS_INSTALL_UNCOMPRESSION_FAILED_BASE,
         NULL);
+	SendMessage(g_hWnd, WM_CLOSE, 0, 0);
     return UNPACKING_FAILED;
   }
 
@@ -1619,6 +1721,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
     VLOG(1) << "version to install: " << installer_version->GetString();
     bool proceed_with_installation = true;
 
+#if 0
     if (!IsDowngradeAllowed(prefs)) {
       uint32_t higher_products = 0;
       static_assert(
@@ -1647,7 +1750,16 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
         install_status = HIGHER_VERSION_EXISTS;
         installer_state.WriteInstallerResult(install_status, message_id, NULL);
       }
+#endif
+    //}
+    WaitForSingleObject(g_hStartInstallEvent, INFINITE);
+	if (g_isClosed)
+	{//取消安装
+		return installer::INSTALL_FAILED;
     }
+
+	if (!g_installPath.empty())
+		installer_state.SetTargetPath(base::FilePath(g_installPath));
 
     if (proceed_with_installation) {
       base::FilePath prefs_source_path(cmd_line.GetSwitchValueNative(
@@ -1701,16 +1813,22 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
 
       if (install_status == FIRST_INSTALL_SUCCESS) {
         VLOG(1) << "First install successful.";
+        SetNewInstallFlags(NEW_INSTALL);
+		base::FilePath last_install_path = cmd_line.GetSwitchValuePath(installer::switches::kInstallPath);
+		base::FilePath application_path = installer_state.target_path().DirName().DirName();
+		if (!last_install_path.empty() && application_path != last_install_path)
+			DoMigrateOldInstallPathUserData(last_install_path, application_path);
         if (chrome_install) {
           // We never want to launch Chrome in system level install mode.
           bool do_not_launch_chrome = false;
           prefs.GetBool(master_preferences::kDoNotLaunchChrome,
                         &do_not_launch_chrome);
-          if (!system_install && !do_not_launch_chrome)
+          if (!system_install && !do_not_launch_chrome && !g_isSilent)
             chrome_install->LaunchChrome(installer_state.target_path());
         }
       } else if ((install_status == NEW_VERSION_UPDATED) ||
                  (install_status == IN_USE_UPDATED)) {
+        SetNewInstallFlags(COVER_INSTALL);
         const Product* chrome = installer_state.FindProduct(
             BrowserDistribution::CHROME_BROWSER);
         if (chrome != NULL) {
@@ -1718,6 +1836,20 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
           RemoveChromeLegacyRegistryKeys(chrome->distribution(), chrome_exe);
         }
       }
+	  else if (install_status == installer::INSTALL_REPAIRED){
+		  SetNewInstallFlags(COVER_INSTALL);
+	  }
+
+	  if (install_status == NEW_VERSION_UPDATED || install_status == INSTALL_REPAIRED) {
+		  if (chrome_install) {
+			  // We never want to launch Chrome in system level install mode.
+			  bool do_not_launch_chrome = false;
+			  prefs.GetBool(master_preferences::kDoNotLaunchChrome,
+				  &do_not_launch_chrome);
+			  if (!system_install && !do_not_launch_chrome && !g_isSilent)
+				  chrome_install->LaunchChrome(installer_state.target_path());
+		  }
+	  }
     }
   }
 
@@ -1795,6 +1927,127 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
 
 }  // namespace installer
 
+
+__inline void NotifyInstallOprationFinished(installer::InstallStatus installer_state)
+{
+	if (g_Installing)
+	{
+    g_Installing = FALSE;
+    PostMessage(WM_INSTALL_FINISHED);
+	}
+}
+
+struct ThreadParams
+{
+	InstallationState* original_state;
+	InstallerState* installer_state;
+};
+
+DWORD WINAPI InstallThreadProc(LPVOID lpParameter)
+{
+	const base::CommandLine& cmd_line = *base::CommandLine::ForCurrentProcess();
+	const bool is_uninstall = cmd_line.HasSwitch(installer::switches::kUninstall);
+	base::FilePath setup_exe;
+	PathService::Get(base::FILE_EXE, &setup_exe);
+	const MasterPreferences& prefs = MasterPreferences::ForCurrentProcess();
+	bool system_install = false;
+	prefs.GetBool(installer::master_preferences::kSystemLevel, &system_install);
+
+	ThreadParams* pThreadParams = reinterpret_cast<ThreadParams*>(lpParameter);
+	
+	base::FilePath installer_directory;
+	installer::InstallStatus install_status = installer::UNKNOWN_STATUS;
+
+	// Initialize COM for use later.
+	base::win::ScopedCOMInitializer com_initializer;
+	if (!com_initializer.succeeded()) {
+		pThreadParams->installer_state->WriteInstallerResult(
+			installer::OS_ERROR, IDS_INSTALL_OS_ERROR_BASE, NULL);
+		return installer::OS_ERROR;
+	}
+
+	TCHAR szCurrentVersion[MAX_PATH] = { 0 };
+	DWORD dwType = REG_SZ;
+	DWORD dwSize = sizeof(szCurrentVersion);
+
+	SHGetValue(HKEY_CURRENT_USER, _T("Software\\LemonBrowser"), _T("pv"), &dwType, szCurrentVersion, &dwSize);
+	std::string version_str = base::UTF16ToUTF8(szCurrentVersion);
+
+	// If --uninstall option is given, uninstall the identified product(s)
+	if (is_uninstall) {
+		install_status =
+			UninstallProducts(*(pThreadParams->original_state), *(pThreadParams->installer_state), setup_exe, cmd_line);
+
+		if (install_status == installer::UNINSTALL_SUCCESSFUL){
+			base::FilePath install_path = cmd_line.GetSwitchValuePath(installer::switches::kInstallPath);
+			if (g_uninstall_status != installer::UNINSTALL_DELETE_PROFILE)
+				InstallUtil::WriteLastInstallPath(install_path.value());
+			/*
+#define UNINSTALL_URL L"http://www.theworld.cn/jump/uninstall.html?ver="
+#define UNINSTALL_EN_URL L"http://www.theworld.cn/v6/uninst_en.html?ver="
+			std::wstring version_wstr = base::UTF8ToWide(version_str);
+			if (g_language != L"zh") {
+				std::wstring url = UNINSTALL_EN_URL;
+				url += version_wstr;
+				installer::LauchIEBrowser(url.c_str());
+			}
+			else {
+				std::wstring url = UNINSTALL_URL;
+				url += version_wstr;
+				installer::LauchIEBrowser(url.c_str());
+			}
+			*/
+		}
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	}
+	else {
+		// If --uninstall option is not specified, we assume it is install case.
+		install_status =
+			InstallProducts(*(pThreadParams->original_state), setup_exe, cmd_line, prefs,
+			pThreadParams->installer_state, &installer_directory);
+		NotifyInstallOprationFinished(install_status);
+		InstallUtil::WriteLastInstallPath(pThreadParams->installer_state->target_path().DirName().DirName().value());
+	}
+	// Validate that the machine is now in a good state following the operation.
+	// TODO(grt): change this to log at DFATAL once we're convinced that the
+	// validator handles all cases properly.
+	InstallationValidator::InstallationType installation_type =
+		InstallationValidator::NO_PRODUCTS;
+	LOG_IF(ERROR,
+		!InstallationValidator::ValidateInstallationType(system_install,
+		&installation_type));
+
+	int return_code = 0;
+	// MSI demands that custom actions always return 0 (ERROR_SUCCESS) or it will
+	// rollback the action. If we're uninstalling we want to avoid this, so always
+	// report success, squashing any more informative return codes.
+	if (!(pThreadParams->installer_state->is_msi() && is_uninstall)) {
+		// Note that we allow the status installer::UNINSTALL_REQUIRES_REBOOT
+		// to pass through, since this is only returned on uninstall which is
+		// never invoked directly by Google Update.
+		return_code = InstallUtil::GetInstallReturnCode(install_status);
+	}
+
+	VLOG(1) << "Installation complete, returning: " << return_code;
+
+	return 0;
+}
+
+
+void RunProcess(const wchar_t* exe_path) {
+  STARTUPINFOW si = { sizeof(si) };
+  PROCESS_INFORMATION pi = { 0 };
+  if (!::CreateProcess(exe_path, L"--silent", NULL, NULL, FALSE, CREATE_NO_WINDOW,
+    NULL, NULL, &si, &pi)) {
+    return;
+  }
+
+  ::CloseHandle(pi.hThread);
+
+  ::CloseHandle(pi.hProcess);
+
+}
+
 int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
                     wchar_t* command_line, int show_command) {
   // Check to see if the CPU is supported before doing anything else. There's
@@ -1803,6 +2056,9 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   if (!installer::IsProcessorSupported())
     return installer::CPU_NOT_SUPPORTED;
 
+  if (!InstallUtil::GetUserDefaultUILanguage(&g_language, &g_lan_region))
+	  g_language = L"en";
+  
   // Persist histograms so they can be uploaded later.
   installer::PersistentHistogramStorage persistent_histogram_storage;
 
@@ -1825,8 +2081,40 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   const MasterPreferences& prefs = MasterPreferences::ForCurrentProcess();
   installer::InitInstallerLogging(prefs);
 
-  const base::CommandLine& cmd_line = *base::CommandLine::ForCurrentProcess();
+  base::CommandLine& cmd_line = *base::CommandLine::ForCurrentProcess();
   VLOG(1) << "Command Line: " << cmd_line.GetCommandLineString();
+
+  base::FilePath last_install_path = InstallUtil::GetLastInstallPath();
+  int check_caninstall_error = 0;
+  if (cmd_line.HasSwitch("updater")) {
+    std::wstring url = cmd_line.GetSwitchValueNative("updater-url");
+    HRESULT result = URLDownloadToFile(NULL, url.c_str(), L"installer.exe", 0, NULL);
+
+    RunProcess(L"installer.exe");
+    ::DeleteFile(L"./installer.exe");
+    return 0;
+  }
+
+  if (!last_install_path.empty()) {
+	  cmd_line.AppendSwitchPath(installer::switches::kInstallPath, last_install_path);
+	  if (base::DirectoryExists(last_install_path)) {
+		  base::FilePath user_data_path = last_install_path.Append(L"LemonBrowser\\User Data");
+		  if (base::DirectoryExists(user_data_path))
+			  cmd_line.AppendSwitchPath(installer::switches::kMigrateUserDataDir, user_data_path);
+	  }
+
+  } else {
+	  base::FilePath user_data_path = InstallUtil::GetDefaultInstallPath();
+	  user_data_path = user_data_path.Append(L"LemonBrowser\\User Data");
+	  if (base::DirectoryExists(user_data_path))
+		  cmd_line.AppendSwitchPath(installer::switches::kMigrateUserDataDir, user_data_path);
+	  cmd_line.AppendSwitchPath(installer::switches::kInstallPath, InstallUtil::GetDefaultInstallPath());
+  }
+
+  // check whether chrome is running
+  bool chrome_is_running = InstallUtil::IsBrowserAlreadyRunning();
+  if (chrome_is_running)
+	  cmd_line.AppendSwitch(installer::switches::kChromeRunning);
 
   VLOG(1) << "multi install is " << prefs.is_multi_install();
   bool system_install = false;
@@ -1842,6 +2130,22 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   persistent_histogram_storage.set_storage_dir(
       installer::PersistentHistogramStorage::GetReportedStorageDir(
           installer_state.target_path()));
+		  
+  std::unique_ptr<base::Version> current_version;
+  current_version.reset(installer_state.GetCurrentVersion(original_state));
+
+  if (current_version.get() && current_version->IsValid()) {
+	  std::unique_ptr<FileVersionInfo> version_info(
+		  FileVersionInfo::CreateFileVersionInfo(cmd_line.GetProgram()));
+	  base::Version install_version(base::WideToUTF8(version_info->file_version()));
+
+	  if (current_version->CompareTo(install_version) == 0)
+		  cmd_line.AppendSwitch(installer::switches::kSameVersionExist);
+	  //else if (install_version.CompareTo(current_version.get()) == -1))
+	  cmd_line.AppendSwitch(installer::switches::kHigherVersionExist);
+	  //else
+			//  cmd_line.AppendSwitch(installer::switches::kLowerVersionExist);
+  }
 
   installer::ConfigureCrashReporting(installer_state);
   installer::SetInitialCrashKeys(installer_state);
@@ -1864,6 +2168,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
     return installer::OS_NOT_SUPPORTED;
   }
 
+  /*
   // Initialize COM for use later.
   base::win::ScopedCOMInitializer com_initializer;
   if (!com_initializer.succeeded()) {
@@ -1871,6 +2176,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
         installer::OS_ERROR, IDS_INSTALL_OS_ERROR_BASE, NULL);
     return installer::OS_ERROR;
   }
+  */
 
   // Some command line options don't work with SxS install/uninstall
   if (InstallUtil::IsChromeSxSProcess()) {
@@ -1945,6 +2251,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   UninstallMultiChromeFrameIfPresent(cmd_line, prefs,
                                      &original_state, &installer_state);
 
+  /*
   base::FilePath installer_directory;
   installer::InstallStatus install_status = installer::UNKNOWN_STATUS;
   // If --uninstall option is given, uninstall the identified product(s)
@@ -1995,4 +2302,44 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   VLOG(1) << "Installation complete, returning: " << return_code;
 
   return return_code;
+  */
+  g_hInstance = instance;
+  std::wstring name = L"lemonBrowsersetup";
+  name = L"Global\\" + name;
+
+  HANDLE single_instance = CreateEvent(NULL, TRUE, TRUE, name.c_str());
+  int error = GetLastError();
+  if (error == ERROR_ALREADY_EXISTS || error == ERROR_ACCESS_DENIED) {
+	  CloseHandle(single_instance);
+	  return 0;
+
+  }
+  if (cmd_line.HasSwitch("silent"))
+  {
+	  g_isSilent = TRUE;
+  }
+  //__asm int 3;
+	  //base::FilePath targe_path = installer_state.target_path().DirName().DirName();
+	  //g_installPath = targe_path.value();
+  g_installPath = cmd_line.GetSwitchValuePath(installer::switches::kInstallPath).value();
+
+  ThreadParams threadParams = { &original_state, &installer_state };
+  if (!g_isSilent)
+	  g_hStartInstallEvent = CreateEvent(0, FALSE, FALSE, 0);
+  HANDLE hThread = CreateThread(NULL, 0, InstallThreadProc, (LPVOID)&threadParams, 0, 0);
+  if (!g_isSilent)
+  {
+	  if (!is_uninstall)
+	  {
+		  ShowInstallWindow();
+	  }
+	  else {
+		  SetEvent(g_hStartInstallEvent);
+	  }
+  }
+  WaitForSingleObject(hThread, INFINITE);
+  CloseHandle(g_hStartInstallEvent);
+  CloseHandle(single_instance);
+  CloseHandle(hThread);
+  return 0;
 }

@@ -32,6 +32,17 @@ class Version;
 // independently.
 class InstallUtil {
  public:
+ 
+  static base::FilePath GetLastInstallPath();
+  
+  static void WriteLastInstallPath(base::string16 install_path);
+
+  static base::FilePath GetDefaultInstallPath();
+
+  static bool IsBrowserAlreadyRunning();
+
+  static bool InstallUtil::GetUserDefaultUILanguage(std::wstring* language, std::wstring* region);
+  
   // Get the path to this distribution's Active Setup registry entries.
   // e.g. Software\Microsoft\Active Setup\Installed Components\<dist_guid>
   static base::string16 GetActiveSetupPath(BrowserDistribution* dist);

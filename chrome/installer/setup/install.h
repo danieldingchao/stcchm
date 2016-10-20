@@ -90,7 +90,9 @@ void CreateOrUpdateShortcuts(
     const Product& product,
     const MasterPreferences& prefs,
     InstallShortcutLevel install_level,
-    InstallShortcutOperation install_operation);
+    InstallShortcutOperation install_operation,
+	const base::Version* new_version,
+	const base::Version* old_version = NULL);
 
 // Registers Chrome on this machine.
 // If |make_chrome_default|, also attempts to make Chrome default where doing so

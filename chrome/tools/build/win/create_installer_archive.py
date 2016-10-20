@@ -40,7 +40,7 @@ PATCH_FILE_EXT = '.diff'
 SETUP_EXEC = "setup.exe"
 SETUP_PATCH_FILE_PREFIX = "setup_patch"
 TEMP_ARCHIVE_DIR = "temp_installer_archive"
-VERSION_FILE = "VERSION"
+VERSION_FILE = "VERSION_LEMON"
 
 
 g_archive_inputs = []

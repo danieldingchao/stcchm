@@ -29,7 +29,7 @@ InstallStatus InstallProductsHelper(const InstallationState& original_state,
                                     const base::FilePath& setup_exe,
                                     const base::CommandLine& cmd_line,
                                     const MasterPreferences& prefs,
-                                    const InstallerState& installer_state,
+                                    InstallerState& installer_state,
                                     base::FilePath* installer_directory,
                                     ArchiveType* archive_type);
 

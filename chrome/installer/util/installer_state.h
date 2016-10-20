@@ -215,6 +215,8 @@ class InstallerState {
   // Returns true if this install needs to register an Active Setup command.
   bool RequiresActiveSetup() const;
 
+  void SetTargetPath(const base::FilePath path);
+  
  protected:
   // Bits for the |file_bits| argument of AnyExistsAndIsInUse.
   enum {

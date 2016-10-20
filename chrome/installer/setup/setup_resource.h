@@ -7,7 +7,22 @@
 // Used by setup.rc
 //
 #define IDI_SETUP                       101
+#define IDD_INSTALLER                   104
 
+#define IDB_BITMAP_LOGO                 119
+#define IDB_INSTALL_BTN                 132
+#define IDB_PRODUCT                     134
+#define IDB_BITMAP_FOLDER               136
+
+#define IDC_PIC_LOGO                    1001
+#define IDC_LABEL_INSTALL               1004
+#define IDC_LABEL_PRODUCT              1005
+
+#define IDT_INPUTDIR                    1006
+#define IDC_LABEL_INSTALLTO              1007
+
+#define IDC_CHOOSE_DIR                  1008
+#define IDC_LABEL_INSTALLER_DIR         1009
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

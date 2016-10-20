@@ -35,6 +35,13 @@ class InstallerState;
 class ProductState;
 class MasterPreferences;
 
+
+bool IsBrowserAlreadyRunning();
+
+BOOL CheckCanInstall(base::FilePath new_dir, int* err_code);
+
+BOOL LauchIEBrowser(LPCWSTR pszUrl);
+
 // Applies a patch file to source file using Courgette. Returns 0 in case of
 // success. In case of errors, it returns kCourgetteErrorOffset + a Courgette
 // status code, as defined in courgette/courgette.h

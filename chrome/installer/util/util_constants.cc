@@ -188,6 +188,13 @@ const char kInputFile[] = "input-file";
 const char kPatchFile[] = "patch-file";
 const char kOutputFile[] = "output-file";
 
+const char kInstallPath[] = "install-path";
+const char kMigrateUserDataDir[] = "migrate_user_date_dir";
+const char kChromeRunning[] = "chrome_running";
+const char kSameVersionExist[] = "same_version_exist";
+const char kHigherVersionExist[] = "higher_version_exist";
+const char kLowerVersionExist[] = "lower_version_exist";
+
 }  // namespace switches
 
 namespace env_vars {
@@ -255,6 +262,8 @@ const wchar_t kChromeChannelStable[] = L"";
 const wchar_t kChromeChannelStableExplicit[] = L"stable";
 
 const size_t kMaxAppModelIdLength = 64U;
+
+const wchar_t kLastInstallPath[] = L"last_install_path";
 
 const char kCourgette[] = "courgette";
 const char kBsdiff[] = "bsdiff";

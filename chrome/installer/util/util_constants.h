@@ -147,6 +147,8 @@ enum InstallerStage {
   NUM_STAGES                  // The number of stages.
 };
 
+
+extern const wchar_t kLastInstallPath[];
 namespace switches {
 
 extern const char kChrome[];
@@ -198,6 +200,13 @@ extern const char kInputFile[];
 extern const char kPatchFile[];
 extern const char kOutputFile[];
 
+
+extern const char kInstallPath[];
+extern const char kMigrateUserDataDir[];
+extern const char kChromeRunning[];
+extern const char kSameVersionExist[];
+extern const char kHigherVersionExist[];
+extern const char kLowerVersionExist[];
 }  // namespace switches
 
 namespace env_vars {

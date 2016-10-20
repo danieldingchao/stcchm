@@ -13,8 +13,14 @@
 #include <iterator>
 #include <set>
 #include <string>
+#include <tchar.h>
+#include <shlwapi.h>
+#include <shlobj.h>
+#include <atlconv.h>
+#include <shellapi.h>
 
 #include "base/bind.h"
+#include "base/sys_info.h"
 #include "base/command_line.h"
 #include "base/cpu.h"
 #include "base/files/file_enumerator.h"
@@ -42,6 +48,9 @@
 #include "courgette/courgette.h"
 #include "courgette/third_party/bsdiff/bsdiff.h"
 
+
+#include "chrome/installer/util/install_util.h"
+#include "chrome/installer/util/util_constants.h"
 namespace installer {
 
 namespace {
@@ -112,6 +121,284 @@ bool OnUserHive(const base::string16& client_state_path,
 }
 
 }  // namespace
+
+bool IsPathDriveExist(std::wstring &path)
+{
+	base::FilePath p(path);
+	std::vector<std::wstring> v;
+
+	p.GetComponents(&v);
+
+	if (v.size() > 0)
+	{
+		return (GetDriveType(v[0].c_str()) != DRIVE_NO_ROOT_DIR) ? true : false;
+	}
+
+	return false;
+}
+BOOL ForceCreateDirectory(LPCTSTR lpszFolder)
+{
+	if (::PathIsDirectory(lpszFolder))
+		return TRUE;
+
+	TCHAR szPreDir[MAX_PATH] = { 0 };
+	StrCpy(szPreDir, lpszFolder);
+
+	// 获取上级目录
+	BOOL bGetPreDir = ::PathRemoveFileSpec(szPreDir);
+	if (!bGetPreDir)
+		return FALSE;
+
+	// 如果上级目录不存在,则递归创建上级目录
+	if (!::PathIsDirectory(szPreDir))
+		ForceCreateDirectory(szPreDir);
+	return ::CreateDirectory(lpszFolder, NULL);
+}
+BOOL IsAppInKnowFolder(LPCWSTR m_szAppPath)
+{
+	BOOL bRet = FALSE;
+	const CLSID CLSID_KnownFolderManager = { 0x4df0c730, 0xdf9d, 0x4ae3, { 0x91, 0x53, 0xaa, 0x6b, 0x82, 0xe9, 0x79, 0x5a } };
+	const IID IID_IKnownFolderManager = { 0x8BE2D872, 0x86AA, 0x4d47, { 0xB7, 0x76, 0x32, 0xCC, 0xA4, 0x0C, 0x70, 0x18 } };
+
+	IKnownFolderManager* lpFolderManager = NULL;
+	if (S_OK == CoCreateInstance(CLSID_KnownFolderManager, NULL, CLSCTX_INPROC, IID_IKnownFolderManager, (void**)&lpFolderManager) && lpFolderManager)
+	{
+		IKnownFolder* lpFolder = NULL;
+		if (S_OK == lpFolderManager->FindFolderFromPath(m_szAppPath, FFFP_NEARESTPARENTMATCH, &lpFolder) && lpFolder)
+		{
+			bRet = TRUE;
+			lpFolder->Release();
+		}
+		lpFolderManager->Release();
+	}
+	return bRet;
+}
+bool IsDirectoryWritable(LPCTSTR lpszFolder, bool IsGreateXP)
+{
+	if (!lpszFolder)
+		return false;
+
+	if (!::PathIsDirectory(lpszFolder))
+		return false;
+
+	TCHAR szProgramFolder[MAX_PATH] = { 0 };
+	TCHAR szWindowsFolder[MAX_PATH] = { 0 };
+	TCHAR szUser[MAX_PATH] = { 0 };
+	TCHAR szVirtualStore[MAX_PATH] = { 0 };
+
+	if (IsGreateXP)
+	{
+		SHGetSpecialFolderPath(NULL, szProgramFolder, CSIDL_PROGRAM_FILES, FALSE);
+		SHGetSpecialFolderPath(NULL, szWindowsFolder, CSIDL_WINDOWS, FALSE);
+		SHGetSpecialFolderPath(NULL, szUser, CSIDL_RECENT, FALSE);
+		SHGetSpecialFolderPath(NULL, szVirtualStore, CSIDL_APPDATA, FALSE);
+
+		bool is_app_data_dir = false;
+		if (StrStrI(lpszFolder, szVirtualStore))
+			is_app_data_dir = true;
+		std::wstring strTemp = szVirtualStore;
+		int temppos = strTemp.find_last_of(_T("\\"));
+		strTemp = strTemp.substr(0, temppos);
+		StrCpy(szVirtualStore, strTemp.c_str());
+
+		std::wstring userpath = szUser;
+		std::wstring username;
+
+		int pos = userpath.find(_T("\\"), 0);
+		pos = userpath.find(_T("\\"), pos + 1);
+		int pos3 = userpath.find(_T("\\"), pos + 1);
+
+		userpath = userpath.substr(0, pos3);
+
+		TCHAR Temp[MAX_PATH] = { 0 };
+		StrCpy(Temp, userpath.c_str());
+		if (!is_app_data_dir && !StrStrI(lpszFolder, Temp))
+		{
+			if (IsAppInKnowFolder(lpszFolder))
+				return false;
+		}
+
+		TCHAR UserPath[MAX_PATH] = { 0 };
+
+		int len = userpath.length();
+		pos = userpath.find_last_of(_T("\\"));
+
+		username = userpath.substr(pos + 1, len - 1);
+
+		userpath = userpath.substr(0, pos);
+		StrCpy(UserPath, userpath.c_str());
+
+		TCHAR UserName[MAX_PATH] = { 0 };
+		StrCpy(UserName, username.c_str());
+
+		if (StrStrI(lpszFolder, szProgramFolder))
+			return false;
+		if (StrStrI(lpszFolder, szWindowsFolder))
+			return false;
+
+		if (StrStrI(lpszFolder, UserPath))
+			if (!StrStrI(lpszFolder, UserName))
+				return false;
+
+	}
+
+
+	TCHAR szTestFilePath[MAX_PATH] = { 0 };
+	if (wcslen(lpszFolder)>3)
+		_sntprintf_s(szTestFilePath, _countof(szTestFilePath), _TRUNCATE, _T("%s\\%d.tmp"), lpszFolder, GetTickCount());
+	else
+		_sntprintf_s(szTestFilePath, _countof(szTestFilePath), _TRUNCATE, _T("%s%d.tmp"), lpszFolder, GetTickCount());
+
+
+	int result = DeleteFile(szTestFilePath);
+	HANDLE hFile = CreateFile(szTestFilePath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return false;
+
+	CloseHandle(hFile);
+
+	DeleteFile(szTestFilePath);
+
+	std::wstring VirtualPath = szTestFilePath;
+	size_t pos_line = VirtualPath.find(_T("\\"));
+	size_t VP_length = VirtualPath.length();
+	if (pos_line == std::wstring::npos)
+		pos_line = 0;
+	VirtualPath = VirtualPath.substr(pos_line, VP_length);
+
+	_sntprintf_s(szVirtualStore, _countof(szVirtualStore), _TRUNCATE, _T("%s%s%s"), szVirtualStore, _T("\\Local\\VirtualStore"), VirtualPath.c_str());
+	if (PathFileExists(szVirtualStore))
+		return false;
+
+	return true;
+}
+BOOL RemoveDirectoryRecursively(LPCTSTR lpszDir)
+{
+	BOOL bRet = TRUE;
+	HANDLE hFindFile = INVALID_HANDLE_VALUE;
+	WIN32_FIND_DATA struFindFileData = { 0 };
+
+	TCHAR strToFind[MAX_PATH] = _T("");
+	_sntprintf_s(strToFind, MAX_PATH - 1, _TRUNCATE, _T("%s\\%s"), lpszDir, _T("*.*"));
+	hFindFile = FindFirstFile(strToFind, &struFindFileData);
+	if (hFindFile == INVALID_HANDLE_VALUE)
+		return FALSE;
+	do
+	{
+		if (!_tcscmp(struFindFileData.cFileName, _T(".")))
+			continue;
+		if (!_tcscmp(struFindFileData.cFileName, _T("..")))
+			continue;
+		if (struFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			TCHAR strNewSource[MAX_PATH] = _T("");
+			_sntprintf_s(strNewSource, MAX_PATH - 1, _TRUNCATE, _T("%s\\%s"), lpszDir, struFindFileData.cFileName);
+			bRet = RemoveDirectoryRecursively(strNewSource);
+		}
+		else
+		{
+			TCHAR strFile[MAX_PATH] = _T("");
+			_sntprintf_s(strFile, MAX_PATH - 1, _TRUNCATE, _T("%s\\%s"), lpszDir, struFindFileData.cFileName);
+			bRet = DeleteFile(strFile);
+		}
+	} while (FindNextFile(hFindFile, &struFindFileData));
+	FindClose(hFindFile);
+	hFindFile = INVALID_HANDLE_VALUE;
+	SetFileAttributes(lpszDir, FILE_ATTRIBUTE_ARCHIVE);
+	bRet = RemoveDirectory(lpszDir);
+	return bRet;
+}
+void FormatFilePath(std::wstring& path) {
+	if (path.size() == 2 && path[1] == _T(':')) {
+		path = path.append(_T("\\"));
+	}
+
+	while (1)
+	{
+		int nPathLen = path.length();
+		if (path[nPathLen - 1] == L'\\') {
+			path = path.substr(0, nPathLen - 1);
+		}
+		else
+			break;
+	}
+	base::ReplaceSubstringsAfterOffset(&path, 0, L"\\\\", L"\\");
+	path.append(L"\\");
+}
+bool CheckEnoughSpace(const std::wstring& path, int min_size) {
+	std::wstring driver_letter(path);
+	FormatFilePath(driver_letter);
+	base::FilePath driver_path = base::FilePath(driver_letter.substr(0, 2));
+	int64_t free_size = base::SysInfo::AmountOfFreeDiskSpace(driver_path);
+  int64_t min_size64 = min_size;
+	min_size64 = min_size64 * 1024 * 1024;
+	if (free_size > min_size64) {
+		return true;
+	}
+	return false;
+}
+
+BOOL LauchIEBrowser(LPCWSTR pszUrl)
+{
+	if (_tcslen(pszUrl) == 0)
+		return FALSE;
+
+	TCHAR szPath[MAX_PATH] = { 0 };
+	DWORD dwType = REG_SZ;
+	DWORD dwSize = sizeof(szPath);
+
+	TCHAR szProgramPath[MAX_PATH] = { 0 };
+	SHGetSpecialFolderPath(NULL, szProgramPath, CSIDL_PROGRAM_FILES, FALSE);
+	_sntprintf(szPath, _countof(szPath) - 1, _T("%s\\Internet Explorer\\iexplore.exe"), szProgramPath);
+
+	if (!::PathFileExists(szPath))
+	{
+		SHGetValue(HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\IEXPLORE.EXE"), _T(""), &dwType, szPath, &dwSize);
+		if (!PathFileExists(szPath))
+		{
+			szPath[0] = _T('\0');
+		}
+	}
+
+	if (_tcslen(szPath) > 0)
+	{
+		USES_CONVERSION;
+		ShellExecute(GetDesktopWindow(), _T("open"), szPath, pszUrl, NULL, SW_SHOWDEFAULT);
+		return TRUE;
+	}
+
+	IWebBrowser2* pBrowserApp = NULL;
+	VARIANT vtEmpty;
+
+	if (FAILED(CoCreateInstance(CLSID_InternetExplorer, NULL, CLSCTX_SERVER, IID_IWebBrowser2, (void**)&pBrowserApp)))
+		return FALSE;
+
+	if (pBrowserApp != NULL)
+	{
+		// show the browser.
+		HWND hwnd = NULL;
+		pBrowserApp->get_HWND((long *)&hwnd);
+
+		if (hwnd != NULL)
+		{
+			::SetForegroundWindow(hwnd);
+			::ShowWindow(hwnd, SW_SHOWNORMAL);
+		}
+
+		// visit the url.
+		BSTR bstrUrl = T2BSTR(pszUrl);
+		VARIANT varUrl;
+		vtEmpty.vt = VT_EMPTY;
+		varUrl.vt = VT_BSTR;
+		varUrl.bstrVal = bstrUrl;
+		HRESULT hr = pBrowserApp->Navigate2(&varUrl, &vtEmpty, &vtEmpty, &vtEmpty, &vtEmpty);
+		pBrowserApp->Release();
+		SysFreeString(bstrUrl);
+	}
+
+	return TRUE;
+}
+
 
 int CourgettePatchFiles(const base::FilePath& src,
                         const base::FilePath& patch,
@@ -664,5 +951,64 @@ ScopedTokenPrivilege::~ScopedTokenPrivilege() {
                             sizeof(TOKEN_PRIVILEGES), NULL, NULL);
   }
 }
+
+BOOL CheckCanInstall(base::FilePath new_dir, int* err_code){
+	if (err_code)
+		*err_code = 0;
+	std::wstring new_path = new_dir.value();
+
+	if (!IsPathDriveExist(new_path)) {
+		if (err_code)
+			*err_code = 1;
+		return FALSE;
+	}
+
+	BOOL bHaveCreate = ::PathFileExists(new_path.c_str());
+	if (!bHaveCreate) {
+		std::wstring temp_path(new_path);
+		if (base::EndsWith(temp_path, std::wstring(L"\\"), base::CompareCase::INSENSITIVE_ASCII))
+			temp_path = temp_path.substr(0, temp_path.length() - 1);
+		if (!ForceCreateDirectory(temp_path.c_str())) {
+			if (err_code)
+				*err_code = 2;
+			return FALSE;
+		}
+	}
+
+	bool isGreatXp = base::win::GetVersion() >= base::win::VERSION_VISTA ? true : false;
+	if (!IsDirectoryWritable(new_path.c_str(), isGreatXp)) {
+		if (!bHaveCreate)
+			RemoveDirectoryRecursively(new_path.c_str());
+		if (err_code)
+			*err_code = 2;
+		return FALSE;
+	}
+
+	bool enough_space = CheckEnoughSpace(new_path, 500);
+	if (!enough_space) {
+		if (err_code)
+			*err_code = 3;
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+bool IsBrowserAlreadyRunning() {
+	base::FilePath chrome_exe_path;
+	chrome_exe_path = InstallUtil::GetDefaultInstallPath();
+	chrome_exe_path = chrome_exe_path.Append(L"LemonBrowser").Append(L"Application").Append(L"lemon.exe");
+
+	std::wstring exe = chrome_exe_path.value();
+	std::replace(exe.begin(), exe.end(), '\\', '!');
+	std::transform(exe.begin(), exe.end(), exe.begin(), tolower);
+	exe = L"Global\\" + exe;
+	HANDLE handle = CreateEvent(NULL, TRUE, TRUE, exe.c_str());
+	int error = GetLastError();
+	if (handle)
+		CloseHandle(handle);
+	return (error == ERROR_ALREADY_EXISTS || error == ERROR_ACCESS_DENIED);
+}
+
 
 }  // namespace installer
