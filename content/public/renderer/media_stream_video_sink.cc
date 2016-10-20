@@ -21,17 +21,21 @@ void MediaStreamVideoSink::ConnectToTrack(
     bool is_sink_secure) {
   DCHECK(connected_track_.isNull());
   connected_track_ = track;
+#if defined(ENABLE_WEBRTC)
   MediaStreamVideoTrack* const video_track =
       MediaStreamVideoTrack::GetVideoTrack(connected_track_);
   DCHECK(video_track);
   video_track->AddSink(this, callback, is_sink_secure);
+#endif
 }
 
 void MediaStreamVideoSink::DisconnectFromTrack() {
+#if defined(ENABLE_WEBRTC)
   MediaStreamVideoTrack* const video_track =
       MediaStreamVideoTrack::GetVideoTrack(connected_track_);
   if (video_track)
     video_track->RemoveSink(this);
+#endif
   connected_track_.reset();
 }
 

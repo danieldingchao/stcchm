@@ -62,6 +62,7 @@ target(link_target_type, "renderer_sources") {
     "resource_fetcher.h",
     "video_encode_accelerator.cc",
     "video_encode_accelerator.h",
+	"media_stream_video_sink.cc",
   ]
 
   configs += [ "//content:content_implementation" ]

@@ -267,7 +267,9 @@ class CastVideoSink : public base::SupportsWeakPtr<CastVideoSink>,
     DVLOG(1) << "CastVideoSink is requesting another refresh frame "
                 "(consecutive count=" << consecutive_refresh_count_ << ").";
     expecting_a_refresh_frame_ = true;
+#if defined(ENABLE_WEBRTC)
     content::RequestRefreshFrameFromVideoTrack(connected_track());
+#endif
   }
 
   void DidReceiveFrame() {
@@ -324,8 +326,10 @@ class CastAudioSink : public base::SupportsWeakPtr<CastAudioSink>,
         sample_frames_out_(0) {}
 
   ~CastAudioSink() override {
+#if defined(ENABLE_WEBRTC)
     if (frame_input_.get())
       RemoveFromAudioTrack(this, track_);
+#endif
   }
 
   // Add this sink to the track. Data received from the track will be

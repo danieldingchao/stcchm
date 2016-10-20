@@ -45,6 +45,7 @@ declare_args() {
 
   # Enables WebRTC.
   enable_webrtc = !is_ios
+  enable_webrtc = false
 
   # Enables the Media Router.
   enable_media_router = !is_ios && !is_chromecast
