@@ -16,7 +16,9 @@
 #include "chrome/browser/download/download_path_reservation_tracker.h"
 #include "chrome/browser/download/download_target_determiner_delegate.h"
 #include "chrome/browser/download/download_target_info.h"
+#if defined(FULL_SAFE_BROWSING)
 #include "chrome/browser/safe_browsing/download_protection_service.h"
+#endif
 #include "content/public/browser/download_danger_type.h"
 #include "content/public/browser/download_item.h"
 #include "content/public/browser/download_manager_delegate.h"
@@ -99,10 +101,10 @@ class ChromeDownloadManagerDelegate
   // So that test classes that inherit from this for override purposes
   // can call back into the DownloadManager.
   content::DownloadManager* download_manager_;
-
+#if defined(FULL_SAFE_BROWSING)
   virtual safe_browsing::DownloadProtectionService*
       GetDownloadProtectionService();
-
+#endif
   // DownloadTargetDeterminerDelegate. Protected for testing.
   void NotifyExtensions(content::DownloadItem* download,
                         const base::FilePath& suggested_virtual_path,
@@ -134,12 +136,12 @@ class ChromeDownloadManagerDelegate
   void Observe(int type,
                const content::NotificationSource& source,
                const content::NotificationDetails& details) override;
-
+#if defined(FULL_SAFE_BROWSING)
   // Callback function after the DownloadProtectionService completes.
   void CheckClientDownloadDone(
       uint32_t download_id,
       safe_browsing::DownloadProtectionService::DownloadCheckResult result);
-
+#endif
   // Internal gateways for ShouldCompleteDownload().
   bool IsDownloadReadyForCompletion(
       content::DownloadItem* item,

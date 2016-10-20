@@ -374,8 +374,10 @@ void NotifyUIThreadOfRequestComplete(
 }  // namespace
 
 ChromeResourceDispatcherHostDelegate::ChromeResourceDispatcherHostDelegate()
-    : download_request_limiter_(g_browser_process->download_request_limiter()),
-      safe_browsing_(g_browser_process->safe_browsing_service())
+    : download_request_limiter_(g_browser_process->download_request_limiter())
+#if defined(FULL_SAFE_BROWSING)
+      , safe_browsing_(g_browser_process->safe_browsing_service())
+#endif
 #if defined(ENABLE_EXTENSIONS)
       , user_script_listener_(new extensions::UserScriptListener())
 #endif
@@ -424,8 +426,10 @@ void ChromeResourceDispatcherHostDelegate::RequestBeginning(
     content::AppCacheService* appcache_service,
     ResourceType resource_type,
     ScopedVector<content::ResourceThrottle>* throttles) {
+#if defined(FULL_SAFE_BROWSING)
   if (safe_browsing_.get())
     safe_browsing_->OnResourceRequest(request);
+#endif
 
   const ResourceRequestInfo* info = ResourceRequestInfo::ForRequest(request);
 

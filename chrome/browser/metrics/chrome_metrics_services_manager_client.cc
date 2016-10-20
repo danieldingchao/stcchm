@@ -225,6 +225,7 @@ bool ChromeMetricsServicesManagerClient::IsSafeBrowsingEnabled(
   // Start listening for updates to SB service state. This is done here instead
   // of in the constructor to avoid errors from trying to instantiate SB
   // service before the IO thread exists.
+#if defined(FULL_SAFE_BROWSING)  
   safe_browsing::SafeBrowsingService* sb_service =
       g_browser_process->safe_browsing_service();
   if (!sb_state_subscription_ && sb_service) {
@@ -237,6 +238,9 @@ bool ChromeMetricsServicesManagerClient::IsSafeBrowsingEnabled(
   }
 
   return sb_service && sb_service->enabled_by_prefs();
+#else
+  return false;
+#endif  
 }
 
 bool ChromeMetricsServicesManagerClient::IsMetricsReportingEnabled() {

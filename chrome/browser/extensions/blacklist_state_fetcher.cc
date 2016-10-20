@@ -32,6 +32,7 @@ BlacklistStateFetcher::~BlacklistStateFetcher() {
 void BlacklistStateFetcher::Request(const std::string& id,
                                     const RequestCallback& callback) {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+#if defined(FULL_SAFE_BROWSING)
   if (!safe_browsing_config_) {
     if (g_browser_process && g_browser_process->safe_browsing_service()) {
       SetSafeBrowsingConfig(
@@ -47,14 +48,16 @@ void BlacklistStateFetcher::Request(const std::string& id,
   callbacks_.insert(std::make_pair(id, callback));
   if (request_already_sent)
     return;
-
   if (!url_request_context_getter_ && g_browser_process &&
       g_browser_process->safe_browsing_service()) {
     url_request_context_getter_ =
         g_browser_process->safe_browsing_service()->url_request_context();
   }
-
   SendRequest(id);
+#else
+  base::ThreadTaskRunnerHandle::Get()->PostTask(
+    FROM_HERE, base::Bind(callback, BLACKLISTED_UNKNOWN));
+#endif
 }
 
 void BlacklistStateFetcher::SendRequest(const std::string& id) {
@@ -76,11 +79,13 @@ void BlacklistStateFetcher::SendRequest(const std::string& id) {
   fetcher->Start();
 }
 
+#if defined(FULL_SAFE_BROWSING)
 void BlacklistStateFetcher::SetSafeBrowsingConfig(
     const safe_browsing::SafeBrowsingProtocolConfig& config) {
   safe_browsing_config_.reset(
       new safe_browsing::SafeBrowsingProtocolConfig(config));
 }
+#endif
 
 void BlacklistStateFetcher::SetURLRequestContextForTest(
       net::URLRequestContextGetter* request_context) {
@@ -88,6 +93,7 @@ void BlacklistStateFetcher::SetURLRequestContextForTest(
 }
 
 GURL BlacklistStateFetcher::RequestUrl() const {
+#if defined(FULL_SAFE_BROWSING)
   std::string url = base::StringPrintf(
       "%s/%s?client=%s&appver=%s&pver=2.2",
       safe_browsing_config_->url_prefix.c_str(),
@@ -100,6 +106,9 @@ GURL BlacklistStateFetcher::RequestUrl() const {
                         net::EscapeQueryParamValue(api_key, true).c_str());
   }
   return GURL(url);
+#else
+  return GURL();
+#endif
 }
 
 void BlacklistStateFetcher::OnURLFetchComplete(const net::URLFetcher* source) {

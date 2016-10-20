@@ -68,7 +68,9 @@
 #include "chrome/browser/profiles/profile_metrics.h"
 #include "chrome/browser/push_messaging/push_messaging_service_factory.h"
 #include "chrome/browser/push_messaging/push_messaging_service_impl.h"
+#if defined(FULL_SAFE_BROWSING)
 #include "chrome/browser/safe_browsing/safe_browsing_service.h"
+#endif
 #include "chrome/browser/sessions/session_service_factory.h"
 #include "chrome/browser/signin/signin_manager_factory.h"
 #include "chrome/browser/signin/signin_ui_util.h"
@@ -467,12 +469,14 @@ ProfileImpl::ProfileImpl(
       path_, sequenced_task_runner, create_mode == CREATE_MODE_SYNCHRONOUS);
 #endif
 
+#if defined(FULL_SAFE_BROWSING)
   scoped_refptr<safe_browsing::SafeBrowsingService> safe_browsing_service(
       g_browser_process->safe_browsing_service());
   if (safe_browsing_service.get()) {
     pref_validation_delegate_ =
         safe_browsing_service->CreatePreferenceValidationDelegate(this);
   }
+#endif
 
   content::BrowserContext::Initialize(this, path_);
 

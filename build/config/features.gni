@@ -83,6 +83,7 @@ declare_args() {
   } else {
     safe_browsing_mode = 1
   }
+  safe_browsing_mode = 0
 
   # Set to true make a build that disables activation of field trial tests
   # specified in testing/variations/fieldtrial_testing_config_*.json.

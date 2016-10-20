@@ -174,6 +174,7 @@ void AddConnectionExplanation(
 void CheckSafeBrowsingStatus(content::NavigationEntry* entry,
                              content::WebContents* web_contents,
                              SecurityStateModel::VisibleSecurityState* state) {
+#if defined(FULL_SAFE_BROWSING)
   safe_browsing::SafeBrowsingService* sb_service =
       g_browser_process->safe_browsing_service();
   if (!sb_service)
@@ -184,6 +185,9 @@ void CheckSafeBrowsingStatus(content::NavigationEntry* entry,
     state->fails_malware_check = true;
     state->initial_security_level = SecurityStateModel::DANGEROUS;
   }
+#else
+	return;
+#endif
 }
 
 }  // namespace

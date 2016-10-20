@@ -213,10 +213,12 @@ void MdDownloadsDOMHandler::SaveDownload(
       PrefService* prefs = profile_->GetPrefs();
       if (!profile_->IsOffTheRecord() &&
           prefs->GetBoolean(prefs::kSafeBrowsingEnabled)) {
+#if defined(FULL_SAFE_BROWSING)
         DownloadDangerPrompt::SendSafeBrowsingDownloadReport(
             safe_browsing::ClientSafeBrowsingReportRequest::
                 DANGEROUS_DOWNLOAD_RECOVERY,
             true, *download);
+#endif
       }
     }
     DangerPromptDone(download->GetId(), DownloadDangerPrompt::ACCEPT);

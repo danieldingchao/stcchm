@@ -759,7 +759,7 @@ void BrowsingDataRemover::RemoveImpl(
 
     storage_partition_remove_mask |=
         content::StoragePartition::REMOVE_DATA_MASK_COOKIES;
-
+#if defined FULL_SAFE_BROWSING
     // Clear the safebrowsing cookies only if time period is for "all time".  It
     // doesn't make sense to apply the time period of deleting in the last X
     // hours/days to the safebrowsing cookies since they aren't the result of
@@ -791,6 +791,7 @@ void BrowsingDataRemover::RemoveImpl(
         }
       }
     }
+#endif
 
     MediaDeviceIDSalt::Reset(profile_->GetPrefs());
   }

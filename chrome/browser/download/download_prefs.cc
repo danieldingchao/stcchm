@@ -190,8 +190,10 @@ DownloadPrefs::DownloadPrefs(Profile* profile) : profile_(profile) {
     // automatically can change in the future. When the list is tightened, it is
     // expected that some entries in the users' auto open list will get dropped
     // permanently as a result.
+#if defined(FULL_SAFE_BROWSING)    
     if (FileTypePolicies::GetInstance()->IsAllowedToOpenAutomatically(
             filename_with_extension))
+#endif  
       auto_open_.insert(extension);
   }
 }
@@ -317,9 +319,9 @@ bool DownloadPrefs::IsAutoOpenEnabledBasedOnExtension(
 bool DownloadPrefs::EnableAutoOpenBasedOnExtension(
     const base::FilePath& file_name) {
   base::FilePath::StringType extension = file_name.Extension();
-  if (!FileTypePolicies::GetInstance()->IsAllowedToOpenAutomatically(
-          file_name))
-    return false;
+  //if (!FileTypePolicies::GetInstance()->IsAllowedToOpenAutomatically(
+  //        file_name))
+  //  return false;
 
   DCHECK(extension[0] == base::FilePath::kExtensionSeparator);
   extension.erase(0, 1);

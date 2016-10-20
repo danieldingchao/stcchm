@@ -69,8 +69,10 @@
 #include "chrome/browser/renderer_host/chrome_navigation_ui_data.h"
 #include "chrome/browser/renderer_host/chrome_render_message_filter.h"
 #include "chrome/browser/renderer_host/pepper/chrome_browser_pepper_host_factory.h"
+#if defined(FULL_SAFE_BROWSING)
 #include "chrome/browser/safe_browsing/safe_browsing_service.h"
 #include "chrome/browser/safe_browsing/ui_manager.h"
+#endif
 #include "chrome/browser/search/instant_service.h"
 #include "chrome/browser/search/instant_service_factory.h"
 #include "chrome/browser/search/search.h"
@@ -648,6 +650,7 @@ void HandleFlashDownloadActionOnUIThread(int render_process_id,
 }
 #endif  // defined(ENABLE_PLUGINS)
 
+#if defined(FULL_SAFE_BROWSING)
 // An implementation of the SSLCertReporter interface used by
 // SSLErrorHandler. Uses the SafeBrowsing UI manager to send invalid
 // certificate reports.
@@ -672,6 +675,18 @@ class SafeBrowsingSSLCertReporter : public SSLCertReporter {
   const scoped_refptr<safe_browsing::SafeBrowsingUIManager>
       safe_browsing_ui_manager_;
 };
+#else
+class NoSafeBrowsingSSLCertReporter : public SSLCertReporter {
+public:
+    explicit NoSafeBrowsingSSLCertReporter(){}
+    ~NoSafeBrowsingSSLCertReporter() override {}
+
+    // SSLCertReporter implementation
+    void ReportInvalidCertificateChain(
+        const std::string& serialized_report) override {
+    }
+};
+#endif
 
 #if BUILDFLAG(ANDROID_JAVA_UI)
 void HandleSingleTabModeBlockOnUIThread(const BlockedWindowParams& params) {
@@ -1590,6 +1605,7 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
         }
       }
 
+#if defined(FULL_SAFE_BROWSING)  
       // Disable client-side phishing detection in the renderer if it is
       // disabled in the Profile preferences or the browser process.
       if (!prefs->GetBoolean(prefs::kSafeBrowsingEnabled) ||
@@ -1597,7 +1613,7 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
         command_line->AppendSwitch(
             switches::kDisableClientSidePhishingDetection);
       }
-
+#endif
       if (prefs->GetBoolean(prefs::kPrintPreviewDisabled))
         command_line->AppendSwitch(switches::kDisablePrintPreview);
 
@@ -2154,12 +2170,17 @@ void ChromeContentBrowserClient::AllowCertificateError(
   if (expired_previous_decision)
     options_mask |= SSLErrorUI::EXPIRED_BUT_PREVIOUSLY_ALLOWED;
 
+#if defined(FULL_SAFE_BROWSING)
   safe_browsing::SafeBrowsingService* safe_browsing_service =
       g_browser_process->safe_browsing_service();
   std::unique_ptr<SafeBrowsingSSLCertReporter> cert_reporter(
       new SafeBrowsingSSLCertReporter(safe_browsing_service
                                           ? safe_browsing_service->ui_manager()
                                           : nullptr));
+#else
+  std::unique_ptr<NoSafeBrowsingSSLCertReporter> cert_reporter(
+        new NoSafeBrowsingSSLCertReporter());
+#endif
   SSLErrorHandler::HandleSSLError(web_contents, cert_error, ssl_info,
                                   request_url, options_mask,
                                   std::move(cert_reporter), callback);

@@ -67,7 +67,9 @@
 #include "chrome/browser/printing/print_job_manager.h"
 #include "chrome/browser/printing/print_preview_dialog_controller.h"
 #include "chrome/browser/profiles/profile_manager.h"
+#if defined(FULL_SAFE_BROWSING)
 #include "chrome/browser/safe_browsing/safe_browsing_service.h"
+#endif
 #include "chrome/browser/shell_integration.h"
 #include "chrome/browser/status_icons/status_tray.h"
 #include "chrome/browser/ui/browser_dialogs.h"
@@ -204,7 +206,9 @@ BrowserProcessImpl::BrowserProcessImpl(
       created_icon_manager_(false),
       created_notification_ui_manager_(false),
       created_notification_bridge_(false),
+#if defined(FULL_SAFE_BROWSING)
       created_safe_browsing_service_(false),
+#endif
       created_subresource_filter_ruleset_service_(false),
       shutting_down_(false),
       tearing_down_(false),
@@ -304,8 +308,10 @@ void BrowserProcessImpl::StartTearDown() {
   // that URLFetcher operation before going away.)
   metrics_services_manager_.reset();
   intranet_redirect_detector_.reset();
+#if defined(FULL_SAFE_BROWSING)
   if (safe_browsing_service_.get())
     safe_browsing_service()->ShutDown();
+#endif
   network_time_tracker_.reset();
 #if defined(ENABLE_PLUGIN_INSTALLATION)
   plugins_resource_service_.reset();
@@ -880,7 +886,7 @@ StatusTray* BrowserProcessImpl::status_tray() {
     CreateStatusTray();
   return status_tray_.get();
 }
-
+#if defined(FULL_SAFE_BROWSING)
 safe_browsing::SafeBrowsingService*
 BrowserProcessImpl::safe_browsing_service() {
   DCHECK(CalledOnValidThread());
@@ -896,6 +902,7 @@ safe_browsing::ClientSideDetectionService*
     return safe_browsing_service()->safe_browsing_detection_service();
   return NULL;
 }
+#endif
 
 subresource_filter::RulesetService*
 BrowserProcessImpl::subresource_filter_ruleset_service() {
@@ -1172,6 +1179,7 @@ void BrowserProcessImpl::CreateBackgroundPrintingManager() {
 #endif
 }
 
+#if defined(FULL_SAFE_BROWSING)
 void BrowserProcessImpl::CreateSafeBrowsingService() {
   DCHECK(!safe_browsing_service_);
   // Set this flag to true so that we don't retry indefinitely to
@@ -1181,6 +1189,7 @@ void BrowserProcessImpl::CreateSafeBrowsingService() {
       safe_browsing::SafeBrowsingService::CreateSafeBrowsingService();
   safe_browsing_service_->Initialize();
 }
+#endif
 
 void BrowserProcessImpl::CreateSubresourceFilterRulesetService() {
   DCHECK(!subresource_filter_ruleset_service_);

@@ -616,8 +616,10 @@ void PermissionUmaUtil::RecordPermissionAction(
             requesting_origin, permission, profile),
         PermissionDecisionAutoBlocker::GetIgnoreCount(
             requesting_origin, permission, profile));
+#if defined(FULL_SAFE_BROWSING)
     g_browser_process->safe_browsing_service()
         ->ui_manager()->ReportPermissionAction(report_info);
+#endif
   }
 
   bool secure_origin = content::IsOriginSecure(requesting_origin);

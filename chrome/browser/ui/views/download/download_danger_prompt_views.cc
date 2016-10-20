@@ -302,6 +302,7 @@ void DownloadDangerPromptViews::RunDone(Action action) {
   OnDone done = done_;
   done_.Reset();
   if (download_ != NULL) {
+#if defined(FULL_SAFE_BROWSING)
     // If this download is no longer dangerous, is already canceled or
     // completed, don't send any report.
     if (download_->IsDangerous() && !download_->IsDone()) {
@@ -316,6 +317,7 @@ void DownloadDangerPromptViews::RunDone(Action action) {
         SendSafeBrowsingDownloadReport(report_type, accept, *download_);
       }
     }
+#endif
     download_->RemoveObserver(this);
     download_ = NULL;
   }

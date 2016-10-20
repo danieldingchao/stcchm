@@ -891,9 +891,13 @@ DownloadFileType::DangerLevel DownloadTargetDeterminer::GetDangerLevel(
       download_->HasUserGesture())
     return DownloadFileType::NOT_DANGEROUS;
 
+#if defined(FULL_SAFE_BROWSING)
   DownloadFileType::DangerLevel danger_level =
       safe_browsing::FileTypePolicies::GetInstance()->GetFileDangerLevel(
           virtual_path_.BaseName());
+#else
+  DownloadFileType::DangerLevel danger_level = DownloadFileType::NOT_DANGEROUS;
+#endif
 
   // A danger level of ALLOW_ON_USER_GESTURE is used to label potentially
   // dangerous file types that have a high frequency of legitimate use. We would

@@ -207,6 +207,7 @@ BadClockBlockingPage* CreateBadClockBlockingPage(
       base::Callback<void(content::CertificateRequestResultType)>());
 }
 
+#if defined(FULL_SAFE_BROWSING)
 safe_browsing::SafeBrowsingBlockingPage* CreateSafeBrowsingBlockingPage(
     content::WebContents* web_contents) {
   safe_browsing::SBThreatType threat_type =
@@ -259,7 +260,7 @@ safe_browsing::SafeBrowsingBlockingPage* CreateSafeBrowsingBlockingPage(
       g_browser_process->safe_browsing_service()->ui_manager().get(),
       web_contents, main_frame_url, resource);
 }
-
+#endif
 #if defined(ENABLE_CAPTIVE_PORTAL_DETECTION)
 CaptivePortalBlockingPage* CreateCaptivePortalBlockingPage(
     content::WebContents* web_contents) {
@@ -355,9 +356,6 @@ void InterstitialHTMLSource::StartDataRequest(
   std::unique_ptr<content::InterstitialPageDelegate> interstitial_delegate;
   if (base::StartsWith(path, "ssl", base::CompareCase::SENSITIVE)) {
     interstitial_delegate.reset(CreateSSLBlockingPage(web_contents_));
-  } else if (base::StartsWith(path, "safebrowsing",
-                              base::CompareCase::SENSITIVE)) {
-    interstitial_delegate.reset(CreateSafeBrowsingBlockingPage(web_contents_));
   } else if (base::StartsWith(path, "clock", base::CompareCase::SENSITIVE)) {
     interstitial_delegate.reset(CreateBadClockBlockingPage(web_contents_));
   }

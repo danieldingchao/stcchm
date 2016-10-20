@@ -35,7 +35,11 @@
 #include "chrome/browser/download/save_package_file_picker.h"
 #include "chrome/browser/platform_util.h"
 #include "chrome/browser/profiles/profile.h"
+#if defined(FULL_SAFE_BROWSING)
 #include "chrome/browser/safe_browsing/safe_browsing_service.h"
+#else
+#include "content/public/browser/browser_thread.h"
+#endif
 #include "chrome/browser/ui/browser.h"
 #include "chrome/browser/ui/browser_finder.h"
 #include "chrome/browser/ui/chrome_pages.h"
@@ -77,8 +81,10 @@
 using content::BrowserThread;
 using content::DownloadItem;
 using content::DownloadManager;
+#if defined(FULL_SAFE_BROWSING)
 using safe_browsing::DownloadFileType;
 using safe_browsing::DownloadProtectionService;
+#endif
 
 namespace {
 
@@ -208,13 +214,14 @@ ChromeDownloadManagerDelegate::~ChromeDownloadManagerDelegate() {
 
 void ChromeDownloadManagerDelegate::SetDownloadManager(DownloadManager* dm) {
   download_manager_ = dm;
-
+#if defined(FULL_SAFE_BROWSING)
   safe_browsing::SafeBrowsingService* sb_service =
       g_browser_process->safe_browsing_service();
   if (sb_service && !profile_->IsOffTheRecord()) {
     // Include this download manager in the set monitored by safe browsing.
     sb_service->AddDownloadManager(dm);
   }
+#endif  
 }
 
 void ChromeDownloadManagerDelegate::Shutdown() {
@@ -450,13 +457,14 @@ void ChromeDownloadManagerDelegate::ChooseSavePath(
 
 void ChromeDownloadManagerDelegate::SanitizeSavePackageResourceName(
     base::FilePath* filename) {
+#if defined(FULL_SAFE_BROWSING)
   safe_browsing::FileTypePolicies* file_type_policies =
       safe_browsing::FileTypePolicies::GetInstance();
 
   if (file_type_policies->GetFileDangerLevel(*filename) ==
       safe_browsing::DownloadFileType::NOT_DANGEROUS)
     return;
-
+#endif
   base::FilePath default_filename = base::FilePath::FromUTF8Unsafe(
       l10n_util::GetStringUTF8(IDS_DEFAULT_DOWNLOAD_FILENAME));
   *filename = filename->AddExtension(default_filename.BaseName().value());
@@ -550,19 +558,19 @@ ChromeDownloadManagerDelegate::ApplicationClientIdForFileScanning() const {
   return std::string(chrome::kApplicationClientIDStringForAVScanning);
 }
 
+#if defined(FULL_SAFE_BROWSING)
 DownloadProtectionService*
     ChromeDownloadManagerDelegate::GetDownloadProtectionService() {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
-#if defined(FULL_SAFE_BROWSING)
   safe_browsing::SafeBrowsingService* sb_service =
       g_browser_process->safe_browsing_service();
   if (sb_service && sb_service->download_protection_service() &&
       profile_->GetPrefs()->GetBoolean(prefs::kSafeBrowsingEnabled)) {
     return sb_service->download_protection_service();
   }
-#endif
   return NULL;
 }
+#endif
 
 void ChromeDownloadManagerDelegate::NotifyExtensions(
     DownloadItem* download,

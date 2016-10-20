@@ -49,6 +49,7 @@ const char* GetDangerTypeString(
 
 }  // namespace
 
+#if defined(FULL_SAFE_BROWSING)
 void DownloadDangerPrompt::SendSafeBrowsingDownloadReport(
     ClientSafeBrowsingReportRequest::ReportType report_type,
     bool did_proceed,
@@ -107,3 +108,4 @@ void DownloadDangerPrompt::RecordDownloadDangerPrompt(
         file_type_uma_value);
   }
 }
+#endif

@@ -34,8 +34,10 @@ class BlacklistStateFetcher : public net::URLFetcherDelegate {
 
   virtual void Request(const std::string& id, const RequestCallback& callback);
 
+#if defined(FULL_SAFE_BROWSING)
   void SetSafeBrowsingConfig(
       const safe_browsing::SafeBrowsingProtocolConfig& config);
+#endif
 
   void SetURLRequestContextForTest(
       net::URLRequestContextGetter* request_context);
@@ -54,8 +56,10 @@ class BlacklistStateFetcher : public net::URLFetcherDelegate {
   // ID for URLFetchers for testing.
   int url_fetcher_id_;
 
+#if defined(FULL_SAFE_BROWSING)
   std::unique_ptr<safe_browsing::SafeBrowsingProtocolConfig>
       safe_browsing_config_;
+#endif
   scoped_refptr<net::URLRequestContextGetter> url_request_context_getter_;
   scoped_refptr<net::URLRequestContextGetter> parent_request_context_for_test_;
 

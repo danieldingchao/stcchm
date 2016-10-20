@@ -222,6 +222,7 @@ class BrowserProcess {
   // on this platform (or this is a unit test).
   virtual StatusTray* status_tray() = 0;
 
+#if defined(FULL_SAFE_BROWSING)  
   // Returns the SafeBrowsing service.
   virtual safe_browsing::SafeBrowsingService* safe_browsing_service() = 0;
 
@@ -229,6 +230,7 @@ class BrowserProcess {
   // client-side detection servers.
   virtual safe_browsing::ClientSideDetectionService*
       safe_browsing_detection_service() = 0;
+#endif
 
   // Returns the service providing versioned storage for rules used by the Safe
   // Browsing subresource filter.
