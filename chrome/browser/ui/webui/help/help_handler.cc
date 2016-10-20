@@ -73,6 +73,9 @@
 #include "components/user_manager/user_manager.h"
 #endif
 
+#include "base/strings/utf_string_conversions.h"
+#include "chrome/common/chrome_version.h"
+
 using base::ListValue;
 using content::BrowserThread;
 
@@ -328,7 +331,7 @@ void HelpHandler::GetLocalizedValues(base::DictionaryValue* localized_strings) {
   localized_strings->SetString(
       "browserVersion",
       l10n_util::GetStringFUTF16(IDS_ABOUT_PRODUCT_VERSION,
-                                 BuildBrowserVersionString()));
+        base::UTF8ToUTF16(CHROME_VERSION_STRING)));
 
   localized_strings->SetString(
       "productCopyright",
@@ -378,6 +381,11 @@ void HelpHandler::GetLocalizedValues(base::DictionaryValue* localized_strings) {
   localized_strings->SetString("jsEngineVersion", v8::V8::GetVersion());
 
   localized_strings->SetString("userAgentInfo", GetUserAgent());
+
+  localized_strings->SetString(
+    "chromiumBranch",
+    l10n_util::GetStringFUTF16(IDS_ABOUT_KERNEL_VERSION,
+      BuildBrowserVersionString()));
 
   base::CommandLine::StringType command_line =
       base::CommandLine::ForCurrentProcess()->GetCommandLineString();

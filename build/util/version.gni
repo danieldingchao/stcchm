@@ -20,7 +20,7 @@ _version_dictionary_template = "full = \"@MAJOR@.@MINOR@.@BUILD@.@PATCH@\" " +
                                "build = \"@BUILD@\" patch = \"@PATCH@\" "
 
 # The file containing the Chrome version number.
-chrome_version_file = "//chrome/VERSION"
+chrome_version_file = "//chrome/VERSION_LEMON"
 
 _result = exec_script("version.py",
                       [

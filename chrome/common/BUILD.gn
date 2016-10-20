@@ -530,7 +530,7 @@ process_version("version_header") {
 
   sources = [
     "//build/util/LASTCHANGE",
-    "//chrome/VERSION",
+    "//chrome/VERSION_LEMON",
     branding_file_path,
   ]
   template_file = "chrome_version.h.in"

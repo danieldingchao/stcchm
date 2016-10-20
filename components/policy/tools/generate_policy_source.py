@@ -95,9 +95,9 @@ class PolicyDetails:
         raise RuntimeError('supported_on must define a start version: "%s"' % p)
 
       # Skip if the current Chromium version does not support the policy.
-      if (int(version_min) > chrome_major_version or
-          version_max != '' and int(version_max) < chrome_major_version):
-        continue
+      #if (int(version_min) > chrome_major_version or
+      #    version_max != '' and int(version_max) < chrome_major_version):
+      #  continue
 
       if platform.startswith('chrome.'):
         platform_sub = platform[7:]

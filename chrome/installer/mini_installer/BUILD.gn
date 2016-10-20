@@ -124,7 +124,7 @@ template("generate_mini_installer") {
 
     inputs = [
       "$chrome_dll_file",
-      "$root_out_dir/chrome.exe",
+      "$root_out_dir/lemon.exe",
       "$root_out_dir/locales/en-US.pak",
       "$root_out_dir/setup.exe",
       release_file,

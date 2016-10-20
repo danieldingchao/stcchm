@@ -45,7 +45,7 @@ template("process_version_rc_template") {
   }
   _sources = [
     "//build/util/LASTCHANGE",
-    "//chrome/VERSION",
+    "//chrome/VERSION_LEMON",
     branding_file_path,
   ]
   if (defined(invoker.sources)) {

@@ -2,6 +2,7 @@
 <!DOCTYPE translationbundle>
 <translationbundle lang="zh-CN">
 <translation id="IDS_OPTIONS_STARTUP_HOMEPAGE">打开预置导航首页</translation>
+<translation id="IDS_ABOUT_KERNEL_VERSION">内核版本 <ph name="PRODUCT_VERSION" /></translation>
 <translation id="1000498691615767391">选择要打开的文件夹</translation>
 <translation id="1005274289863221750">使用您的麦克风和摄像头</translation>
 <translation id="1007233996198401083">无法连接。</translation>

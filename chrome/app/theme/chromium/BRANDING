@@ -1,9 +1,9 @@
-COMPANY_FULLNAME=The Chromium Authors
-COMPANY_SHORTNAME=The Chromium Authors
-PRODUCT_FULLNAME=Chromium
-PRODUCT_SHORTNAME=Chromium
-PRODUCT_INSTALLER_FULLNAME=Chromium Installer
-PRODUCT_INSTALLER_SHORTNAME=Chromium Installer
-COPYRIGHT=Copyright 2016 The Chromium Authors. All rights reserved.
-MAC_BUNDLE_ID=org.chromium.Chromium
+COMPANY_FULLNAME=The Lemon Authors
+COMPANY_SHORTNAME=The Lemon Authors
+PRODUCT_FULLNAME=Lemon Browser
+PRODUCT_SHORTNAME=Lemon
+PRODUCT_INSTALLER_FULLNAME=Lemon Installer
+PRODUCT_INSTALLER_SHORTNAME=Lemon Installer
+COPYRIGHT=Copyright 2016 The Lemon Authors. All rights reserved.
+MAC_BUNDLE_ID=com.lemonbrowser.Browser
 MAC_CREATOR_CODE=Cr24

@@ -16,8 +16,8 @@ def reorder_imports(input_dir, output_dir, architecture):
   (pdbs, manifests etc.).
   """
 
-  input_image = os.path.join(input_dir, 'chrome.exe')
-  output_image = os.path.join(output_dir, 'chrome.exe')
+  input_image = os.path.join(input_dir, 'lemon.exe')
+  output_image = os.path.join(output_dir, 'lemon.exe')
 
   swap_exe = os.path.join(
     __file__,
@@ -33,7 +33,7 @@ def reorder_imports(input_dir, output_dir, architecture):
 
   subprocess.check_call(args)
 
-  for fname in glob.iglob(os.path.join(input_dir, 'chrome.exe.*')):
+  for fname in glob.iglob(os.path.join(input_dir, 'lemon.exe.*')):
     shutil.copy(fname, os.path.join(output_dir, os.path.basename(fname)))
   return 0
 

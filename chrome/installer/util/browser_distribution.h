@@ -169,6 +169,7 @@ class BrowserDistribution {
 
  private:
   BrowserDistribution();
+  std::wstring m_language;
 
   DISALLOW_COPY_AND_ASSIGN(BrowserDistribution);
 };

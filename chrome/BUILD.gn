@@ -44,11 +44,11 @@ if (is_win) {
     # See comment in chrome_dll.gypi in the hardlink_to_output
     # target for why this cannot be 'initial' like the DLL.
     inputs = [
-      "$root_out_dir/initialexe/chrome.exe",
+      "$root_out_dir/initialexe/lemon.exe",
     ]
     outputs = [
-      "$root_out_dir/chrome.exe",
-      "$root_out_dir/chrome.exe.pdb",
+      "$root_out_dir/lemon.exe",
+      "$root_out_dir/lemon.exe.pdb",
     ]
     args = [
       "-i",
@@ -108,9 +108,9 @@ if (!is_android && !is_mac) {
 
   executable("chrome_initial") {
     if (is_win) {
-      output_name = "initialexe/chrome"
+      output_name = "initialexe/lemon"
     } else {
-      output_name = "chrome"
+      output_name = "lemon"
     }
 
     # Because the sources list varies so significantly per-platform, generally

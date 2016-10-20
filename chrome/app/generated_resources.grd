@@ -210,6 +210,10 @@ are declared in build/common.gypi.
     <message name="IDS_OPTIONS_STARTUP_HOMEPAGE" use_name_for_id = "true" desc="start up show homepage">
       Open Built-in page
     </message>
+	<message name="IDS_ABOUT_KERNEL_VERSION" use_name_for_id = "true" desc="start up show homepage">
+      Kernel Version <ph name="PRODUCT_VERSION">$1<ex>15.0.865.0</ex></ph>
+    </message>
+	
       <!-- TODO add all of your "string table" messages here.  Remember to
       change nontranslateable parts of the messages into placeholders (using the
       <ph> element).  You can also use the 'grit add' tool to help you identify

@@ -32,6 +32,8 @@
 #include "chrome/installer/util/master_preferences.h"
 #include "chrome/installer/util/non_updating_app_registration_data.h"
 
+#include "base/win/i18n.h"
+
 using installer::MasterPreferences;
 
 namespace {
@@ -51,17 +53,59 @@ BrowserDistribution::Type GetCurrentDistributionType() {
   return BrowserDistribution::CHROME_BROWSER;
 }
 
+bool GetUserDefaultUILanguage(std::wstring* language, std::wstring* region) {
+  DCHECK(language);
+
+  LANGID lang_id = ::GetUserDefaultUILanguage();
+  if (LOCALE_CUSTOM_UI_DEFAULT != lang_id) {
+    const LCID locale_id = MAKELCID(lang_id, SORT_DEFAULT);
+    // max size for LOCALE_SISO639LANGNAME and LOCALE_SISO3166CTRYNAME is 9
+    wchar_t result_buffer[9];
+    int result_length =
+      GetLocaleInfo(locale_id, LOCALE_SISO639LANGNAME, &result_buffer[0],
+        arraysize(result_buffer));
+    DPCHECK(0 != result_length) << "Failed getting language id";
+    if (1 < result_length) {
+      language->assign(&result_buffer[0], result_length - 1);
+      region->clear();
+      if (SUBLANG_NEUTRAL != SUBLANGID(lang_id)) {
+        result_length =
+          GetLocaleInfo(locale_id, LOCALE_SISO3166CTRYNAME, &result_buffer[0],
+            arraysize(result_buffer));
+        DPCHECK(0 != result_length) << "Failed getting region id";
+        if (1 < result_length)
+          region->assign(&result_buffer[0], result_length - 1);
+      }
+      return true;
+    }
+  }
+  else {
+    // This is entirely unexpected on pre-Vista, which is the only time we
+    // should try GetUserDefaultUILanguage anyway.
+    NOTREACHED() << "Cannot determine language for a supplemental locale.";
+  }
+  return false;
+}
+
 }  // namespace
 
 BrowserDistribution::BrowserDistribution()
     : type_(CHROME_BROWSER),
       app_reg_data_(base::MakeUnique<NonUpdatingAppRegistrationData>(
-          L"Software\\Chromium")) {}
+          L"Software\\Chromium")) {
+  std::wstring lan_region;
+  if (!GetUserDefaultUILanguage(&m_language, &lan_region))
+    m_language = L"en";
+}
 
 BrowserDistribution::BrowserDistribution(
     Type type,
     std::unique_ptr<AppRegistrationData> app_reg_data)
-    : type_(type), app_reg_data_(std::move(app_reg_data)) {}
+    : type_(type), app_reg_data_(std::move(app_reg_data)) {
+  std::wstring lan_region;
+  if (!GetUserDefaultUILanguage(&m_language, &lan_region))
+    m_language = L"en";
+}
 
 BrowserDistribution::~BrowserDistribution() {}
 
@@ -153,7 +197,9 @@ base::string16 BrowserDistribution::GetActiveSetupGuid() {
 }
 
 base::string16 BrowserDistribution::GetBaseAppName() {
-  return L"Chromium";
+  if (m_language == L"zh")
+    return L"ÄûÃÊä¯ÀÀÆ÷";
+  return L"LemonBrowser";
 }
 
 base::string16 BrowserDistribution::GetDisplayName() {
@@ -184,27 +230,27 @@ base::string16 BrowserDistribution::GetStartMenuShortcutSubfolder(
 }
 
 base::string16 BrowserDistribution::GetBaseAppId() {
-  return L"Chromium";
+  return L"LemonBrowser";
 }
 
 base::string16 BrowserDistribution::GetBrowserProgIdPrefix() {
   // This used to be "ChromiumHTML", but was forced to become "ChromiumHTM"
   // because of http://crbug.com/153349.  See the declaration of this function
   // in the header file for more details.
-  return L"ChromiumHTM";
+  return L"LemonHTM";
 }
 
 base::string16 BrowserDistribution::GetBrowserProgIdDesc() {
-  return L"Chromium HTML Document";
+  return L"Lemon HTML Document";
 }
 
 
 base::string16 BrowserDistribution::GetInstallSubDir() {
-  return L"Chromium";
+  return L"LemonBrowser";
 }
 
 base::string16 BrowserDistribution::GetPublisherName() {
-  return L"Chromium";
+  return L"LemonBrowser";
 }
 
 base::string16 BrowserDistribution::GetAppDescription() {
@@ -218,7 +264,7 @@ base::string16 BrowserDistribution::GetLongAppDescription() {
 }
 
 std::string BrowserDistribution::GetSafeBrowsingName() {
-  return "chromium";
+  return "LemonBrowser";
 }
 
 base::string16 BrowserDistribution::GetDistributionData(HKEY root_key) {
@@ -230,7 +276,7 @@ base::string16 BrowserDistribution::GetRegistryPath() {
 }
 
 base::string16 BrowserDistribution::GetUninstallRegPath() {
-  return L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Chromium";
+  return L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\LemonBrowser";
 }
 
 BrowserDistribution::DefaultBrowserControlPolicy
