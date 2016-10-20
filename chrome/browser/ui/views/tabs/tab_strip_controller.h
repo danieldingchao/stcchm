@@ -93,7 +93,7 @@ class TabStripController {
   virtual bool IsCompatibleWith(TabStrip* other) const = 0;
 
   // Creates the new tab.
-  virtual void CreateNewTab() = 0;
+  virtual void CreateNewTab(const ui::Event& event) = 0;
 
   // Creates a new tab, and loads |location| in the tab. If |location| is a
   // valid URL, then simply loads the URL, otherwise this can open a

@@ -230,6 +230,12 @@
 #include "ash/shell.h"  // nogncheck
 #endif
 
+#include "components/omnibox/browser/autocomplete_classifier.h"
+#include "chrome/browser/autocomplete/autocomplete_classifier_factory.h"
+#include "components/omnibox/browser/autocomplete_controller.h"
+#include "components/omnibox/browser/autocomplete_match.h"
+#include "components/omnibox/browser/autocomplete_provider.h"
+
 using base::TimeDelta;
 using base::UserMetricsAction;
 using content::NativeWebKeyboardEvent;
@@ -2580,4 +2586,28 @@ bool Browser::MaybeCreateBackgroundContents(
   }
 
   return contents != NULL;
+}
+
+void Browser::OnSearchText(const base::string16& text) {
+  if (!profile_)
+    return;
+  if (!(AutocompleteClassifierFactory::GetForProfile(profile_)))
+    return;
+
+  AutocompleteMatch match;
+  AutocompleteClassifierFactory::GetForProfile(profile_)->Classify(
+    text, false, false, metrics::OmniboxEventProto::INVALID_SPEC, &match, NULL);
+  GURL navigation_url = match.destination_url;
+
+  if (navigation_url.is_valid()) {
+    WindowOpenDisposition eWindowOpenDisposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+    if (HIBYTE(GetKeyState(VK_SHIFT)))
+      eWindowOpenDisposition = WindowOpenDisposition::NEW_BACKGROUND_TAB;
+
+    chrome::NavigateParams params(this, navigation_url, ui::PAGE_TRANSITION_LINK);
+    params.disposition = eWindowOpenDisposition;
+    params.tabstrip_add_types = TabStripModel::ADD_NONE;
+
+    chrome::Navigate(&params);
+  }
 }

@@ -336,18 +336,12 @@ NewTabButton::~NewTabButton() {
 #if defined(OS_WIN)
 void NewTabButton::OnMouseReleased(const ui::MouseEvent& event) {
   if (event.IsOnlyRightMouseButton()) {
-    gfx::Point point = event.location();
-    views::View::ConvertPointToScreen(this, &point);
-    point = display::win::ScreenWin::DIPToScreenPoint(point);
-    bool destroyed = false;
-    destroyed_ = &destroyed;
-    gfx::ShowSystemMenuAtPoint(views::HWNDForView(this), point);
-    if (destroyed)
-      return;
-
-    destroyed_ = NULL;
-    SetState(views::CustomButton::STATE_NORMAL);
+    if (!HitTestPoint(event.location())) {
+      SetState(STATE_NORMAL);
     return;
+  }
+    SetState(STATE_HOVERED);
+    NotifyClick(event);
   }
   views::ImageButton::OnMouseReleased(event);
 }
@@ -2672,7 +2666,7 @@ void TabStrip::ButtonPressed(views::Button* sender, const ui::Event& event) {
       }
     }
 
-    controller_->CreateNewTab();
+    controller_->CreateNewTab(event);
     if (event.type() == ui::ET_GESTURE_TAP)
       TouchUMA::RecordGestureAction(TouchUMA::GESTURE_NEWTAB_TAP);
   }

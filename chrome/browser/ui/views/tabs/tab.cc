@@ -964,6 +964,11 @@ bool Tab::GetTooltipTextOrigin(const gfx::Point& p, gfx::Point* origin) const {
 bool Tab::OnMousePressed(const ui::MouseEvent& event) {
   controller_->OnMouseEventInTab(this, event);
 
+  if ((event.flags() & ui::EF_IS_DOUBLE_CLICK) && !controller()->IsTabPinned(this)) {
+      controller()->CloseTab(this, CLOSE_TAB_FROM_MOUSE);
+      return true;
+  }
+
   // Allow a right click from touch to drag, which corresponds to a long click.
   if (event.IsOnlyLeftMouseButton() ||
       (event.IsOnlyRightMouseButton() && event.flags() & ui::EF_FROM_TOUCH)) {

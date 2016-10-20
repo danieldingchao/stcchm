@@ -47,6 +47,19 @@
 #include "ui/views/widget/widget.h"
 #include "url/origin.h"
 
+#include "components/omnibox/browser/autocomplete_controller.h"
+#include "chrome/browser/autocomplete/chrome_autocomplete_provider_client.h"
+#include "chrome/browser/ui/simple_message_box.h"
+#include "ui/base/l10n/l10n_util.h"
+#include "content/public/browser/site_instance.h"
+#include "base/strings/string_util.h"
+#include "base/strings/string_number_conversions.h"
+#include "grit/google_chrome_strings.h"
+#include "grit/generated_resources.h"
+#include "base/strings/string_tokenizer.h"
+#include "base/strings/utf_string_conversions.h"
+#include "chrome/browser/ui/omnibox/clipboard_utils.h"
+
 using base::UserMetricsAction;
 using content::WebContents;
 
@@ -358,8 +371,68 @@ bool BrowserTabStripController::IsCompatibleWith(TabStrip* other) const {
   return other_profile == profile();
 }
 
-void BrowserTabStripController::CreateNewTab() {
-  model_->delegate()->AddTabAt(GURL(), -1, true);
+void BrowserTabStripController::CreateNewTab(const ui::Event& event) {
+  // right click new button for clipboard
+  if (event.flags() & ui::EF_RIGHT_MOUSE_BUTTON) {
+    base::string16 clipbord;
+    ui::Clipboard* clipboard = ui::Clipboard::GetForCurrentThread();
+    if (clipboard->IsFormatAvailable(ui::Clipboard::GetPlainTextWFormatType(),
+      ui::CLIPBOARD_TYPE_COPY_PASTE)) {
+      clipboard->ReadText(ui::CLIPBOARD_TYPE_COPY_PASTE, &clipbord);
+    }
+    if (!clipbord.empty()) {
+      base::string16 trimed16 = base::CollapseWhitespace(clipbord, false);
+      std::vector<base::string16> vector_open_urls;
+      base::WStringTokenizer tokenizer(trimed16, L" ");
+      while (tokenizer.GetNext())
+        vector_open_urls.push_back(tokenizer.token());
+
+      if (vector_open_urls.size() >= 10) {
+        chrome::MessageBoxResult messagebox_result =
+          chrome::ShowQuestionMessageBox(tabstrip_->GetWidget()->GetNativeWindow(),
+            l10n_util::GetStringUTF16(IDS_PRODUCT_NAME),
+            l10n_util::GetStringFUTF16(IDS_BOOKMARK_BAR_SHOULD_OPEN_ALL,
+              base::IntToString16(vector_open_urls.size())));
+        if (messagebox_result != chrome::MESSAGE_BOX_RESULT_YES)
+          return;
+      }
+
+      std::vector<base::string16>::iterator it;
+      for (it = vector_open_urls.begin(); it != vector_open_urls.end(); ++it) {
+        if (!it->empty()) {
+          AutocompleteController autocompleteController(
+            base::WrapUnique(new ChromeAutocompleteProviderClient(model_->profile())),
+            NULL, AutocompleteClassifier::kDefaultOmniboxProviders);
+
+          autocompleteController.Start(AutocompleteInput(
+            it->c_str(), base::string16::npos, std::string(),
+            GURL(*it), metrics::OmniboxEventProto::OTHER, true, false,
+            false, false, false, ChromeAutocompleteSchemeClassifier(model_->profile())));
+
+          DCHECK(autocompleteController.done());
+          const AutocompleteResult& result = autocompleteController.result();
+
+          chrome::NavigateParams params(browser_,
+            result.default_match()->destination_url, ui::PAGE_TRANSITION_LINK);
+
+          const WebContents* contents = model_->GetWebContentsAt(model_->active_index());
+          if (contents && (contents->GetURL() == GURL(chrome::kChromeUINewTabURL) ||
+            search::IsInstantNTP(contents))) {
+            params.disposition = WindowOpenDisposition::CURRENT_TAB;
+          } else {
+            params.disposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+          }
+
+          params.tabstrip_add_types =
+            TabStripModel::ADD_FORCE_INDEX | TabStripModel::ADD_INHERIT_OPENER;
+
+          Navigate(&params);
+        }
+      }
+    }
+  } else {
+    model_->delegate()->AddTabAt(GURL(), -1, true);
+  }
 }
 
 void BrowserTabStripController::CreateNewTabWithLocation(

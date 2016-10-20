@@ -68,7 +68,7 @@ class BrowserTabStripController : public TabStripController,
   void OnDropIndexUpdate(int index, bool drop_before) override;
   void PerformDrop(bool drop_before, int index, const GURL& url) override;
   bool IsCompatibleWith(TabStrip* other) const override;
-  void CreateNewTab() override;
+  void CreateNewTab(const ui::Event& event) override;
   void CreateNewTabWithLocation(const base::string16& loc) override;
   bool IsIncognito() override;
   void StackedLayoutMaybeChanged() override;

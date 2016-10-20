@@ -12,6 +12,9 @@
 #include "content/public/browser/web_contents.h"
 #include "ui/base/dragdrop/os_exchange_data.h"
 
+#include "chrome/browser/ui/tabs/tab_strip_model.h"
+#include "chrome/browser/ui/browser_navigator_params.h"
+
 using content::WebContents;
 
 WebDragBookmarkHandlerAura::WebDragBookmarkHandlerAura()
@@ -73,6 +76,41 @@ void WebDragBookmarkHandlerAura::OnDrop() {
   }
 
   bookmark_drag_data_.Clear();
+}
+
+void WebDragBookmarkHandlerAura::OnDropExt(const ui::OSExchangeData& data) {
+  Browser* browser = chrome::FindBrowserWithWebContents(web_contents_);
+  if (!browser) {
+    return;
+  }
+
+  WindowOpenDisposition eWindowOpenDisposition = WindowOpenDisposition::NEW_BACKGROUND_TAB;
+  if (HIBYTE(GetKeyState(VK_SHIFT)))
+    eWindowOpenDisposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+
+  // if HasPlainTextURL, HasURL also return true
+  if (data.HasURL(ui::OSExchangeData::CONVERT_FILENAMES)) {
+    GURL url;
+    base::string16 title;
+    data.GetURLAndTitle(ui::OSExchangeData::CONVERT_FILENAMES, &url, &title);
+
+    if (url.SchemeIs("http") || url.SchemeIs("https")) {
+      chrome::NavigateParams params(browser, url, ui::PAGE_TRANSITION_LINK);
+      params.disposition = eWindowOpenDisposition;
+      params.tabstrip_add_types = TabStripModel::ADD_NONE;
+
+      chrome::Navigate(&params);
+      return;
+    }
+  } else if (data.HasString()) {
+    base::string16 plain_text;
+    data.GetString(&plain_text);
+    if (browser && 0 != plain_text.find(L"javascript:")) {
+      if (!plain_text.empty()) {
+        browser->OnSearchText(plain_text);
+      }
+    }
+  }
 }
 
 void WebDragBookmarkHandlerAura::OnDragLeave() {

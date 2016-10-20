@@ -31,6 +31,7 @@ class WebDragDestDelegate {
   virtual void OnDrop() = 0;
   // This should also clear any state kept about this drag.
   virtual void OnDragLeave() = 0;
+  virtual void OnDropExt(const ui::OSExchangeData& data) = 0;
 
 #if defined(USE_AURA)
   // Called at the start of every drag to supply the data associated with the

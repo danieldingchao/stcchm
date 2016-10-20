@@ -32,6 +32,7 @@ class WebDragBookmarkHandlerAura : public content::WebDragDestDelegate {
   void OnDrop() override;
   void OnDragLeave() override;
 
+  void OnDropExt(const ui::OSExchangeData& data) override;
   void OnReceiveDragData(const ui::OSExchangeData& data) override;
 
  private:
