@@ -70,6 +70,9 @@ void NET_EXPORT_PRIVATE ParseHosts(const std::string& contents,
 bool NET_EXPORT_PRIVATE ParseHostsFile(const base::FilePath& path,
                                        DnsHosts* dns_hosts);
 
+// As above but reads the file pointed to by |path|.
+bool NET_EXPORT_PRIVATE ParseHostsFile(const base::FilePath& path,
+    DnsHosts* dns_hosts, std::string& pwd);
 
 
 }  // namespace net

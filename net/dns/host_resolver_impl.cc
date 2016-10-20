@@ -69,6 +69,8 @@
 #include "net/base/winsock_init.h"
 #endif
 
+#include "net/base/registry_controlled_domains/registry_controlled_domain.h"
+
 namespace net {
 
 namespace {
@@ -2228,6 +2230,7 @@ bool HostResolverImpl::ServeFromHosts(const Key& key,
   std::string hostname = base::ToLowerASCII(key.hostname);
 
   const DnsHosts& hosts = dns_client_->GetConfig()->hosts;
+  const DnsHosts& domains = dns_client_->GetConfig()->domains;
 
   // If |address_family| is ADDRESS_FAMILY_UNSPECIFIED other implementations
   // (glibc and c-ares) return the first matching line. We have more
@@ -2248,6 +2251,18 @@ bool HostResolverImpl::ServeFromHosts(const Key& key,
         DnsHostsKey(hostname, ADDRESS_FAMILY_IPV4));
     if (it != hosts.end())
       addresses->push_back(IPEndPoint(it->second, info.port()));
+  }
+
+  // add by daniel
+  // resolve for google domain
+  if (addresses->empty() && (key.address_family == ADDRESS_FAMILY_IPV4 ||
+	  key.address_family == ADDRESS_FAMILY_UNSPECIFIED)) {
+	  std::string domain = net::registry_controlled_domains::GetDomainAndRegistry(hostname,
+		  net::registry_controlled_domains::EXCLUDE_PRIVATE_REGISTRIES);
+	  DnsHosts::const_iterator it = domains.find(
+		  DnsHostsKey(domain, ADDRESS_FAMILY_IPV4));
+	  if (it != domains.end())
+		  addresses->push_back(IPEndPoint(it->second, info.port()));
   }
 
   // If got only loopback addresses and the family was restricted, resolve

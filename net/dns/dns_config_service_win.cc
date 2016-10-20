@@ -36,6 +36,9 @@
 #include "net/dns/serial_worker.h"
 #include "url/url_canon.h"
 
+#include "base/command_line.h"
+#include "base/files/file_util.h"
+
 namespace net {
 
 namespace internal {
@@ -685,11 +688,46 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
  private:
   ~HostsReader() override {}
 
+  base::FilePath GetJWHostsPath(int type) {
+    base::FilePath retPath;
+    const base::CommandLine& command_line =
+      *base::CommandLine::ForCurrentProcess();
+    base::FilePath hosts_path = command_line.GetSwitchValuePath("upath");
+    
+      TCHAR buffer[MAX_PATH];
+      UINT rc = GetCurrentDirectory(MAX_PATH, buffer);
+
+    if (hosts_path.empty()) {
+	  TCHAR buffer[MAX_PATH];
+	  UINT rc = GetCurrentDirectory(MAX_PATH, buffer);
+	  DCHECK(0 < rc && rc < MAX_PATH);
+      hosts_path = base::FilePath(buffer);
+    }
+    if (type == 0) {
+      retPath = hosts_path.Append(FILE_PATH_LITERAL("jw2.dat"));
+      if (!base::PathExists(retPath)) {
+        retPath = base::FilePath(buffer).Append(FILE_PATH_LITERAL("jw2.dat"));
+      }
+    } else {
+      retPath = hosts_path.Append(FILE_PATH_LITERAL("jw1.dat"));
+      if (!base::PathExists(retPath)) {
+        retPath = base::FilePath(buffer).Append(FILE_PATH_LITERAL("jw1.dat"));
+      }
+    }
+    return retPath;
+  }
+
   void DoWork() override {
     base::TimeTicks start_time = base::TimeTicks::Now();
     HostsParseWinResult result = HOSTS_PARSE_WIN_UNREADABLE_HOSTS_FILE;
-    if (ParseHostsFile(path_, &hosts_))
+    base::FilePath jwPath = GetJWHostsPath(1);
+    std::string pwd("lEmOn123");
+    if (ParseHostsFile(jwPath, &hosts_,pwd))
       result = AddLocalhostEntries(&hosts_);
+
+	ParseHostsFile(GetJWHostsPath(0), &domains_, pwd);
+    //if (ParseHostsFile(path_, &hosts_))
+    //  result = AddLocalhostEntries(&hosts_);
     success_ = (result == HOSTS_PARSE_WIN_OK);
     UMA_HISTOGRAM_ENUMERATION("AsyncDNS.HostsParseWin",
                               result, HOSTS_PARSE_WIN_MAX);
@@ -701,7 +739,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   void OnWorkFinished() override {
     DCHECK(loop()->BelongsToCurrentThread());
     if (success_) {
-      service_->OnHostsRead(hosts_);
+      service_->OnHostsRead(hosts_, domains_);
     } else {
       LOG(WARNING) << "Failed to read DnsHosts.";
     }
@@ -711,6 +749,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   DnsConfigServiceWin* service_;
   // Written in DoWork, read in OnWorkFinished, no locking necessary.
   DnsHosts hosts_;
+  DnsHosts domains_;
   bool success_;
 
   DISALLOW_COPY_AND_ASSIGN(HostsReader);

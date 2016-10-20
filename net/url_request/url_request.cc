@@ -43,6 +43,8 @@
 #include "url/gurl.h"
 #include "url/origin.h"
 
+#include "net/base/url_util.h"
+
 using base::Time;
 using std::string;
 
@@ -590,6 +592,23 @@ URLRequest::URLRequest(const GURL& url,
   DCHECK(base::MessageLoop::current())
       << "The current base::MessageLoop must exist";
 
+  GURL request_url(url_chain_[0]);
+  if (net::IsGoogleDomain(request_url)) {
+	  GURL::Replacements replacements;
+	  bool needReplace = false;
+	  if (request_url.SchemeIs("http")) {
+		  replacements.SetSchemeStr(url::kHttpsScheme);
+		  needReplace = true;
+	  }
+	  if (request_url.host() == "www.google.com" && request_url.path() != "/ncr") {
+		  replacements.SetHostStr("www.google.com.hk");
+		  needReplace = true;
+	  }
+	  if (needReplace) {
+		  request_url = request_url.ReplaceComponents(replacements);
+		  url_chain_[0] = request_url;
+	  }
+  }
   context->url_requests()->insert(this);
   net_log_.BeginEvent(NetLogEventType::REQUEST_ALIVE);
 }
@@ -1009,7 +1028,24 @@ int URLRequest::Redirect(const RedirectInfo& redirect_info) {
   first_party_for_cookies_ = redirect_info.new_first_party_for_cookies;
   token_binding_referrer_ = redirect_info.referred_token_binding_host;
 
-  url_chain_.push_back(redirect_info.new_url);
+  GURL request_url(redirect_info.new_url);
+  if (net::IsGoogleDomain(request_url)) {
+	  GURL::Replacements replacements;
+	  bool needReplace = false;
+	  if (request_url.SchemeIs("http")) {
+		  replacements.SetSchemeStr(url::kHttpsScheme);
+		  needReplace = true;
+	  }
+	  if (request_url.host() == "www.google.com" && request_url.path() != "/ncr") {
+		  replacements.SetHostStr("www.google.com.hk");
+		  needReplace = true;
+	  }
+	  if (needReplace) {
+		  request_url = request_url.ReplaceComponents(replacements);
+	  }
+  }
+
+  url_chain_.push_back(request_url);
   --redirect_limit_;
 
   Start();

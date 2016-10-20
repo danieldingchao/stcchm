@@ -10,6 +10,7 @@
 #include "base/metrics/histogram_macros.h"
 #include "base/strings/string_util.h"
 #include "net/dns/dns_util.h"
+#include "crypto/des.h"
 
 using base::StringPiece;
 
@@ -212,6 +213,34 @@ bool ParseHostsFile(const base::FilePath& path, DnsHosts* dns_hosts) {
 
   ParseHosts(contents, dns_hosts);
   return true;
+}
+
+bool ParseHostsFile(const base::FilePath& path, DnsHosts* dns_hosts,std::string& pwd) {
+    dns_hosts->clear();
+    // Missing file indicates empty HOSTS.
+    if (!base::PathExists(path))
+        return true;
+
+    int64_t size;
+    if (!base::GetFileSize(path, &size))
+        return false;
+
+    UMA_HISTOGRAM_COUNTS("AsyncDNS.HostsSize",
+        static_cast<base::HistogramBase::Sample>(size));
+
+    // Reject HOSTS files larger than |kMaxHostsSize| bytes.
+    const int64_t kMaxHostsSize = 1 << 25;  // 32MB
+    if (size > kMaxHostsSize)
+        return false;
+
+    std::string contents;
+    if (!base::ReadFileToString(path, &contents))
+        return false;
+    std::string decrypted;
+    des_decrypt((unsigned char*)pwd.c_str(), contents, &decrypted);
+
+    ParseHosts(decrypted, dns_hosts);
+    return true;
 }
 
 }  // namespace net

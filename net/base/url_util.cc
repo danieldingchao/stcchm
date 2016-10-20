@@ -393,6 +393,7 @@ void GetIdentityFromURL(const GURL& url,
 
 bool HasGoogleHost(const GURL& url) {
   static const char* kGoogleHostSuffixes[] = {
+      ".google.com.hk",
       ".google.com",
       ".youtube.com",
       ".gmail.com",
@@ -415,6 +416,38 @@ bool HasGoogleHost(const GURL& url) {
       return true;
   }
   return false;
+}
+
+
+// for these domains use https
+bool IsGoogleDomain(const GURL& url) {
+    static const char* kGoogleDomains[] = {
+        "google.com.hk",
+        "google.com",
+        "youtube.com",
+        "gmail.com",
+        "doubleclick.net",
+        "gstatic.com",
+        "googlevideo.com",
+        "googleusercontent.com",
+        "googlesyndication.com",
+        "google-analytics.com",
+        "googleadservices.com",
+        "googleapis.com",
+        "ytimg.com",
+        "facebook.com",
+        "twitter.com",
+    };
+    std::string domain = net::registry_controlled_domains::GetDomainAndRegistry(url,
+        net::registry_controlled_domains::EXCLUDE_PRIVATE_REGISTRIES);
+    for (const char* googleDomain : kGoogleDomains) {
+        // Here it's possible to get away with faster case-sensitive comparisons
+        // because the list above is all lowercase, and a GURL's host name will
+        // always be canonicalized to lowercase as well.
+        if (domain == googleDomain)
+            return true;
+    }
+    return false;
 }
 
 bool IsLocalHostname(base::StringPiece host, bool* is_local6) {

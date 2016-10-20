@@ -165,6 +165,8 @@ NET_EXPORT_PRIVATE void GetIdentityFromURL(const GURL& url,
 // for histograms and shouldn't be used to affect behavior.
 NET_EXPORT_PRIVATE bool HasGoogleHost(const GURL& url);
 
+NET_EXPORT_PRIVATE bool IsGoogleDomain(const GURL& url);
+
 // This function tests |host| to see if it is of any local hostname form.
 // |host| is normalized before being tested and if |is_local6| is not NULL then
 // it it will be set to true if the localhost name implies an IPv6 interface (

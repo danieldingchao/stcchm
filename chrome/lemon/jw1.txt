@@ -1,0 +1,1138 @@
+
+# Amazon AWS Start
+54.239.31.69	aws.amazon.com
+54.239.30.25	console.aws.amazon.com
+54.239.96.90	ap-northeast-1.console.aws.amazon.com
+54.240.226.81	ap-southeast-1.console.aws.amazon.com
+54.240.193.125	ap-southeast-2.console.aws.amazon.com
+54.239.38.102	eu-west-1.console.aws.amazon.com
+54.239.54.102	eu-central-1.console.aws.amazon.com
+54.231.49.3	s3.amazonaws.com
+54.239.31.128	s3-console-us-standard.console.aws.amazon.com
+52.219.0.4	s3-ap-northeast-1.amazonaws.com
+54.231.242.170	s3-ap-southeast-1.amazonaws.com
+54.231.251.21	s3-ap-southeast-2.amazonaws.com
+52.218.16.140	s3-eu-west-1.amazonaws.com
+54.231.193.37	s3-eu-central-1.amazonaws.com
+52.92.72.2	s3-sa-east-1.amazonaws.com
+54.231.236.6	s3-us-west-1.amazonaws.com
+54.231.168.160	s3-us-west-2.amazonaws.com
+177.72.244.194	sa-east-1.console.aws.amazon.com
+176.32.114.59	us-west-1.console.aws.amazon.com
+54.240.254.230	us-west-2.console.aws.amazon.com
+52.216.80.48	github-cloud.s3.amazonaws.com
+54.231.48.40	github-com.s3.amazonaws.com
+# Amazon AWS End
+
+# Archive Start
+207.241.224.22	archive.org
+207.241.224.22	www.archive.org
+207.241.224.22	ia802704.us.archive.org
+207.241.224.22	analytics.archive.org
+207.241.226.190	web.archive.org
+# Archive End
+
+# Battle.NET Start
+12.129.206.133	enUS.patch.battle.net
+208.111.148.7	llnw.blizzard.com
+121.254.200.133	zhTW.patch.battle.net
+# Battle.NET End
+
+# Box.com Start
+74.112.184.70	app.box.com
+74.112.184.90	box.com
+74.112.184.85	m.box.com
+104.218.203.34	support.box.com
+74.112.184.85	www.box.com
+74.112.184.80	www.box.net
+# Box.com End
+
+# BundleStars Start
+23.253.146.21	bundlestars.com
+54.192.232.60	cdn-images.bundlestars.com
+185.12.83.2	support.bundlestars.com
+# BundleStars End
+
+# DuckDuckGo Start
+46.51.216.186	duckduckgo.com
+46.51.216.186	www.duckduckgo.com
+46.51.216.186	ac.duckduckgo.com
+54.251.178.52	icons.duckduckgo.com
+54.251.178.52	images.duckduckgo.com
+96.45.83.209	help.duckduckgo.com
+# DuckDuckGo End
+
+# Disqus Start
+23.235.33.134	disqus.com
+23.235.33.134	www.disqus.com
+23.235.33.134	blog.disqus.com
+50.18.249.249	help.disqus.com
+23.235.33.134	content.disqus.com
+23.235.37.134	referrer.disqus.com
+23.235.37.134	apkpure.disqus.com
+# Disqus End
+
+#Dropbox Start
+218.254.1.13	db.tt
+218.254.1.13	dropbox.com
+218.254.1.13	m.dropbox.com
+218.254.1.13	www.v.dropbox.com
+162.125.66.1	www.dropbox.com
+52.85.76.60	linux.dropbox.com
+108.160.172.193	d.dropbox.com
+108.160.172.193	d.v.dropbox.com
+108.160.172.193	api-d.dropbox.com
+108.160.172.237	api.dropboxapi.com
+108.160.172.237	api.dropbox.com
+108.160.172.237	api.v.dropbox.com
+108.160.172.237	api-notify.dropbox.com
+108.160.172.233	www.dropboxstatic.com
+104.16.100.29	cfl.dropboxstatic.com
+108.160.172.201	dbxlocal.dropboxstatic.com
+199.47.217.36	api-content.dropbox.com
+199.47.217.36	api-content-photos.dropbox.com
+108.160.172.207	photos.dropbox.com
+162.125.34.129	bolt.dropbox.com
+162.125.17.129	photos-thumb.dropbox.com
+162.125.17.129	photos-thumb.x.dropbox.com
+199.47.217.97	block.dropbox.com
+199.47.217.97	block.v.dropbox.com
+54.230.214.100	cf.dropboxstatic.com
+54.192.108.33	client-cf.dropbox.com
+45.58.69.38	dl.dropbox.com
+219.76.4.4	dl-web.dropbox.com
+45.58.69.37	dl.dropboxusercontent.com
+162.125.18.2	photos-1.dropbox.com
+162.125.18.2	photos-2.dropbox.com
+162.125.18.2	photos-3.dropbox.com
+162.125.18.2	photos-4.dropbox.com
+162.125.18.2	photos-5.dropbox.com
+162.125.18.2	photos-6.dropbox.com
+54.192.213.118	status.dropbox.com
+54.192.213.118	marketing.dropbox.com
+54.192.213.118	blogs.dropbox.com
+54.192.213.118	forums.dropbox.com
+54.192.213.118	snapengage.dropbox.com
+162.125.32.129	notify.dropbox.com
+108.160.172.236	client-lb.dropbox.com
+108.160.172.236	client-web.dropbox.com
+108.160.172.236	client.dropbox.com
+108.160.172.236	client.v.dropbox.com
+219.76.4.4	dl-debug.dropbox.com
+219.76.4.4	log.getdropbox.com
+#Dropbox End
+
+# Facebook start
+45.64.40.68	fb.me
+45.64.40.68	facebook.com
+45.64.40.68	www.facebook.com
+45.64.40.68	m.facebook.com
+45.64.40.68	mqtt.facebook.com
+45.64.40.68	s-static.ak.facebook.com
+45.64.40.68	profile.ak.facebook.com
+45.64.40.68	static.ak.facebook.com
+45.64.40.68	b.static.ak.facebook.com
+45.64.40.68	graph.facebook.com
+45.64.40.68	ssl.facebook.com
+45.64.40.68	api.facebook.com
+45.64.40.68	secure-profile.facebook.com
+45.64.40.68	secure.facebook.com
+45.64.40.68	zh-cn.facebook.com
+45.64.40.68	login.facebook.com
+45.64.40.68	i.facebook.com
+45.64.40.68	im.facebook.com
+45.64.40.68	attachments.facebook.com
+45.64.40.68	touch.facebook.com
+45.64.40.68	apps.facebook.com
+45.64.40.68	upload.facebook.com
+45.64.40.68	developers.facebook.com
+45.64.40.68	act.channel.facebook.com
+45.64.40.68	0-act.channel.facebook.com
+45.64.40.68	1-act.channel.facebook.com
+45.64.40.68	2-act.channel.facebook.com
+45.64.40.68	3-act.channel.facebook.com
+45.64.40.68	4-act.channel.facebook.com
+45.64.40.68	5-act.channel.facebook.com
+45.64.40.68	6-act.channel.facebook.com
+45.64.40.68	inyour-slb-01-05-ash3.facebook.com
+45.64.40.68	origincache-starfacebook-ai-01-05-ash3.facebook.com
+45.64.40.68	beta-chat-01-05-ash3.facebook.com
+45.64.40.68	channel-ecmp-05-ash3.facebook.com
+45.64.40.68	channel-staging-ecmp-05-ash3.facebook.com
+45.64.40.68	channel-testing-ecmp-05-ash3.facebook.com
+45.64.40.68	0-edge-chat.facebook.com
+45.64.40.68	1-edge-chat.facebook.com
+45.64.40.68	2-edge-chat.facebook.com
+45.64.40.68	3-edge-chat.facebook.com
+45.64.40.68	4-edge-chat.facebook.com
+45.64.40.68	5-edge-chat.facebook.com
+45.64.40.68	6-edge-chat.facebook.com
+45.64.40.68	api-read.facebook.com
+45.64.40.68	bigzipfiles.facebook.com
+45.64.40.68	check4.facebook.com
+45.64.40.68	check6.facebook.com
+45.64.40.68	code.facebook.com
+45.64.40.68	connect.facebook.com
+45.64.40.68	edge-chat.facebook.com
+45.64.40.68	pixel.facebook.com
+45.64.40.68	star.c10r.facebook.com
+45.64.40.68	star.facebook.com
+45.64.40.68	zh-tw.facebook.com
+45.64.40.68	b-api.facebook.com
+45.64.40.68	b-graph.facebook.com
+45.64.40.68	orcart.facebook.com
+45.64.40.68	s-static.facebook.com
+45.64.40.68	vupload.facebook.com
+45.64.40.68	vupload2.vvv.facebook.com
+45.64.40.68	d.facebook.com
+45.64.40.68	fbcdn.net
+45.64.40.68	scontent.xx.fbcdn.net
+45.64.40.68	scontent-a.xx.fbcdn.net
+45.64.40.68	scontent-b.xx.fbcdn.net
+45.64.40.68	scontent-c.xx.fbcdn.net
+45.64.40.68	scontent-d.xx.fbcdn.net
+45.64.40.68	scontent-e.xx.fbcdn.net
+45.64.40.68	scontent-mxp.xx.fbcdn.net
+45.64.40.68	scontent-a-lax.xx.fbcdn.net
+45.64.40.68	scontent-a-sin.xx.fbcdn.net
+45.64.40.68	scontent-b-lax.xx.fbcdn.net
+45.64.40.68	scontent-b-sin.xx.fbcdn.net
+45.64.40.68	ent-a.xx.fbcdn.net
+45.64.40.68	ent-b.xx.fbcdn.net
+45.64.40.68	ent-c.xx.fbcdn.net
+45.64.40.68	ent-d.xx.fbcdn.net
+45.64.40.68	ent-e.xx.fbcdn.net
+23.207.122.24	s-external.ak.fbcdn.net
+23.34.45.177	s-static.ak.fbcdn.net
+45.64.40.68	static.thefacebook.com
+45.64.40.68	attachment.fbsbx.com
+104.78.23.174	connect.facebook.net
+192.0.78.13	live.fb.com
+192.0.78.13	work.fb.com
+192.0.78.13	techprep.fb.com
+192.0.78.13	nonprofits.fb.com
+192.0.78.13	managingbias.fb.com
+192.0.78.13	rightsmanager.fb.com
+192.0.78.13	instantarticles.fb.com
+192.0.66.2	messengerplatform.fb.com
+199.201.64.67	threatexchange.fb.com
+31.13.95.14	video.xx.fbcdn.net
+# domains colud be removed START
+184.28.188.10	fbexternal-a.akamaihd.net
+184.28.188.10	fbcdn-creative-a.akamaihd.net
+184.28.188.10	fbcdn-video-a-a.akamaihd.net
+184.28.188.10	fbcdn-video-b-a.akamaihd.net
+184.28.188.10	fbcdn-video-c-a.akamaihd.net
+184.28.188.10	fbcdn-video-d-a.akamaihd.net
+184.28.188.10	fbcdn-video-e-a.akamaihd.net
+184.28.188.10	fbcdn-video-f-a.akamaihd.net
+184.28.188.10	fbcdn-video-g-a.akamaihd.net
+184.28.188.10	fbcdn-video-h-a.akamaihd.net
+184.28.188.10	fbcdn-video-i-a.akamaihd.net
+184.28.188.10	fbcdn-video-j-a.akamaihd.net
+184.28.188.10	fbcdn-video-k-a.akamaihd.net
+184.28.188.10	fbcdn-video-l-a.akamaihd.net
+184.28.188.10	fbcdn-video-m-a.akamaihd.net
+184.28.188.10	fbcdn-video-n-a.akamaihd.net
+184.28.188.10	fbcdn-video-o-a.akamaihd.net
+184.28.188.10	fbcdn-video-p-a.akamaihd.net
+184.28.188.10	fbcdn-vthumb-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-a-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-b-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-c-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-d-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-e-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-f-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-g-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-h-a.akamaihd.net
+184.28.188.10	fbcdn-profile-a.akamaihd.net
+184.28.188.10	fbcdn-photos-a.akamaihd.net
+184.28.188.10	fbcdn-photos-e-a.akamaihd.net
+184.28.188.10	fbcdn-sphotos-a.akamaihd.net
+184.28.188.10	fbstatic-a.akamaihd.net
+184.28.188.10	vthumb.ak.fbcdn.net
+184.28.188.10	photos-a.ak.fbcdn.net
+184.28.188.10	photos-b.ak.fbcdn.net
+184.28.188.10	photos-c.ak.fbcdn.net
+184.28.188.10	photos-d.ak.fbcdn.net
+184.28.188.10	photos-e.ak.fbcdn.net
+184.28.188.10	photos-f.ak.fbcdn.net
+184.28.188.10	photos-g.ak.fbcdn.net
+184.28.188.10	photos-h.ak.fbcdn.net
+184.28.188.10	creative.ak.fbcdn.net
+184.28.188.10	external.ak.fbcdn.net
+184.28.188.10	b.static.ak.fbcdn.net
+184.28.188.10	static.ak.fbcdn.net
+184.28.188.10	profile.ak.fbcdn.net
+# domains colud be removed END
+# Facebook end
+
+# FlipBoard start
+54.225.64.251	beacon.flipboard.com
+54.225.64.251	fbprod.flipboard.com
+# FlipBoard End
+
+# Twitter Start
+104.244.42.3	twitter.com
+104.244.42.3	www.twitter.com
+185.45.5.36	t.co
+104.244.42.3	api.twitter.com
+104.244.42.3	mobile.twitter.com
+104.244.42.3	support.twitter.com
+104.244.42.3	upload.twitter.com
+104.244.42.3	tweetdeck.twitter.com
+104.244.42.3	syndication.twitter.com
+104.244.42.3	syndication-o.twitter.com
+104.244.42.3	platform.twitter.com
+104.244.42.3	about.twitter.com
+104.244.42.3	blog.twitter.com
+104.244.42.3	p.twitter.com
+104.244.42.3	betastream.twitter.com
+104.244.42.3	dev.twitter.com
+104.244.42.3	pic.twitter.com
+104.244.42.3	search.twitter.com
+104.244.42.3	status.twitter.com
+104.244.42.3	assets0.twitter.com
+104.244.42.3	assets1.twitter.com
+104.244.42.3	assets2.twitter.com
+104.244.42.3	assets3.twitter.com
+104.244.42.3	static.twitter.com
+104.244.42.3	help.twitter.com
+104.244.42.3	ton.twitter.com
+104.244.42.3	s.twitter.com
+104.244.42.3	analytics.twitter.com
+104.244.42.3	urls-real.api.twitter.com
+104.244.42.3	userstream.twitter.com
+104.244.42.3	sitestream.twitter.com
+104.244.42.3	stream.twitter.com
+104.244.42.3	tdweb.twitter.com
+173.236.110.98	twitpic.com
+173.236.110.98	m1.twitpic.com
+173.236.110.98	web1.twitpic.com
+173.236.110.98	web10.twitpic.com
+173.236.110.98	web2.twitpic.com
+173.236.110.98	web3.twitpic.com
+173.236.110.98	web4.twitpic.com
+173.236.110.98	web5.twitpic.com
+173.236.110.98	web6.twitpic.com
+173.236.110.98	web7.twitpic.com
+173.236.110.98	web8.twitpic.com
+173.236.110.98	web9.twitpic.com
+209.17.68.209	oi40.tinypic.com
+209.17.68.209	oi41.tinypic.com
+209.17.68.209	oi42.tinypic.com
+209.17.68.209	oi43.tinypic.com
+209.17.68.209	oi44.tinypic.com
+209.17.68.209	oi45.tinypic.com
+209.17.68.209	oi46.tinypic.com
+209.17.68.209	oi47.tinypic.com
+209.17.68.209	oi48.tinypic.com
+209.17.68.209	oi49.tinypic.com
+209.17.68.209	oi50.tinypic.com
+209.17.68.209	oi51.tinypic.com
+209.17.68.209	oi52.tinypic.com
+209.17.68.209	oi53.tinypic.com
+209.17.68.209	oi54.tinypic.com
+209.17.68.209	oi55.tinypic.com
+209.17.68.209	oi56.tinypic.com
+199.96.57.3	a0.twimg.com
+199.96.57.3	a1.twimg.com
+199.96.57.3	video.twimg.com
+199.96.57.3	abs.twimg.com
+199.96.57.3	g.twimg.com
+199.96.57.3	o.twimg.com
+199.96.57.3	p.twimg.com
+199.96.57.3	r.twimg.com
+199.96.57.3	ma.twimg.com
+199.96.57.3	pbs.twimg.com
+199.96.57.3	si0.twimg.com
+199.96.57.3	si1.twimg.com
+199.96.57.3	si2.twimg.com
+199.96.57.3	si3.twimg.com
+199.96.57.3	si4.twimg.com
+199.96.57.3	si5.twimg.com
+199.96.57.3	ton.twimg.com
+199.96.57.3	syndication.twimg.com
+199.96.57.3	syndication-o.twimg.com
+199.96.57.3	image-proxy-origin.twimg.com
+199.96.57.3	si0.twimg.co
+199.96.57.3	si1.twimg.co
+199.96.57.3	si2.twimg.co
+199.96.57.3	si3.twimg.co
+199.96.57.3	si4.twimg.co
+199.96.57.3	si5.twimg.co
+104.244.42.132	tweetdeck.com
+104.244.42.132	api.tweetdeck.com
+104.244.42.132	web.tweetdeck.com
+104.244.42.132	www.tweetdeck.com
+104.244.42.132	downloads.tweetdeck.com
+104.244.42.3	cdn.syndication.twimg.com
+104.244.42.3	cdn.syndication.twitter.com
+104.244.42.3	cdn.api.twitter.com
+104.244.42.3	preview.cdn.twitter.com
+104.244.42.3	apps.twitter.com
+# Twitter End
+
+64.233.188.129	corp.google.com
+64.233.188.129	login.corp.google.com
+64.233.188.129	uberproxy.corp.google.com
+64.233.188.129	uberproxy.l.google.com
+220.255.2.153	certificate-transparency.org
+220.255.2.153	www.certificate-transparency.org
+220.255.2.153	abc.xyz
+64.233.191.121	www.androidexperiments.com
+64.233.191.121	androidexperiments.com
+# Google:others End
+
+# Gmail SMTP/POP/IMAP Start
+64.233.188.14	gmr-smtp-in.l.google.com
+64.233.188.16	googlemail-imap.l.google.com
+64.233.188.16	googlemail-smtp.l.google.com
+64.233.188.16	googlemail-pop.l.google.com
+64.233.188.16	pop.googlemail.com
+64.233.188.16	imap.googlemail.com
+64.233.188.16	smtp.googlemail.com
+64.233.188.27	gmail-smtp-in.l.google.com
+64.233.188.109	gmail-imap.l.google.com
+64.233.188.109	gmail-pop.l.google.com
+64.233.188.109	gmail-smtp.l.google.com
+64.233.188.109	imap.gmail.com
+64.233.188.109	smtp.gmail.com
+64.233.188.109	pop.gmail.com
+64.233.188.109	gmail-smtp-msa.l.google.com
+# Gmail SMTP/POP/IMAP End
+
+# Google:stun Server Start
+64.233.177.127	stun.l.google.com
+64.233.177.127	alt1.stun.l.google.com
+64.233.177.127	alt2.stun.l.google.com
+64.233.177.127	alt3.stun.l.google.com
+64.233.177.127	alt4.stun.l.google.com
+64.233.177.127	alt5.stun.l.google.com
+# Google:stun Server End
+
+# Google:Gtalk	Start
+64.233.188.125	talk.google.com
+64.233.188.125	talk.l.google.com
+64.233.188.125	talkx.l.google.com
+64.233.188.125	alt1.talk.l.google.com
+# Google:Gtalk	End
+
+# Google:ghs Start
+64.233.188.121	ghs.google.com
+64.233.188.121	ghs46.google.com
+64.233.188.121	ghs.l.google.com
+64.233.188.121	ghs46.l.google.com
+64.233.188.121	www.nianticlabs.com
+64.233.188.121	gsamplemaps.googlepages.com
+64.233.188.121	javascript-blocker.toggleable.com
+64.233.188.121	goto.ext.google.com
+64.233.188.121	webrtc.org
+64.233.188.121	www.webrtc.org
+64.233.188.121	chromeexperiments.com
+64.233.188.121	www.chromeexperiments.com
+64.233.188.121	vr.chromeexperiments.com
+64.233.188.121	globe.chromeexperiments.com
+64.233.188.121	workshop.chromeexperiments.com
+64.233.188.121	www.gwtproject.org
+64.233.188.121	www.html5rocks.com
+64.233.188.121	slides.html5rocks.com
+64.233.188.121	playground.html5rocks.com
+64.233.188.121	studio.html5rocks.com
+64.233.188.121	lists.webmproject.org
+64.233.188.121	www.waveprotocol.org
+64.233.188.121	www.20thingsilearned.com
+64.233.188.121	www.creativelab5.com
+64.233.188.121	blog.webmproject.org
+64.233.188.121	www.agoogleaday.com
+64.233.188.121	www.gosetsuden.jp
+64.233.188.121	www.thegooglepuzzle.com
+64.233.188.121	www.thegobridgeoglepuzzle.com
+64.233.188.121	www.googlezeitgeist.com
+64.233.188.121	news.dartlang.org
+64.233.188.121	dartpad.dartlang.org
+# Google:ghs End
+
+# Google:gcm Start
+64.233.188.188	mobile-gtalk.l.google.com
+64.233.188.188	mtalk.google.com
+64.233.188.188	gcm.googleapis.com
+64.233.188.188	gcm.l.google.com
+64.233.188.188	gcm-xmpp.googleapis.com
+64.233.188.188	gcm-preprod.l.google.com
+64.233.188.188	gcm-preprod.googleapis.com
+# Google:gcm End
+
+# Goole:duo Start
+220.255.2.153	instantmessaging-pa.googleapis.com
+# Goole:duo End
+
+# Google:A-GPS Start
+64.233.171.192	supl.google.com
+# Google:A-GPS End
+
+# Google:Made the code for girls Start
+216.239.38.21	madewithcode.com
+216.239.38.21	www.madewithcode.com
+# Google:Made the code for girls End
+
+# Google CN Start
+# 203.208.41.144	0.gvt0.cn
+# 203.208.41.144	1.gvt0.cn
+# 203.208.41.144	2.gvt0.cn
+# 203.208.41.144	265.com
+# 203.208.41.144	3.gvt0.cn
+# 203.208.41.144	blogsearch.google.cn
+# 203.208.41.144	books.google.cn
+# 203.208.41.144	ditu.google.cn
+# 203.208.41.144	fonts.googleapis.com
+# 203.208.41.144	g.cn
+# 203.208.41.144	gg.google.cn
+# 203.208.41.144	google.cn
+# 203.208.41.144	groups.google.cn
+# 203.208.41.144	id.google.cn
+# 203.208.41.144	labs.google.cn
+# 203.208.41.144	m.google.cn
+# 203.208.41.144	maps.gstatic.cn
+# 203.208.41.144	mt.google.cn
+# 203.208.41.144	mt0.google.cn
+# 203.208.41.144	mt1.google.cn
+# 203.208.41.144	mt2.google.cn
+# 203.208.41.144	mt3.google.cn
+# 203.208.41.144	news.google.cn
+# 203.208.41.144	pack.google.cn
+# 203.208.41.144	scholar.google.cn
+# 203.208.41.144	static.googleadsserving.cn
+# 203.208.41.144	translate.google.cn
+# 203.208.41.144	video.google.cn
+# 203.208.41.144	www.265.com
+# 203.208.41.144	www.google.cn
+# 203.208.41.144	www.gstatic.cn
+# 203.208.41.144	www.gvt0.cn
+# 203.208.41.144	tpc.googlesyndication.com
+# 203.208.41.144	domains.googlesyndication.com
+# 203.208.41.144	pagead2.googlesyndication.com
+# 203.208.41.144	www.googletagservices.com
+# 203.208.41.144	www.google-analytics.com
+# 203.208.41.144	ssl.google-analytics.com
+# 203.208.41.144	ssl-google-analytics.l.google.com
+# 203.208.41.144	googleads.g.doubleclick.net
+# 203.208.41.144	googletagmanager.com
+# 203.208.41.144	www.googletagmanager.com
+# 203.208.41.144	fonts.gstatic.com
+# 203.208.41.144	fls.uk.doubleclick.net
+# 203.208.41.144	csi.gstatic.com
+# 203.208.41.144	www-google-analytics.l.google.com
+# 203.208.41.144	www-googletagmanager.l.google.com
+# 203.208.41.144	partner.googleadservices.com
+# 203.208.41.144	pagead.google.com
+# 203.208.41.144	pagead2.googleadservices.com
+# 203.208.41.144	buttons.googlesyndication.com
+# Google CN End
+# Google End
+
+# HumbleBundle Start
+5.153.35.171	humble.pubnub.com
+198.41.186.33	humblebundle.com
+203.69.81.33	humblebundle-a.akamaihd.net
+52.36.140.12	pubnub.com
+74.125.34.32	www.humblebundle.com
+# HumbleBundle End
+
+# imgur Start
+103.245.224.193	imgur.com
+103.245.224.193	www.imgur.com
+103.245.224.193	i.imgur.com
+103.245.224.193	s.imgur.com
+# imgur End
+
+# Indiegala Start
+199.83.129.61	www.indiegala.com
+74.125.29.121	www.galagiveaways.com
+# Indiegala End
+
+# inoreader Start
+92.247.181.40	inoreader.com
+92.247.181.40	www.inoreader.com
+# inoreader End
+
+# Instagram Start
+31.13.70.52	instagram.com
+31.13.70.52	www.instagram.com
+31.13.70.52	i.instagram.com
+31.13.70.52	api.instagram.com
+31.13.70.52	help.instagram.com
+31.13.70.52	blog.instagram.com
+74.117.178.40	graph.instagram.com
+31.13.70.52	logger.instagram.com
+31.13.70.52	badges.instagram.com
+31.13.95.48	platform.instagram.com
+31.13.70.52	maps.instagram.com
+31.13.70.52	scontent.cdninstagram.com
+31.13.70.52	scontent-a.cdninstagram.com
+31.13.70.52	scontent-b.cdninstagram.com
+184.51.15.142	igcdn-photos-a-a.akamaihd.net
+184.51.15.142	igcdn-photos-b-a.akamaihd.net
+184.51.15.142	igcdn-photos-c-a.akamaihd.net
+184.51.15.142	igcdn-photos-d-a.akamaihd.net
+184.51.15.142	igcdn-photos-e-a.akamaihd.net
+184.51.15.142	igcdn-photos-f-a.akamaihd.net
+184.51.15.142	igcdn-photos-g-a.akamaihd.net
+184.51.15.142	igcdn-photos-h-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-a-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-b-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-c-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-d-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-e-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-f-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-g-19-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-0-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-1-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-2-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-3-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-4-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-5-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-6-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-7-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-8-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-9-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-10-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-11-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-12-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-13-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-14-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-15-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-16-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-17-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-18-a.akamaihd.net
+184.51.15.142	igcdn-videos-h-19-a.akamaihd.net
+184.51.15.142	instagramimages-a.akamaihd.net
+184.51.15.142	instagramstatic-a.akamaihd.net
+184.51.15.142	images.ak.instagram.com
+184.51.15.142	static.ak.instagram.com
+# Instagram End
+
+# Ixquick Start
+69.90.210.184	www.ixquick.com
+69.90.210.184	ixquick.com
+69.90.210.184	support.ixquick.com
+69.90.210.184	s19.ixquick.com
+69.90.210.184	s1-eu5.ixquick.com
+69.90.210.184	s2-eu5.ixquick.com
+69.90.210.184	s3-eu5.ixquick.com
+69.90.210.184	s4-eu5.ixquick.com
+69.90.210.184	s5-eu5.ixquick.com
+69.90.210.184	s6-eu5.ixquick.com
+69.90.210.184	s7-eu5.ixquick.com
+69.90.210.184	s8-eu5.ixquick.com
+69.90.210.184	s9-eu5.ixquick.com
+69.90.210.184	s10-eu5.ixquick.com
+69.90.210.184	s11-eu5.ixquick.com
+69.90.210.184	s12-eu5.ixquick.com
+69.90.210.184	s13-eu2.ixquick.com
+69.90.210.184	s14-eu2.ixquick.com
+69.90.210.184	s15-eu2.ixquick.com
+69.90.210.184	s16-eu2.ixquick.com
+69.90.210.184	s17-eu2.ixquick.com
+69.90.210.184	s18-eu2.ixquick.com
+69.90.210.184	s19-eu2.ixquick.com
+69.90.210.184	s20-eu2.ixquick.com
+69.90.210.184	s1-us5.ixquick.com
+69.90.210.184	s2-us5.ixquick.com
+69.90.210.184	s3-us5.ixquick.com
+69.90.210.184	s4-us5.ixquick.com
+69.90.210.184	s5-us5.ixquick.com
+69.90.210.184	s6-us5.ixquick.com
+69.90.210.184	s7-us5.ixquick.com
+69.90.210.184	s8-us5.ixquick.com
+69.90.210.184	s9-us5.ixquick.com
+69.90.210.184	s10-us5.ixquick.com
+69.90.210.184	s11-us5.ixquick.com
+69.90.210.184	s12-us5.ixquick.com
+69.90.210.184	s13-us2.ixquick.com
+69.90.210.184	s14-us2.ixquick.com
+69.90.210.184	s15-us2.ixquick.com
+69.90.210.184	s16-us2.ixquick.com
+69.90.210.184	s17-us2.ixquick.com
+69.90.210.184	s18-us2.ixquick.com
+69.90.210.184	s19-us2.ixquick.com
+69.90.210.184	s20-us2.ixquick.com
+# Ixquick End
+
+# Logmein Start
+77.242.192.193	secure.logmein.com
+# Logmein End
+
+# MEGA Start
+31.216.147.135	eu.api.mega.co.nz
+154.53.224.130	eu.static.mega.co.nz
+117.18.237.188	g.cdn1.mega.co.nz
+154.53.224.150	mega.co.nz
+154.53.224.166	mega.nz
+31.216.147.130	w.api.mega.co.nz
+# MEGA End
+
+# OneDrive Start
+204.79.197.217	onedrive.live.com
+134.170.107.72	storage.live.com
+134.170.30.15	people.live.com
+134.170.30.15	profile.live.com
+134.170.104.24	skyapi.onedrive.live.com
+23.41.136.70	auth.gfx.ms
+23.53.65.164	p.sfx.ms
+# OneDrive End
+
+# SoundCloud Start
+93.184.220.127	soundcloud.com
+93.184.220.127	www.soundcloud.com
+93.184.220.127	m.soundcloud.com
+93.184.220.127	api.soundcloud.com
+93.184.220.127	api-mobile.soundcloud.com
+93.184.220.127	api-v2.soundcloud.com
+93.184.220.127	promoted.soundcloud.com
+93.184.220.127	visuals.soundcloud.com
+93.184.220.127	on.soundcloud.com
+66.228.50.217	blog.soundcloud.com
+72.21.91.96	a1.sndcdn.com
+72.21.91.96	a-v2.sndcdn.com
+# DNS works fine
+#52.84.213.247	i1.sndcdn.com
+#52.84.213.247	i2.sndcdn.com
+#52.84.213.247	i3.sndcdn.com
+#52.84.213.247	i4.sndcdn.com
+93.184.220.96	va.sndcdn.com
+# DNS works fine
+#52.84.213.129	wis.sndcdn.com
+93.184.221.77	ec-media.sndcdn.com
+93.184.220.96	ec-preview-media.sndcdn.com
+72.21.81.167	ec-media.soundcloud.com
+93.184.222.220	ec-rtmp-media.soundcloud.com
+54.230.99.234	cf-media.sndcdn.com
+# Cannot access AWS
+#54.76.196.137	l9bjkkhaycw6f8f4.soundcloud.com
+#54.76.196.137	eventgateway.soundcloud.com
+#54.76.196.137	eventlogger.soundcloud.com
+# DNS works fine
+#62.161.94.230	logs1403.xiti.com
+#203.190.124.27	pixel.quantserve.com
+#203.190.124.15	secure.quantserve.com
+104.118.93.251	sb.scorecardresearch.com
+# Domain not found
+#111.119.3.1	soundcloud.hs.llnwd.net
+93.184.220.96	style.sndcdn.com
+# SoundCloud End
+
+# Startpage Start
+37.0.88.36	startpage.com
+37.0.88.36	eu.startpage.com
+37.0.88.36	www.startpage.com
+37.0.88.36	support.startpage.com
+37.0.88.36	blog.startpage.com
+# Startpage End
+
+# Vimeo Start
+104.156.85.217	vimeo.com
+104.156.85.217	www.vimeo.com
+104.156.85.217	player.vimeo.com
+103.245.224.143	i.vimeocdn.com
+103.245.224.143	f.vimeocdn.com
+103.245.222.249	vimeo-hp-videos.global.ssl.fastly.net
+198.245.92.39	click.email.vimeo.com
+# Vimeo End
+
+# Wikipedia Start
+198.35.26.96	zh.wikipedia.org
+198.35.26.96	zh.m.wikipedia.org
+# 91.198.174.192	en.wikipedia.org
+# Wikipedia End
+
+# WordPress Start
+68.232.44.121	www.gravatar.com
+68.232.44.121	0.gravatar.com
+68.232.44.121	1.gravatar.com
+68.232.44.121	2.gravatar.com
+68.232.44.121	s.gravatar.com
+192.0.80.242	lb.gravatar.com
+192.0.80.242	secure.gravatar.com
+192.0.81.250	botd2.wordpress.com
+66.155.9.238	dashboard.wordpress.com
+66.155.9.238	en.blog.wordpress.com
+66.155.9.238	en.forums.wordpress.com
+66.155.9.238	forums.wordpress.com
+192.0.77.2	i0.wp.com
+192.0.77.2	i1.wp.com
+192.0.77.2	i2.wp.com
+66.155.9.238	lb.wordpress.com
+66.155.9.238	lucifr.wordpress.com
+192.0.81.250	r-login.wordpress.com
+68.232.44.119	s.stats.wordpress.com
+192.229.144.127	s.w.org
+68.232.44.111	s.wordpress.com
+68.232.44.111	s.wordpress.org
+68.232.44.111	s0.wp.com
+68.232.44.111	s1.wordpress.com
+68.232.44.111	s1.wp.com
+68.232.44.111	s2.wordpress.com
+68.232.44.111	s2.wp.com
+68.232.44.111	s3.wordpress.com
+66.155.9.238	stats.wordpress.com
+66.155.11.243	wordpress.com
+66.155.9.238	wpcom.wordpress.com
+66.155.9.238	zh.wordpress.com
+66.155.9.238	zh-cn.wordpress.com
+66.155.9.238	zh-sg.wordpress.com
+# WordPress End
+
+# XDA Start
+68.232.44.229	cdn.www.xda-developers.com
+174.129.2.23	cdn.xda-developers.com
+192.229.144.96	cdn1.xda-developers.com
+192.229.144.96	cdn2.xda-developers.com
+192.229.144.96	cdn3.xda-developers.com
+93.184.216.96	cdn4.xda-developers.com
+192.229.144.96	cdn-img.xda-developers.com
+192.229.144.96	cdn-www.xda-developers.com
+192.229.144.96	cs261.wac.edgecastcdn.net
+207.244.72.9	forum.xda-developers.com
+23.32.241.66	m.servebom.com
+117.18.237.203	tags.bkrtx.com
+68.232.44.229	wac.8244.edgecastcdn.net
+207.244.73.44	www.xda-developers.com
+207.244.73.44	xda-developers.com
+# XDA End
+
+# Yahoo Start
+192.0.79.32	code.flickr.com
+121.101.144.112	api.flickr.com
+119.161.9.151	c5.ah.yahoo.com
+119.160.254.215	d.yimg.com
+106.10.136.195	de.yahoo.com
+119.160.254.215	e.yimg.com
+98.139.21.169	edit.yahoo.com
+106.10.137.23	farm1.staticflickr.com
+106.10.137.23	farm2.staticflickr.com
+106.10.137.23	farm3.staticflickr.com
+106.10.137.23	farm4.staticflickr.com
+106.10.137.23	farm5.staticflickr.com
+106.10.137.23	farm6.staticflickr.com
+106.10.137.23	farm7.staticflickr.com
+106.10.137.23	farm8.staticflickr.com
+106.10.137.23	farm9.staticflickr.com
+63.250.200.72	bf1.farm3.staticflickr.com
+63.250.200.72	bf1.farm6.staticflickr.com
+63.250.200.72	bf1.farm7.staticflickr.com
+74.6.47.80	gq1.farm3.staticflickr.com
+74.6.47.80	gq1.farm4.staticflickr.com
+74.6.47.80	gq1.farm5.staticflickr.com
+74.6.47.80	gq1.farm6.staticflickr.com
+98.138.4.56	ne1.farm7.staticflickr.com
+69.147.76.173	flickr.com
+106.10.137.175	geo.query.yahoo.com
+217.12.13.41	geo.yahoo.com
+203.84.197.27	finance.yahoo.com
+121.101.144.112	hk.finance.yahoo.com
+27.123.201.252	tw.finance.yahoo.com
+119.160.254.215	h.yimg.com
+106.10.199.10	hk.news.yahoo.com
+106.10.138.240	hk.yahoo.com
+206.190.39.139	hsrd.yahoo.com
+106.10.193.20	hk-mg61.mail.yahoo.com
+119.160.254.215	l.yimg.com
+106.10.193.20	login.yahoo.com
+208.71.44.31	m.flickr.com
+106.10.193.20	mail.yahoo.com
+203.84.197.27	mg.mail.yahoo.com
+106.10.193.20	na.edit.yahoo.com
+106.10.193.20	open.login.yahoo.com
+98.136.166.37	overview.mail.yahoo.com
+119.160.254.215	p.yimg.com
+216.115.100.102	s.yimg.com
+119.160.254.215	s1.yimg.com
+106.10.193.20	sa.edit.yahoo.com
+208.71.44.31	secure.flickr.com
+106.10.193.30	sp.analytics.yahoo.com
+106.10.137.23	static.flickr.com
+106.10.199.11	tw.news.yahoo.com
+106.10.138.240	tw.yahoo.com
+121.101.144.116	up.flickr.com
+204.0.5.34	us.js2.yimg.com
+106.10.138.240	us.yahoo.com
+183.177.81.75	www.flickr.com
+106.10.138.240	www.yahoo.com
+98.138.253.109	yahoo.com
+77.238.184.150	ying.com
+183.177.81.75	downloadr.flickr.com
+50.18.192.250	duckduckgo-owned-server.yahoo.net
+116.214.11.98	tw.mobi.yahoo.com
+# Yahoo End
+
+# Travis CI fastly CDN Start
+103.245.222.249	travis-ci-org.global.ssl.fastly.net
+# Travis CI fastly CDN End
+
+# Github start
+192.30.253.113	gist.github.com
+# Github end
+
+#TensorFlow start
+64.233.188.121	www.tensorflow.org
+#TensorFlow end
+
+# W3schools Start
+66.29.212.110	w3schools.com
+68.232.44.251	www.w3schools.com
+# W3schools End
+
+# Medium start
+104.16.120.127	medium.com
+104.16.120.145	cdn-static-1.medium.com
+104.16.120.145	cdn-images-1.medium.com
+103.245.222.101	cdn-images-2.medium.com
+# Medium end
+
+# Tumblr Start
+31.13.66.6	tumblr.com
+66.6.32.4	tumblr.co
+66.6.32.4	api.tumblr.com
+31.13.72.54	www.tumblr.com
+66.6.32.22	cynicallys.tumblr.com
+93.184.216.97	mx.tumblr.com
+52.85.81.119	vt.tumblr.com
+31.13.73.2	ls.srvcs.tumblr.com
+66.6.32.162	px.srvcs.tumblr.com
+217.12.1.36	assets.tumblr.com
+217.12.1.35	secure.assets.tumblr.com
+52.85.81.16	secure.static.tumblr.com
+54.230.84.5	media.tumblr.com
+216.115.100.125	24.media.tumblr.com
+192.229.237.98	30.media.tumblr.com
+216.115.100.126	31.media.tumblr.com
+52.85.155.236	32.media.tumblr.com
+216.115.100.126	33.media.tumblr.com
+54.230.158.13	36.media.tumblr.com
+216.115.100.126	37.media.tumblr.com
+216.115.100.126	38.media.tumblr.com
+209.197.3.20	39.media.tumblr.com
+192.229.237.98	40.media.tumblr.com
+209.197.3.20	41.media.tumblr.com
+192.229.237.185	42.media.tumblr.com
+209.197.3.20	43.media.tumblr.com
+192.229.237.98	44.media.tumblr.com
+209.197.3.20	45.media.tumblr.com
+192.229.237.98	46.media.tumblr.com
+54.192.234.133	47.media.tumblr.com
+209.197.3.20	48.media.tumblr.com
+192.229.237.98	49.media.tumblr.com
+54.192.234.244	50.media.tumblr.com
+54.230.142.156	65.media.tumblr.com
+192.229.237.98	66.media.tumblr.com
+209.197.3.20	67.media.tumblr.com
+216.115.100.126	68.media.tumblr.com
+209.197.3.20	90.media.tumblr.com
+128.127.159.1	94.media.tumblr.com
+23.2.16.8	95.media.tumblr.com
+52.85.155.236	96.media.tumblr.com
+192.229.237.98	97.media.tumblr.com
+151.101.76.249	98.media.tumblr.com
+209.197.3.20	99.media.tumblr.com
+# Tumblr End
+
+# Smartdnsproxy start
+103.28.248.96	www.smartdnsproxy.com
+184.72.50.35	support.smartdnsproxy.com
+# Smartdnsproxy end
+
+# apkpure Start
+104.20.82.194	apkpure.com
+104.20.82.194	a.apkpure.com
+104.20.82.194	download.apkpure.com
+104.20.82.194	m.apkpure.com
+104.20.82.194	static.apkpure.com
+104.20.82.194	translate.apkpure.com
+151.101.24.134	apkpure.disqus.com
+# apkpure End
+
+#nytimes for mobile Start
+170.149.159.135	nytimes.com
+52.84.219.212	cn.nytimes.com
+52.84.219.212	m.cn.nytimes.com
+184.84.127.110	www.nytimes.com
+184.84.127.110	graphics8.nytimes.com
+184.84.127.110	json8.nytimes.com
+184.84.127.110	typeface.nytimes.com
+184.84.127.110	typeface.nyt.com
+184.84.127.110	a1.nyt.com
+184.84.127.110	s1.nyt.com
+184.84.127.110	i1.nyt.com
+184.84.127.110	static01.nyt.com
+184.84.127.110	static02.nyt.com
+184.84.127.110	static03.nyt.com
+184.84.127.110	static04.nyt.com
+184.84.127.110	static05.nyt.com
+184.84.127.110	static06.nyt.com
+184.84.127.110	static07.nyt.com
+184.84.127.110	static08.nyt.com
+184.84.127.110	static09.nyt.com
+184.84.127.110	js.nyt.com
+184.84.127.110	css.nyt.com
+184.84.127.110	int.nyt.com
+#nytimes for mobile End
+
+# telegram start
+149.154.167.99	telegram.org
+149.154.167.99	desktop.telegram.org
+149.154.167.99	core.telegram.org
+149.154.167.99	macos.telegram.org
+# telegram end
+
+# issuu Start
+52.72.26.162	issuu.com
+52.72.26.162	www.issuu.com
+52.72.26.162	blog.issuu.com
+52.72.26.162	developers.issuu.com
+52.72.26.162	pingback.issuu.com
+52.72.26.162	photo.issuu.com
+52.72.26.162	page.issuu.com
+52.72.26.162	image.issuu.com
+52.72.26.162	api.issuu.com
+52.72.26.162	content.issuu.com
+52.72.26.162	static.issuu.com
+52.72.26.162	skin.issuu.com
+52.72.26.162	help.issuu.com
+52.72.26.162	static.issuu.com
+# issuu End
+
+# Modified hosts end

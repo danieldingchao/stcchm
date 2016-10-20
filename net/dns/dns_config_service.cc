@@ -161,12 +161,13 @@ void DnsConfigService::OnConfigRead(const DnsConfig& config) {
     OnCompleteConfig();
 }
 
-void DnsConfigService::OnHostsRead(const DnsHosts& hosts) {
+void DnsConfigService::OnHostsRead(const DnsHosts& hosts, const DnsHosts& domains) {
   DCHECK(CalledOnValidThread());
 
   bool changed = false;
   if (hosts != dns_config_.hosts) {
     dns_config_.hosts = hosts;
+	dns_config_.domains = domains;
     need_update_ = true;
     changed = true;
   }

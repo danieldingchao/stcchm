@@ -321,7 +321,7 @@ IOThread::IOThread(
       extension_event_router_forwarder_(extension_event_router_forwarder),
 #endif
       globals_(nullptr),
-      is_quic_allowed_by_policy_(true),
+      is_quic_allowed_by_policy_(false),
       http_09_on_non_default_ports_enabled_(false),
       creation_time_(base::TimeTicks::Now()),
       weak_factory_(this) {
@@ -712,7 +712,7 @@ void IOThread::RegisterPrefs(PrefRegistrySimple* registry) {
   registry->RegisterBooleanPref(prefs::kEnableReferrers, true);
   data_reduction_proxy::RegisterPrefs(registry);
   registry->RegisterBooleanPref(prefs::kBuiltInDnsClientEnabled, true);
-  registry->RegisterBooleanPref(prefs::kQuickCheckEnabled, true);
+  registry->RegisterBooleanPref(prefs::kQuickCheckEnabled, false);
   registry->RegisterBooleanPref(prefs::kPacHttpsUrlStrippingEnabled, true);
 }
 
@@ -831,7 +831,7 @@ void IOThread::InitSystemRequestContextOnIOThread() {
 }
 
 void IOThread::UpdateDnsClientEnabled() {
-  globals()->host_resolver->SetDnsClientEnabled(*dns_client_enabled_);
+  globals()->host_resolver->SetDnsClientEnabled(true);
 }
 
 void IOThread::RegisterSTHObserver(net::ct::STHObserver* observer) {

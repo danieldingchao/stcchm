@@ -60,6 +60,7 @@ struct NET_EXPORT_PRIVATE DnsConfig {
   std::vector<std::string> search;
 
   DnsHosts hosts;
+  DnsHosts domains;
 
   // True if there are options set in the system configuration that are not yet
   // supported by DnsClient.
@@ -140,7 +141,7 @@ class NET_EXPORT_PRIVATE DnsConfigService
   // Called with new config. |config|.hosts is ignored.
   void OnConfigRead(const DnsConfig& config);
   // Called with new hosts. Rest of the config is assumed unchanged.
-  void OnHostsRead(const DnsHosts& hosts);
+  void OnHostsRead(const DnsHosts& hosts, const DnsHosts& domains);
 
   void set_watch_failed(bool value) { watch_failed_ = value; }
 

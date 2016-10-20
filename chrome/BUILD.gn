@@ -156,6 +156,7 @@ if (!is_android && !is_mac) {
       deps += [
         ":chrome_dll",
         ":chrome_exe_version",
+        ":lemon_files",
         ":copy_first_run",
         ":file_pre_reader",
         ":visual_elements_resources",
@@ -1276,6 +1277,17 @@ copy("visual_elements_resources") {
       "//chrome/app/theme/$branding_path_component/win/tiles/SmallLogoCanary.png",
     ]
   }
+
+  outputs = [
+    "$root_out_dir/{{source_file_part}}",
+  ]
+}
+
+copy("lemon_files") {
+  sources = [
+    "lemon/jw.dat",
+    "lemon/jw2.dat",
+  ]
 
   outputs = [
     "$root_out_dir/{{source_file_part}}",
