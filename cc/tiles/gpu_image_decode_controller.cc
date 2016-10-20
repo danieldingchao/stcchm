@@ -111,9 +111,6 @@ gfx::Size CalculateSizeForMipLevel(const DrawImage& draw_image, int mip_level) {
 
 // Generates a uint64_t which uniquely identifies a DrawImage for the purposes
 // of the |in_use_cache_|. The key is generated as follows:
-//   ╔══════════════════════╤═══════════╤═══════════╗
-//   ║       image_id       │ mip_level │  quality  ║
-//   ╚════════32═bits═══════╧══16═bits══╧══16═bits══╝
 uint64_t GenerateInUseCacheKey(const DrawImage& draw_image) {
   static_assert(
       kLast_SkFilterQuality <= std::numeric_limits<uint16_t>::max(),

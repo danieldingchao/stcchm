@@ -14,19 +14,6 @@ namespace cc {
 // The spiral iterator which iterates based on directions around the center
 // rect in the given region. If the center rect is at index (2, 2), spiral
 // iterator gives following sequence on iterating.
-//
-//    x 0   1   2   3   4
-//  y ┌───┬───┬───┬───┬───┐
-//  0 │ 16│ 15│ 14│ 13│ 12│
-//    ├───┼───┼───┼───┼───┤
-//  1 │ 17│  4│  3│  2│ 11│
-//    ├───┼───┼───┼───┼───┤
-//  2 │ 18│  5│  *│  1│ 10│
-//    ├───┼───┼───┼───┼───┤
-//  3 │ 19│  6│  7│  8│  9│
-//    ├───┼───┼───┼───┼───┤
-//  4 │ 20│ 21│ 22│ 23│ 24│
-//    └───┴───┴───┴───┴───┘
 class CC_EXPORT SpiralIterator {
  public:
   SpiralIterator();

@@ -30,34 +30,9 @@ namespace cc {
 // the visible region and is_in_positive_quadrant() can be used to check whether
 // all indices lie within this quadrant or not.
 //
-//              │
-//              │
-//  -ve index_x │  +ve index_x
-//  -ve index_y │  -ve index_y
-//              │
-//  ────────────┼────────────
-//              │
-//  -ve index_x │  +ve index_x
-//  +ve index_y │  +ve index_y
-//              │
-//              │  (+ve Quadrant)
-//
 // In the following example, region has |left_| = 0, |right_| = 4, |top_| = 0
 // and |bottom_| = 4. Here x indices are 0, 1, 2, 3, 4 and y indices are
 // 0, 1, 2, 3, 4.
-//
-//    x 0   1   2   3   4
-//  y ┌───┬───┬───┬───┬───┐
-//  0 │   │   │   │   │   │
-//    ├───┼───┼───┼───┼───┤
-//  1 │   │   │   │   │   │
-//    ├───┼───┼───┼───┼───┤
-//  2 │   │   │   │   │   │
-//    ├───┼───┼───┼───┼───┤
-//  3 │   │   │   │   │   │
-//    ├───┼───┼───┼───┼───┤
-//  4 │   │   │   │   │   │
-//    └───┴───┴───┴───┴───┘
 class CC_EXPORT IndexRect {
  public:
   constexpr IndexRect(int left, int right, int top, int bottom)

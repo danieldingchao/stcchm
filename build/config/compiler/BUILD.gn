@@ -905,6 +905,13 @@ config("default_warnings") {
       "/wd4457",
       "/wd4458",
       "/wd4459",
+      "/wd4459",
+      "/wd4819",
+      "/wd4189",
+      "/wd4238",
+      "/wd4245",
+      "/wd4310",
+      "/wd4530",
     ]
 
     if (visual_studio_version == "2015") {

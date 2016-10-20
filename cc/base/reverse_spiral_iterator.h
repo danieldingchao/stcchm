@@ -14,19 +14,6 @@ namespace cc {
 // The spiral iterator which iterates in reverse direction based on directions
 // around the center rect in the given region. If the center rect is at index
 // (2, 2), reverse spiral iterator gives following sequence on iterating.
-//
-//    x 0   1   2   3   4
-//  y ┌───┬───┬───┬───┬───┐
-//  0 │  9│ 10│ 11│ 12│ 13│
-//    ├───┼───┼───┼───┼───┤
-//  1 │  8│ 21│ 22│ 23│ 14│
-//    ├───┼───┼───┼───┼───┤
-//  2 │  7│ 20│  *│ 24│ 15│
-//    ├───┼───┼───┼───┼───┤
-//  3 │  6│ 19│ 18│ 17│ 16│
-//    ├───┼───┼───┼───┼───┤
-//  4 │  5│  4│  3│  2│  1│
-//    └───┴───┴───┴───┴───┘
 class CC_EXPORT ReverseSpiralIterator {
  public:
   ReverseSpiralIterator();
