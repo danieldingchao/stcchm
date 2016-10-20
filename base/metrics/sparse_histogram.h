@@ -43,13 +43,16 @@ namespace base {
 // pre-allocated vector of slots once the fleet gets to version 4 or 5 or 10.
 // Likewise Sqlite.Error.* are SPARSE, because most databases generate few or no
 // errors and there are large gaps in the set of possible errors.
+#if 0 // disable metrics
 #define UMA_HISTOGRAM_SPARSE_SLOWLY(name, sample) \
     do { \
       base::HistogramBase* histogram = base::SparseHistogram::FactoryGet( \
           name, base::HistogramBase::kUmaTargetedHistogramFlag); \
       histogram->Add(sample); \
     } while (0)
-
+#else
+#define UMA_HISTOGRAM_SPARSE_SLOWLY(name, sample) __noop
+#endif
 class HistogramSamples;
 class PersistentHistogramAllocator;
 

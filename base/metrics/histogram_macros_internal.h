@@ -31,6 +31,7 @@
 // define HISTOGRAM_POINTER_USE, which uses an |atomic_histogram_pointer|, and
 // STATIC_HISTOGRAM_POINTER_BLOCK, which defines an |atomic_histogram_pointer|
 // and forwards to HISTOGRAM_POINTER_USE.
+#if 0
 #define HISTOGRAM_POINTER_USE(atomic_histogram_pointer,                        \
                               constant_histogram_name,                         \
                               histogram_add_method_invocation,                 \
@@ -125,5 +126,18 @@
    private:                                                                    \
     base::TimeTicks constructed_;                                              \
   } scoped_histogram_timer_##key
-
+#else
+#define HISTOGRAM_POINTER_USE(atomic_histogram_pointer,                   \
+                              constant_histogram_name,                    \
+                              histogram_add_method_invocation,            \
+                              histogram_factory_get_invocation) __noop
+#define STATIC_HISTOGRAM_POINTER_BLOCK(constant_histogram_name,               \
+                                       histogram_add_method_invocation,       \
+                                       histogram_factory_get_invocation)      __noop
+#define INTERNAL_HISTOGRAM_CUSTOM_COUNTS_WITH_FLAG(name, sample, min, max,     \
+                                                   bucket_count, flag) __noop
+#define INTERNAL_HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) __noop
+#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_EXPANDER(name, is_long, key) __noop
+#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_UNIQUE(name, is_long, key) __noop
+#endif
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_INTERNAL_H_

@@ -17,7 +17,7 @@
 // Enumeration histograms.
 //
 // For usage details, see the equivalents in histogram_macros.h.
-
+#if 0
 #define LOCAL_HISTOGRAM_ENUMERATION(name, sample, enum_max)                    \
    INTERNAL_HISTOGRAM_ENUMERATION_WITH_FLAG(                                   \
         name, sample, enum_max,                                                \
@@ -84,5 +84,20 @@
 // instead.
 #define LOCAL_HISTOGRAM_COUNTS(name, sample)                                   \
     LOCAL_HISTOGRAM_CUSTOM_COUNTS(name, sample, 1, 1000000, 50)
+#else
+#endif
 
+#define LOCAL_HISTOGRAM_TIMES(name, sample) __noop
+#define LOCAL_HISTOGRAM_CUSTOM_TIMES(name, sample, min, max, bucket_count) __noop
+#define LOCAL_HISTOGRAM_COUNTS(name, sample) __noop
+#define LOCAL_HISTOGRAM_COUNTS_100(name, sample) __noop
+#define LOCAL_HISTOGRAM_COUNTS_10000(name, sample) __noop
+#define LOCAL_HISTOGRAM_COUNTS_1000000(name, sample) __noop
+#define LOCAL_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max, bucket_count) __noop
+#define HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) __noop
+#define LOCAL_HISTOGRAM_PERCENTAGE(name, under_one_hundred) __noop
+#define LOCAL_HISTOGRAM_BOOLEAN(name, sample) __noop
+#define LOCAL_HISTOGRAM_ENUMERATION(name, sample, boundary_value) __noop
+#define LOCAL_HISTOGRAM_CUSTOM_ENUMERATION(name, sample, custom_ranges) __noop
+#define LOCAL_HISTOGRAM_MEMORY_KB(name, sample) __noop
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_LOCAL_H_

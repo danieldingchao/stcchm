@@ -202,6 +202,7 @@
 // enabled, then this does nothing.
 // - category and name strings must have application lifetime (statics or
 //   literals). They may not include " chars.
+#if 0
 #define TRACE_EVENT0(category_group, name)    \
   INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 #define TRACE_EVENT_WITH_FLOW0(category_group, name, bind_id, flow_flags)  \
@@ -222,6 +223,17 @@
   INTERNAL_TRACE_EVENT_ADD_SCOPED_WITH_FLOW(category_group, name, bind_id,   \
                                             flow_flags, arg1_name, arg1_val, \
                                             arg2_name, arg2_val)
+#else
+#define TRACE_EVENT0(category_group, name)
+#define TRACE_EVENT_WITH_FLOW0(category_group, name, bind_id, flow_flags) 
+#define TRACE_EVENT1(category_group, name, arg1_name, arg1_val)
+#define TRACE_EVENT_WITH_FLOW1(category_group, name, bind_id, flow_flags,  \
+                               arg1_name, arg1_val)
+#define TRACE_EVENT2(category_group, name, arg1_name, arg1_val, arg2_name,   \
+                     arg2_val)
+#define TRACE_EVENT_WITH_FLOW2(category_group, name, bind_id, flow_flags,    \
+                               arg1_name, arg1_val, arg2_name, arg2_val)
+#endif
 
 // UNSHIPPED_TRACE_EVENT* are like TRACE_EVENT* except that they are not
 // included in official builds.
@@ -1016,6 +1028,7 @@
 #define TRACE_BIND_IDS(category_group, name, id, bind_id) \
   INTERNAL_TRACE_EVENT_ADD_BIND_IDS(category_group, name, id, bind_id);
 
+#if 0
 // Macro to efficiently determine if a given category group is enabled.
 #define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category_group, ret)             \
   do {                                                                      \
@@ -1049,7 +1062,11 @@
       *ret = false;                                                        \
     }                                                                      \
   } while (0)
-
+#else
+#define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category_group, ret) *ret = false;
+#define TRACE_EVENT_WARMUP_CATEGORY(category_group)
+#define TRACE_EVENT_IS_NEW_TRACE(ret) *ret = false;
+#endif
 // Notes regarding the following definitions:
 // New values can be added and propagated to third party libraries, but existing
 // definitions must never be changed, because third party libraries may use old

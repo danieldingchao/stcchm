@@ -23,6 +23,7 @@
 #include "base/trace_event/trace_log.h"
 #include "build/build_config.h"
 
+#if 0
 // By default, const char* argument values are assumed to have long-lived scope
 // and will not be copied. Use this macro to force a const char* to be copied.
 #define TRACE_STR_COPY(str) \
@@ -48,7 +49,16 @@
 
 #define TRACE_ID_GLOBAL(id) trace_event_internal::TraceID::GlobalId(id)
 #define TRACE_ID_LOCAL(id) trace_event_internal::TraceID::LocalId(id)
+#else
+#define TRACE_STR_COPY(str)
+#define TRACE_ID_MANGLE(id)
+#define TRACE_ID_DONT_MANGLE(id)
+#define TRACE_ID_WITH_SCOPE(scope, id)
+#define TRACE_ID_GLOBAL(id)
+#define TRACE_ID_LOCAL(id)
+#endif
 
+#if 0
 // Sets the current sample state to the given category and name (both must be
 // constant strings). These states are intended for a sampling profiler.
 // Implementation note: we store category and name together because we don't
@@ -97,7 +107,19 @@
     category_group_enabled)                                             \
   UNLIKELY(category_group_enabled&                                      \
                base::trace_event::TraceLog::ENABLED_FOR_FILTERING)
-
+#else
+#define TRACE_EVENT_SET_SAMPLING_STATE_FOR_BUCKET( \
+    bucket_number, category, name) __noop
+#define TRACE_EVENT_GET_SAMPLING_STATE_FOR_BUCKET(bucket_number) __noop
+#define TRACE_EVENT_SET_NONCONST_SAMPLING_STATE_FOR_BUCKET( \
+    bucket_number, category_and_name)  __noop
+#define TRACE_EVENT_SCOPED_SAMPLING_STATE_FOR_BUCKET(                   \
+    bucket_number, category, name) __noop
+#define TRACE_EVENT_API_CURRENT_THREAD_ID __noop
+#define INTERNAL_TRACE_EVENT_CATEGORY_GROUP_ENABLED_FOR_RECORDING_MODE() __noop
+#define INTERNAL_TRACE_EVENT_CATEGORY_GROUP_ENABLED_FOR_FILTERING_MODE( \
+    category_group_enabled) __noop
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation specific tracing API definitions.
 
@@ -251,6 +273,8 @@ TRACE_EVENT_API_CLASS_EXPORT extern \
 #define INTERNAL_TRACE_EVENT_UID(name_prefix) \
     INTERNAL_TRACE_EVENT_UID2(name_prefix, __LINE__)
 
+
+#if 0
 // Implementation detail: internal macro to create static category.
 // No barriers are needed, because this code is designed to operate safely
 // even when the unsigned char* points to garbage data (which may be the case
@@ -413,7 +437,23 @@ TRACE_EVENT_API_CLASS_EXPORT extern \
           ##__VA_ARGS__);                                                   \
     }                                                                       \
   } while (0)
+#else
+#define INTERNAL_TRACE_EVENT_GET_CATEGORY_INFO_CUSTOM_VARIABLES( \
+    category_group, atomic, category_group_enabled) __noop
+#define INTERNAL_TRACE_EVENT_GET_CATEGORY_INFO(category_group) __noop
+#define INTERNAL_TRACE_EVENT_ADD(phase, category_group, name, flags, ...) __noop
+#define INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name, ...) __noop
+#define INTERNAL_TRACE_EVENT_ADD_SCOPED_WITH_FLOW( \
+    category_group, name, bind_id, flow_flags, ...) __noop
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID(phase, category_group, name, id, \
+                                         flags, ...) __noop
 
+#define INTERNAL_TRACE_EVENT_ADD_WITH_TIMESTAMP(phase, category_group, name, \
+                                                timestamp, flags, ...)	__noop
+#define INTERNAL_TRACE_EVENT_ADD_WITH_ID_TID_AND_TIMESTAMP(                   \
+    phase, category_group, name, id, thread_id, timestamp, flags, ...) __noop
+#define INTERNAL_TRACE_EVENT_METADATA_ADD(category_group, name, ...) __noop
+#endif
 // Implementation detail: internal macro to enter and leave a
 // context based on the current scope.
 #define INTERNAL_TRACE_EVENT_SCOPED_CONTEXT(category_group, name, context) \
