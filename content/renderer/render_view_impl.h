@@ -208,7 +208,9 @@ class CONTENT_EXPORT RenderViewImpl
   StatsCollectionObserver* GetStatsCollectionObserver() {
     return stats_collection_observer_.get();
   }
-
+  void OnRequestBlockedbyAdfilterService(int frame_id,
+      const GURL url);
+  std::vector<std::string>& adblock_filter_urls() { return adblock_filter_urls_; }
   // Adds the given file chooser request to the file_chooser_completion_ queue
   // (see that var for more) and requests the chooser be displayed if there are
   // no other waiting items in the queue.
@@ -909,6 +911,7 @@ class CONTENT_EXPORT RenderViewImpl
   // notifications.
   // ---------------------------------------------------------------------------
 
+  std::vector<std::string> adblock_filter_urls_;
   DISALLOW_COPY_AND_ASSIGN(RenderViewImpl);
 };
 

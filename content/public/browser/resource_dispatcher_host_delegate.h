@@ -147,6 +147,7 @@ class CONTENT_EXPORT ResourceDispatcherHostDelegate {
   virtual void OnAbortedFrameLoad(const GURL& url,
                                   base::TimeDelta request_loading_time);
 
+  virtual bool CheckBrowseUrl(net::URLRequest* request,bool* bcancel);
  protected:
   virtual ~ResourceDispatcherHostDelegate();
 };

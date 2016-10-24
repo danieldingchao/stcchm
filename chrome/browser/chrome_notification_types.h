@@ -490,6 +490,9 @@ enum NotificationType {
   // (std::pair<net::SSLCertRequestInfo*, net::X509Certificate*>).
   NOTIFICATION_SSL_CLIENT_AUTH_CERT_SELECTED,
 
+  NOTIFICATION_ADBLOCK_REFRESH_BLOCKS,
+  NOTIFICATION_ADBLOCK_UPDATE_BLOCKS,
+
   // Note:-
   // Currently only Content and Chrome define and use notifications.
   // Custom notifications not belonging to Content and Chrome should start

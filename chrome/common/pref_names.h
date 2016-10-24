@@ -16,6 +16,14 @@ namespace prefs {
 // lemon add
 extern const char kFixedHomePage[];
 
+extern const char kAdfilterLevel[];
+extern const char kAdfilterCssJs[];
+extern const char kAdfilterPopup[];
+extern const char kAdfilterStatisticDate[];
+extern const char kAdfilterStatisticCount[];
+extern const char kUserAdfilterRulseLastDir[];
+extern const char KUserAdfilterRulseDisableList[];
+
 // Profile prefs. Please add Local State prefs below instead.
 #if defined(OS_CHROMEOS) && defined(ENABLE_APP_LIST)
 extern const char kArcApps[];

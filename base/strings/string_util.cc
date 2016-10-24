@@ -994,4 +994,41 @@ size_t wcslcpy(wchar_t* dst, const wchar_t* src, size_t dst_size) {
   return lcpyT<wchar_t>(dst, src, dst_size);
 }
 
+template<typename STR>
+static size_t TokenizeT(const STR& str,
+                        const STR& delimiters,
+                        std::vector<STR>* tokens) {
+  tokens->clear();
+  size_t start = str.find_first_not_of(delimiters);
+  while (start != STR::npos) {
+    size_t end = str.find_first_of(delimiters, start + 1);
+    if (end == STR::npos) {
+      tokens->push_back(str.substr(start));
+      break;
+    } else {
+      tokens->push_back(str.substr(start, end - start));
+      start = str.find_first_not_of(delimiters, end + 1);
+    }
+  }
+  return tokens->size();
+}
+
+size_t Tokenize(const string16& str,
+                const string16& delimiters,
+                std::vector<string16>* tokens) {
+  return TokenizeT(str, delimiters, tokens);
+}
+
+size_t Tokenize(const std::string& str,
+                const std::string& delimiters,
+                std::vector<std::string>* tokens) {
+  return TokenizeT(str, delimiters, tokens);
+}
+
+size_t Tokenize(const base::StringPiece& str,
+                const base::StringPiece& delimiters,
+                std::vector<base::StringPiece>* tokens) {
+  return TokenizeT(str, delimiters, tokens);
+}
+
 }  // namespace base

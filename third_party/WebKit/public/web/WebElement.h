@@ -38,6 +38,7 @@ namespace blink {
 
 class Element;
 struct WebRect;
+class WebURL;
 
 // Provides access to some properties of a DOM element node.
 class WebElement : public WebNode {
@@ -80,6 +81,8 @@ class WebElement : public WebNode {
   // Returns the image contents of this element or a null WebImage
   // if there isn't any.
   BLINK_EXPORT WebImage imageContents();
+    BLINK_EXPORT void removeChild(WebNode& child, int& error_code);
+    BLINK_EXPORT WebURL src();
 
 #if BLINK_IMPLEMENTATION
   BLINK_EXPORT WebElement(Element*);

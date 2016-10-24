@@ -1,0 +1,35 @@
+component("abp") {
+  sources = [
+    "abp.cc",
+    "abp.h",
+    "abp_filter.cc",
+    "abp_filter.h",
+    "abp_matcher.cc",
+    "abp_matcher.h",
+    "abp_parser.cc",
+    "abp_parser.h",
+    "css_js_injector_manager.cc",
+    "css_js_injector_manager.h",
+    "abp_export.h"
+  ]
+  deps = [
+    ":lemon_files",
+    "//base:base",
+    "//base/third_party/dynamic_annotations:dynamic_annotations",
+    "//net",
+    "//url",
+  ]
+  
+  defines = [
+    "ABP_IMPLEMENTATION",
+  ]
+}
+copy("lemon_files") {
+  sources = [
+    "data/adblock",
+  ]
+
+  outputs = [
+    "$root_out_dir/{{source_file_part}}",
+  ]
+}

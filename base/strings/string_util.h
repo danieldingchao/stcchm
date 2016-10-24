@@ -456,6 +456,18 @@ BASE_EXPORT string16 ReplaceStringPlaceholders(const string16& format_string,
                                                const string16& a,
                                                size_t* offset);
 
+BASE_EXPORT size_t Tokenize(const base::string16& str,
+                            const base::string16& delimiters,
+                            std::vector<base::string16>* tokens);
+
+BASE_EXPORT size_t Tokenize(const std::string& str,
+                            const std::string& delimiters,
+                            std::vector<std::string>* tokens);
+
+BASE_EXPORT size_t Tokenize(const base::StringPiece& str,
+                            const base::StringPiece& delimiters,
+                            std::vector<base::StringPiece>* tokens);
+
 }  // namespace base
 
 #if defined(OS_WIN)

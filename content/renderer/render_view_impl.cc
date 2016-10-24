@@ -1373,6 +1373,8 @@ bool RenderViewImpl::OnMessageReceived(const IPC::Message& message) {
                         OnGetRenderedText)
     IPC_MESSAGE_HANDLER(ViewMsg_Close, OnClose)
 #endif
+    IPC_MESSAGE_HANDLER(ViewMsg_RequestBlockedbyAdfilterService,
+        OnRequestBlockedbyAdfilterService)
     // Adding a new message? Add platform independent ones first, then put the
     // platform specific ones at the end.
 
@@ -3033,6 +3035,14 @@ void RenderViewImpl::UpdateWebViewWithDeviceScaleFactor() {
   }
   webview()->settings()->setPreferCompositingToLCDTextEnabled(
       PreferCompositingToLCDText(compositor_deps_, device_scale_factor_));
+}
+
+void RenderViewImpl::OnRequestBlockedbyAdfilterService(
+    int frame_id,
+    const GURL url){
+    if (std::find(adblock_filter_urls_.begin(), adblock_filter_urls_.end(), url.spec()) == adblock_filter_urls_.end()) {
+        adblock_filter_urls_.push_back(url.spec());
+    }
 }
 
 }  // namespace content

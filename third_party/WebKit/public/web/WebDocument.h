@@ -143,6 +143,7 @@ class WebDocument : public WebNode {
       v8::Local<v8::Value> options,
       WebExceptionCode&);
 
+  BLINK_EXPORT bool insertAdblockCssRules(const WebString& rule_id, const WebString& selectors, const WebString& rules);
   BLINK_EXPORT WebURL manifestURL() const;
   BLINK_EXPORT bool manifestUseCredentials() const;
   BLINK_EXPORT WebDistillabilityFeatures distillabilityFeatures();

@@ -1504,6 +1504,17 @@ IPC_MESSAGE_ROUTED2(FrameHostMsg_GetNearestFindResult_Reply,
                     float /* distance */)
 #endif
 
+IPC_MESSAGE_ROUTED2(FrameMsg_RequestBlockedbyAdfilterService,
+int,/* frame_id */
+GURL)
+IPC_MESSAGE_ROUTED2(FrameMsg_CSSSelectorsbyAdfilterService,
+std::string,
+std::vector<std::string>)
+IPC_MESSAGE_ROUTED3(FrameMsg_InjectCssJs,
+std::vector<int>,
+std::vector<int>,
+std::vector<std::string>)
+
 // Adding a new message? Stick to the sort order above: first platform
 // independent FrameMsg, then ifdefs for platform specific FrameMsg, then
 // platform independent FrameHostMsg, then ifdefs for platform specific

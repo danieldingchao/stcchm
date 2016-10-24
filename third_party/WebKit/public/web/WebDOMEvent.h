@@ -33,6 +33,8 @@
 
 #include "../platform/WebCommon.h"
 #include "../platform/WebPrivatePtr.h"
+#include "../platform/WebString.h"
+#include "WebNode.h"
 
 namespace blink {
 
@@ -51,6 +53,8 @@ class WebDOMEvent {
 
   BLINK_EXPORT void reset();
   BLINK_EXPORT void assign(const WebDOMEvent&);
+    BLINK_EXPORT WebString type() const;
+    BLINK_EXPORT WebNode target() const;
 
   bool isNull() const { return m_private.isNull(); }
 

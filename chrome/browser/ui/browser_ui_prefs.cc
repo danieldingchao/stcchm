@@ -18,6 +18,7 @@
 #if defined(OS_WIN)
 #include "base/win/windows_version.h"
 #endif
+#include "chrome/browser/adfilter/adfilter_service.h"
 
 namespace {
 
@@ -47,6 +48,7 @@ void RegisterBrowserUserPrefs(user_prefs::PrefRegistrySyncable* registry) {
       GetHomeButtonAndHomePageIsNewTabPageFlags());
   registry->RegisterBooleanPref(prefs::kShowHomeButton, false,
                                 GetHomeButtonAndHomePageIsNewTabPageFlags());
+  AdfilterService::RegisterUserPrefs(registry);
 
   registry->RegisterIntegerPref(prefs::kModuleConflictBubbleShown, 0);
   registry->RegisterInt64Pref(prefs::kDefaultBrowserLastDeclined, 0);

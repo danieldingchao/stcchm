@@ -668,6 +668,7 @@ class NET_EXPORT URLRequest : NON_EXPORTED_BASE(public base::NonThreadSafe),
  private:
   friend class URLRequestJob;
   friend class URLRequestContext;
+  friend class AdfilterService;
 
   // For testing purposes.
   // TODO(maksims): Remove this.
@@ -688,7 +689,10 @@ class NET_EXPORT URLRequest : NON_EXPORTED_BASE(public base::NonThreadSafe),
   // returned indicating so. This should only be called after Start is called
   // and OnBeforeRequest returns true (signalling that the request should be
   // paused).
+public:
   void BeforeRequestComplete(int error);
+  void OnCallToDelegate();
+private:
 
   // TODO(mmenke):  Make this take a scoped_ptr.
   void StartJob(URLRequestJob* job);
@@ -736,8 +740,6 @@ class NET_EXPORT URLRequest : NON_EXPORTED_BASE(public base::NonThreadSafe),
                     CookieOptions* options) const;
   bool CanEnablePrivacyMode() const;
 
-  // Called just before calling a delegate that may block a request.
-  void OnCallToDelegate();
   // Called when the delegate lets a request continue.  Also called on
   // cancellation.
   void OnCallToDelegateComplete();

@@ -1,0 +1,13 @@
+setTimeout(function() {
+    var height = window.innerHeight || document.documentElement.clientHeight;
+    var el = document.elementFromPoint(1, height-1);
+    while (el) {
+        var css = window.getComputedStyle(el);
+        if (css.bottom == "0px" && css.position == "fixed") {
+            el.style.display = "none";
+            break;
+        }
+        el = el.parentNode;
+    }
+}, 1000);
+

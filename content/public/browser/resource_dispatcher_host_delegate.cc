@@ -117,4 +117,8 @@ void ResourceDispatcherHostDelegate::OnAbortedFrameLoad(
 ResourceDispatcherHostDelegate::~ResourceDispatcherHostDelegate() {
 }
 
+bool ResourceDispatcherHostDelegate::CheckBrowseUrl(net::URLRequest* request,
+    bool* bcancel){
+    return true;
+}
 }  // namespace content

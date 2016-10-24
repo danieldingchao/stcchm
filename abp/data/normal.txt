@@ -1,0 +1,14 @@
+cn.bing.com##div[id="TopApp"]
+baidu.com###index-card > .fixed
+wapbaike.baidu.com##.card-share + div
+tieba.baidu.com##.bdps_login_ad_wrap
+map.baidu.com##.bottom-banner-float
+music.baidu.com###head-ad
+lashou.com###wrap + div[class="com-client"]
+58.com##.bban_new
+sina.cn###promotionCover
+autohome.com.cn##.rO1dOzO15_
+lagou.com###go_app
+toutiao.com##.banner-index-bottom
+toutiao.com###pageletTopBanner
+douban.com###dale_event_mobile_app_banner

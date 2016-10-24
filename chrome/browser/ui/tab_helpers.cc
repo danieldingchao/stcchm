@@ -109,6 +109,7 @@
 #include "chrome/browser/printing/print_view_manager_basic.h"
 #endif  // defined(ENABLE_PRINT_PREVIEW)
 #endif  // defined(ENABLE_PRINTING)
+#include "chrome/browser/adfilter/adfilter_tab_helper.h"
 
 using content::WebContents;
 
@@ -193,6 +194,7 @@ void TabHelpers::AttachTabHelpers(WebContents* web_contents) {
   // TODO(vabr): Remove TabSpecificContentSettings from here once their function
   // is taken over by ChromeContentSettingsClient. http://crbug.com/387075
   TabSpecificContentSettings::CreateForWebContents(web_contents);
+  AdfilterTabHelper::CreateForWebContents(web_contents);
 
   // --- Platform-specific tab helpers ---
 

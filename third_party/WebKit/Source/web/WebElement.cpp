@@ -41,6 +41,7 @@
 #include "wtf/PassRefPtr.h"
 #include "wtf/text/AtomicString.h"
 #include "wtf/text/WTFString.h"
+#include "public/platform/WebURL.h"
 
 namespace blink {
 
@@ -153,6 +154,19 @@ WebElement& WebElement::operator=(Element* elem) {
 
 WebElement::operator Element*() const {
   return toElement(m_private.get());
+}
+
+void WebElement::removeChild(WebNode& child, int& error_code)
+{
+    TrackExceptionState err;
+    unwrap<Element>()->removeChild(child.unwrap<Element>(), err);
+    error_code = err.code();
+}
+
+WebURL WebElement::src()
+{
+    Element* el = unwrap<Element>();
+    return WebURL(el->document().completeURL(el->getAttribute(QualifiedName("", "src", ""))));
 }
 
 }  // namespace blink

@@ -155,6 +155,7 @@
 #include "chrome/browser/supervised_user/supervised_user_settings_service.h"
 #include "chrome/browser/supervised_user/supervised_user_settings_service_factory.h"
 #endif
+#include "chrome/browser/adfilter/adfilter_service.h"
 
 using base::Time;
 using base::TimeDelta;
@@ -477,6 +478,9 @@ ProfileImpl::ProfileImpl(
         safe_browsing_service->CreatePreferenceValidationDelegate(this);
   }
 #endif
+
+  scoped_refptr<AdfilterService> adfilter_service(
+    g_browser_process->adfilter_service());
 
   content::BrowserContext::Initialize(this, path_);
 

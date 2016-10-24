@@ -152,6 +152,7 @@ class BrowserProcessImpl : public BrowserProcess,
 #endif
   network_time::NetworkTimeTracker* network_time_tracker() override;
   gcm::GCMDriver* gcm_driver() override;
+  virtual AdfilterService* adfilter_service() override;
   memory::TabManager* GetTabManager() override;
   shell_integration::DefaultWebClientState CachedDefaultWebClientState()
       override;
@@ -186,6 +187,7 @@ class BrowserProcessImpl : public BrowserProcess,
   void ApplyAllowCrossOriginAuthPromptPolicy();
   void ApplyDefaultBrowserPolicy();
   void ApplyMetricsReportingPolicy();
+  void CreateAdfilterService();
 
   void CacheDefaultWebClientState();
 
@@ -350,6 +352,8 @@ class BrowserProcessImpl : public BrowserProcess,
 
   std::unique_ptr<PhysicalWebDataSource> physical_web_data_source_;
 
+  bool created_adfilter_service_;
+  scoped_refptr<AdfilterService> adfilter_service_;
   DISALLOW_COPY_AND_ASSIGN(BrowserProcessImpl);
 };
 

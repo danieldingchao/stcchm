@@ -44,6 +44,7 @@ class WebDocument;
 class WebElement;
 class WebElementCollection;
 class WebPluginContainer;
+class WebDOMEventListener;
 
 // Provides access to some properties of a DOM node.
 // Note that the class design requires that neither this class nor any of its
@@ -88,6 +89,7 @@ class WebNode {
   BLINK_EXPORT bool isFocusable() const;
   BLINK_EXPORT bool isContentEditable() const;
   BLINK_EXPORT bool isElementNode() const;
+    BLINK_EXPORT void addEventListener(const WebString& eventType, WebDOMEventListener* listener, bool useCapture);
   BLINK_EXPORT void simulateClick();
 
   // The argument should be lower-cased.

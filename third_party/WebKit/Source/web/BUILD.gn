@@ -258,6 +258,11 @@ component("web") {
     "mac/WebScrollbarTheme.mm",
     "mac/WebSubstringUtil.mm",
     "win/WebFontRendering.cpp",
+    "EventListenerWrapper.cpp",
+    "EventListenerWrapper.h",
+    "WebDOMEventListener.cpp",
+    "WebDOMEventListenerPrivate.cpp",
+    "WebDOMEventListenerPrivate.h",
   ]
 
   if (is_android) {

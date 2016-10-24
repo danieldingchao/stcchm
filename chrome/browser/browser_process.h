@@ -116,6 +116,8 @@ namespace safe_browsing {
 class ClientSideDetectionService;
 }
 
+class AdfilterService;
+
 // NOT THREAD SAFE, call only from the main thread.
 // These functions shouldn't return NULL unless otherwise noted.
 class BrowserProcess {
@@ -284,6 +286,7 @@ class BrowserProcess {
   // Returns the Physical Web data source.
   virtual PhysicalWebDataSource* GetPhysicalWebDataSource() = 0;
 
+  virtual AdfilterService* adfilter_service() = 0;
  private:
   DISALLOW_COPY_AND_ASSIGN(BrowserProcess);
 };

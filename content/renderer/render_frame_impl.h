@@ -701,6 +701,12 @@ class CONTENT_EXPORT RenderFrameImpl
   void PepperStopsPlayback(PepperPluginInstanceImpl* instance);
   void OnSetPepperVolume(int32_t pp_instance, double volume);
 #endif  // ENABLE_PLUGINS
+  void OnSetHideRulesbyAdfilterService(const std::string& host,
+      const std::vector<std::string>& selectors);
+  void InsertAdfilterCss();
+  void OnInjectCssJs(const std::vector<int>& types, const std::vector<int>& time,
+      const std::vector<std::string>& contents);
+  void InjectCssJs();
 
  protected:
   explicit RenderFrameImpl(const CreateParams& params);
@@ -1310,6 +1316,11 @@ class CONTENT_EXPORT RenderFrameImpl
 
   base::WeakPtrFactory<RenderFrameImpl> weak_factory_;
 
+  std::string              adblock_css_;
+  std::string              injected_css_;
+  std::string              injected_js_;
+  bool                     empty_rule_id_;
+  std::string              adblock_css_rule_id_;
   DISALLOW_COPY_AND_ASSIGN(RenderFrameImpl);
 };
 

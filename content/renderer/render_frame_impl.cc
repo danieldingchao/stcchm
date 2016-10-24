@@ -250,6 +250,10 @@
 #include "media/mojo/clients/mojo_decoder_factory.h"  // nogncheck
 #endif
 
+#include "base/strings/string_number_conversions.h"
+#include "third_party/WebKit/public/web/WebElementCollection.h"
+#include "third_party/WebKit/public/web/WebDOMEventListener.h"
+
 using base::Time;
 using base::TimeDelta;
 using blink::WebCachePolicy;
@@ -308,6 +312,9 @@ using blink::WebFloatPoint;
 using blink::WebFloatRect;
 #endif
 
+using blink::WebCString;
+using blink::WebElementCollection;
+
 #define STATIC_ASSERT_ENUM(a, b)                            \
   static_assert(static_cast<int>(a) == static_cast<int>(b), \
                 "mismatching enums: " #a)
@@ -315,6 +322,59 @@ using blink::WebFloatRect;
 namespace content {
 
 namespace {
+class AdFilterProcesser : public blink::WebDOMEventListener {
+    public:
+        explicit AdFilterProcesser(WebFrame* frame, RenderViewImpl* render_view)
+            : frame_(frame), render_view_(render_view){}
+
+    private:
+        // blink::WebDOMEventListener implementation.
+        virtual void handleEvent(const blink::WebDOMEvent& event);
+
+        // The listener getting the actual notifications.
+        WebFrame* frame_;
+        RenderViewImpl* render_view_;
+
+        DISALLOW_COPY_AND_ASSIGN(AdFilterProcesser);
+    };
+
+    const char* typeMap[] = { "IMG", "IMAGE", "INPUT", "AUDIO", "VIDEO" };
+
+    void AdFilterProcesser::handleEvent(const blink::WebDOMEvent& event)
+    {
+        WebNode node = event.target();
+        if (node.isElementNode()) {
+            WebElement& el = static_cast<WebElement&>(node);
+            WebCString tagname = el.tagName().utf8();
+            std::vector<std::string>& adblock_filter_urls = render_view_->adblock_filter_urls();
+            for (int i = 0; i<sizeof(typeMap) / sizeof(typeMap[0]); ++i) {
+                if (::strncmp(typeMap[i], tagname.data(), tagname.length()) == 0) {
+                    if (event.type() == "error") {
+                        WebURL url = el.src();
+                        if (std::find(adblock_filter_urls.begin(), adblock_filter_urls.end(), GURL(url).spec()) != adblock_filter_urls.end()) {
+                            int err = 0;
+                            if (!el.parentNode().isNull())
+                                el.parentNode().to<WebElement>().removeChild(node, err);
+                        }
+                    }
+                }
+                if (::strncmp("IFRAME", tagname.data(), tagname.length()) == 0) {
+                    if (event.type() == "load") {
+                        WebNode node_parent = el.parentNode();
+                        if (!node_parent.isNull()) {
+                            WebURL url = el.src();
+                            if (std::find(adblock_filter_urls.begin(), adblock_filter_urls.end(), GURL(url).spec()) != adblock_filter_urls.end()) {
+                                int err = 0;
+                                if (!el.parentNode().isNull())
+                                    el.parentNode().to<WebElement>().removeChild(node, err);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 const int kExtraCharsBeforeAndAfterSelection = 100;
 
@@ -1139,6 +1199,8 @@ RenderFrameImpl::RenderFrameImpl(const CreateParams& params)
 #endif
 
   manifest_manager_ = new ManifestManager(this);
+  int64_t now = base::TimeTicks::Now().ToInternalValue();
+  adblock_css_rule_id_ = base::Int64ToString(now);
 }
 
 RenderFrameImpl::~RenderFrameImpl() {
@@ -1601,6 +1663,10 @@ bool RenderFrameImpl::OnMessageReceived(const IPC::Message& msg) {
 #if defined(OS_MACOSX)
     IPC_MESSAGE_HANDLER(InputMsg_CopyToFindPboard, OnCopyToFindPboard)
 #endif
+    IPC_MESSAGE_HANDLER(FrameMsg_CSSSelectorsbyAdfilterService,
+    OnSetHideRulesbyAdfilterService)
+    IPC_MESSAGE_HANDLER(FrameMsg_InjectCssJs,
+    OnInjectCssJs)
   IPC_END_MESSAGE_MAP()
 
   return handled;
@@ -3245,6 +3311,10 @@ void RenderFrameImpl::didStartProvisionalLoad(blink::WebLocalFrame* frame,
   DCHECK_EQ(frame_, frame);
   WebDataSource* ds = frame->provisionalDataSource();
 
+  injected_js_.clear();
+  injected_css_.clear();
+  adblock_css_.clear();
+
   // In fast/loader/stop-provisional-loads.html, we abort the load before this
   // callback is invoked.
   if (!ds)
@@ -3541,6 +3611,9 @@ void RenderFrameImpl::didCommitProvisionalLoad(
       RenderFrameObserver, observers_,
       DidCommitProvisionalLoad(is_new_navigation,
                                navigation_state->WasWithinSamePage()));
+  AdFilterProcesser* demo = new AdFilterProcesser(frame, render_view_.get());
+  frame_->document().addEventListener("error", demo, true);
+  frame_->document().addEventListener("load", demo, true);
 
   if (!frame->parent()) {  // Only for top frames.
     RenderThreadImpl* render_thread_impl = RenderThreadImpl::current();
@@ -3624,6 +3697,8 @@ void RenderFrameImpl::didCreateDocumentElement(blink::WebLocalFrame* frame) {
       render_view_->Send(new ViewHostMsg_DocumentAvailableInMainFrame(
           render_view_->GetRoutingID(),
           main_frame->document().isPluginDocument()));
+      InsertAdfilterCss();
+      InjectCssJs();
     }
   }
 
@@ -3664,6 +3739,8 @@ void RenderFrameImpl::didReceiveTitle(blink::WebLocalFrame* frame,
     Send(new FrameHostMsg_UpdateTitle(routing_id_,
                                       shortened_title, direction));
   }
+  InsertAdfilterCss();
+  InjectCssJs();
 
   // Also check whether we have new encoding name.
   UpdateEncoding(frame, frame->view()->pageEncoding().utf8());
@@ -3685,7 +3762,8 @@ void RenderFrameImpl::didFinishDocumentLoad(blink::WebLocalFrame* frame) {
   document_state->set_finish_document_load_time(Time::Now());
 
   Send(new FrameHostMsg_DidFinishDocumentLoad(routing_id_));
-
+  InsertAdfilterCss();
+  InjectCssJs();
   FOR_EACH_OBSERVER(RenderViewObserver, render_view_->observers(),
                     DidFinishDocumentLoad(frame));
   FOR_EACH_OBSERVER(RenderFrameObserver, observers_, DidFinishDocumentLoad());
@@ -3756,7 +3834,8 @@ void RenderFrameImpl::didHandleOnloadEvents(blink::WebLocalFrame* frame) {
     base::TimeTicks ui_timestamp = base::TimeTicks() +
         base::TimeDelta::FromSecondsD(
             frame->dataSource()->request().uiStartTime());
-
+    InsertAdfilterCss();
+    InjectCssJs();
     Send(new FrameHostMsg_DocumentOnLoadCompleted(
         routing_id_, report_type, ui_timestamp));
   }
@@ -3808,6 +3887,8 @@ void RenderFrameImpl::didFinishLoad(blink::WebLocalFrame* frame) {
                     DidFinishLoad(frame));
   FOR_EACH_OBSERVER(RenderFrameObserver, observers_, DidFinishLoad());
 
+  InsertAdfilterCss();
+  InjectCssJs();
   Send(new FrameHostMsg_DidFinishLoad(routing_id_,
                                       ds->request().url()));
 }
@@ -6495,6 +6576,53 @@ void RenderFrameImpl::RenderWidgetWillHandleMouseEvent() {
   // |pepper_last_mouse_event_target_|.
   pepper_last_mouse_event_target_ = nullptr;
 #endif
+}
+
+void RenderFrameImpl::InsertAdfilterCss(){
+    if (frame_&&adblock_css_.length() > 0) {
+        frame_->document().insertAdblockCssRules(
+            blink::WebString::fromUTF8(adblock_css_rule_id_.c_str()),
+            blink::WebString::fromUTF8(adblock_css_.c_str()),
+            blink::WebString::fromUTF8("display: none !important;"));
+    }
+}
+
+void RenderFrameImpl::OnSetHideRulesbyAdfilterService(const std::string& host,
+    const std::vector<std::string>& selectors) {
+    adblock_css_ = "";
+    for (std::vector<std::string>::const_iterator it = selectors.begin();
+        it != selectors.end(); ++it) {
+        adblock_css_ += (*it + ", ");
+    }
+    if (adblock_css_.length() > 2){
+        adblock_css_ = adblock_css_.substr(0, adblock_css_.length() - 2);
+        InsertAdfilterCss();
+    }
+}
+
+void RenderFrameImpl::OnInjectCssJs(const std::vector<int>& types, const std::vector<int>& time,
+    const std::vector<std::string>& contents) {
+	for(size_t i = 0;i< types.size();i++) {
+    if (types[i] == 1) {
+        injected_js_ += contents[i];
+        injected_js_ += "\r\n";
+    }
+    else{
+        injected_css_ = contents[i];
+        injected_js_ += "\r\n";
+    }
+	}
+    InjectCssJs();
+}
+void RenderFrameImpl::InjectCssJs() {
+
+    WebFrame* frame = render_view_->webview()->mainFrame();
+    if (injected_css_.size() != 0) {
+        frame->document().insertStyleSheet(blink::WebString::fromUTF8(injected_css_));
+    }
+    if (injected_js_.size() != 0) {
+        frame->executeScript(blink::WebString::fromUTF8(injected_js_));
+    }
 }
 
 }  // namespace content

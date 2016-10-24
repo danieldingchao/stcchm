@@ -12,6 +12,15 @@ namespace prefs {
 // Lemon Add
 const char kFixedHomePage[] = "browser.fixed_home_page";
 
+const char kAdfilterLevel[] = "adfilter.adfilter_level";
+const char kAdfilterCssJs[] = "adfilter.cssjs_enabled";
+const char kAdfilterPopup[] = "adfilter.adfilter_popup";
+const char kAdfilterStatisticDate[] = "adfilter.statistic_day_date";
+const char kAdfilterStatisticCount[] = "adfilter.statistic_day_count";
+// user adfilter rulse
+const char kUserAdfilterRulseLastDir[] = "adfilter.LastDirectory";
+const char KUserAdfilterRulseDisableList[] = "adfilter.disableList";
+
 // *************** PROFILE PREFS ***************
 // These are attached to the user profile
 

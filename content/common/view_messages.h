@@ -1007,6 +1007,13 @@ IPC_MESSAGE_ROUTED2(ViewHostMsg_ShowUnhandledTapUIIfNeeded,
 IPC_MESSAGE_ROUTED1(ViewMsg_GetRenderedTextCompleted, std::string)
 #endif
 
+IPC_MESSAGE_ROUTED2(ViewMsg_RequestBlockedbyAdfilterService,
+                    int,/* frame_id */
+                    GURL)
+IPC_MESSAGE_ROUTED2(ViewMsg_CSSSelectorsbyAdfilterService,
+                    std::string,
+                    std::vector<std::string>)
+
 // Adding a new message? Stick to the sort order above: first platform
 // independent ViewMsg, then ifdefs for platform specific ViewMsg, then platform
 // independent ViewHostMsg, then ifdefs for platform specific ViewHostMsg.

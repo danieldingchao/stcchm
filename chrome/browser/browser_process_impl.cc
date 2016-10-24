@@ -177,6 +177,8 @@
 #include "chrome/browser/android/physical_web/physical_web_data_source_android.h"
 #endif
 
+#include "chrome/browser/adfilter/adfilter_service.h"
+
 #if (defined(OS_WIN) || defined(OS_LINUX)) && !defined(OS_CHROMEOS)
 // How often to check if the persistent instance of Chrome needs to restart
 // to install an update.
@@ -209,6 +211,7 @@ BrowserProcessImpl::BrowserProcessImpl(
 #if defined(FULL_SAFE_BROWSING)
       created_safe_browsing_service_(false),
 #endif
+      created_adfilter_service_(false),
       created_subresource_filter_ruleset_service_(false),
       shutting_down_(false),
       tearing_down_(false),
@@ -312,6 +315,9 @@ void BrowserProcessImpl::StartTearDown() {
   if (safe_browsing_service_.get())
     safe_browsing_service()->ShutDown();
 #endif
+  if (adfilter_service_.get()){
+      adfilter_service_->ShutDown(true);
+  }
   network_time_tracker_.reset();
 #if defined(ENABLE_PLUGIN_INSTALLATION)
   plugins_resource_service_.reset();
@@ -1409,3 +1415,22 @@ void BrowserProcessImpl::OnAutoupdateTimer() {
 }
 
 #endif  // (defined(OS_WIN) || defined(OS_LINUX)) && !defined(OS_CHROMEOS)
+
+AdfilterService* BrowserProcessImpl::adfilter_service(){
+  const base::CommandLine& parsed_command_line = *base::CommandLine::ForCurrentProcess();
+  std::string process_type = parsed_command_line.GetSwitchValueASCII("type");
+  if( process_type.empty()  && parsed_command_line.HasSwitch("no-adfilter") ) {
+    return NULL;
+  }
+  if (!created_adfilter_service_){
+    CreateAdfilterService();
+  }
+  return adfilter_service_.get();
+}
+
+void BrowserProcessImpl::CreateAdfilterService(){
+  DCHECK(adfilter_service_.get() == NULL);
+  adfilter_service_ = new AdfilterService;
+  adfilter_service_->Initialize();
+  created_adfilter_service_ = true;
+}

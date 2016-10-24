@@ -56,6 +56,10 @@ split_static_library("browser") {
   sources = [
     "about_flags.cc",
     "about_flags.h",
+    "adfilter/adfilter_tab_helper.h",
+    "adfilter/adfilter_tab_helper.cc",
+    "adfilter/adfilter_service.h",
+    "adfilter/adfilter_service.cc",
     "after_startup_task_utils.cc",
     "after_startup_task_utils.h",
     "app_controller_mac.h",
@@ -1253,6 +1257,7 @@ split_static_library("browser") {
   # iOS/non-iOS shared deps. New dependencies should generally be added in the
   # non-iOS deps below.
   public_deps = [
+    "//abp",
     "//chrome/common",
     "//components/autofill/core/browser",
     "//components/sync",

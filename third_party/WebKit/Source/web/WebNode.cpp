@@ -59,6 +59,8 @@
 #include "web/WebLocalFrameImpl.h"
 #include "web/WebPluginContainerImpl.h"
 #include "wtf/PtrUtil.h"
+#include "public/web/WebDOMEventListener.h"
+#include "web/EventListenerWrapper.h"
 
 namespace blink {
 
@@ -157,6 +159,18 @@ bool WebNode::isInsideFocusableElementOrARIAWidget() const {
 
 bool WebNode::isElementNode() const {
   return m_private->isElementNode();
+}
+
+void WebNode::addEventListener(const WebString& eventType, WebDOMEventListener* listener, bool useCapture)
+{
+    // Please do not add more eventTypes to this list without an API review.
+    // RELEASE_ASSERT(eventType == "mousedown");
+
+    EventListenerWrapper* listenerWrapper = listener->createEventListenerWrapper(eventType, useCapture, m_private.get());
+    // The listenerWrapper is only referenced by the actual Node.  Once it goes
+    // away, the wrapper notifies the WebEventListener so it can clear its
+    // pointer to it.
+    m_private->addEventListener(eventType, listenerWrapper, useCapture);
 }
 
 bool WebNode::isDocumentNode() const {

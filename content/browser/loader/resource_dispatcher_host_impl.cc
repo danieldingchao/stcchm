@@ -2404,6 +2404,20 @@ void ResourceDispatcherHostImpl::StartLoading(
   DCHECK(pending_loaders_[info->GetGlobalRequestID()] == nullptr);
   pending_loaders_[info->GetGlobalRequestID()] = std::move(loader);
 
+  if (delegate_&&filter_){
+      bool block = false;
+      if (delegate_->CheckBrowseUrl(loader_ptr->request(), &block) && block){
+          const content::ResourceRequestInfo* info = content::ResourceRequestInfo::ForRequest(loader_ptr->request());
+          if (info){
+              filter_->Send(new ViewMsg_RequestBlockedbyAdfilterService(
+                  info->GetRouteID(),
+                  info->GetRenderFrameID(),
+				  loader_ptr->request()->url()));
+          }
+          return;
+      }
+  }
+  
   loader_ptr->StartRequest();
 }
 

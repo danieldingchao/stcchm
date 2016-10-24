@@ -47,6 +47,18 @@ void WebDOMEvent::assign(Event* event) {
   m_private = event;
 }
 
+WebString WebDOMEvent::type() const
+{
+    ASSERT(m_private.get());
+    return m_private->type();
+}
+
+WebNode WebDOMEvent::target() const
+{
+    ASSERT(m_private.get());
+    return WebNode(m_private->target()->toNode());
+}
+
 WebDOMEvent::WebDOMEvent(Event* event) : m_private(event) {}
 
 WebDOMEvent::operator Event*() const {

@@ -66,6 +66,7 @@
 #include "web/WebLocalFrameImpl.h"
 #include "wtf/PassRefPtr.h"
 #include <v8.h>
+#include "core/html/HTMLStyleElement.h"
 
 namespace blink {
 
@@ -271,6 +272,39 @@ v8::Local<v8::Value> WebDocument::registerEmbedderCustomElement(
     return v8::Local<v8::Value>();
   return constructor.v8Value();
 }
+
+bool WebDocument::insertAdblockCssRules(const WebString& rule_id, const WebString& selectors, const WebString& rules)
+{
+    Document* document = unwrap<Document>();
+    Element* element = document->documentElement();
+    if (!element) return false;
+
+    for (Node * pNode = element->firstChild(); pNode; pNode = pNode->nextSibling()){
+        if (pNode&&pNode->isElementNode()){
+            AtomicString id = static_cast<Element*>(pNode)->getIdAttribute();
+            if (!id.isNull() && !id.isEmpty())
+                return false;
+        }
+    }
+
+    TrackExceptionState e;
+    Element* css = document->createElement(AtomicString("style"), e);
+    if (css) {
+        css->setAttribute("type", "text/css", e);
+        static_cast<Node*>(element)->appendChild(css, e);
+        if (!e.hadException()) {
+            if (static_cast<HTMLStyleElement*>(css)->sheet()) {
+                static_cast<HTMLStyleElement*>(css)->sheet()->addRule(selectors, rules, e);
+                if (!rule_id.isNull() && !rule_id.isEmpty())
+                   // css->setIdAttribute(AtomicString(rule_id));
+
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 WebURL WebDocument::manifestURL() const {
   const Document* document = constUnwrap<Document>();

@@ -1,0 +1,7 @@
+# CssJs Main Config File
+[ChaoZhuo Rules]
+enabled=1
+version=1.0.0.1001
+[Subscriptions]
+*.baidu.com 1 1 0
+tieba.baidu.com 2 1 0
