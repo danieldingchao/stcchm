@@ -27,6 +27,21 @@ enum ImporterType {
   TYPE_BOOKMARKS_FILE  = 5, // Identifies a 'bookmarks.html' file.
 #if defined(OS_WIN)
   TYPE_EDGE            = 6,
+  TYPE_THEWORLD5 = 7,
+  TYPE_THEWORLDCHROME = 8,
+  TYPE_GOOGLE_CHROME = 9,
+  TYPE_360SE5 = 10,
+  TYPE_360SE6 = 11,
+  TYPE_360CHROME = 12,
+  TYPE_LIEBAO = 13,
+  TYPE_SOGOU = 14,
+  TYPE_MAXTHON = 15,
+  TYPE_THEWORLD3 = 16,
+  TYPE_THEWORLD6 = 17,
+  TYPE_CENT_BROWSER = 18,
+  TYPE_7STAR_BROWSER = 19,
+  TYPE_LOCAL = 20,
+  TYPE_HTML = 21,
 #endif
 };
 

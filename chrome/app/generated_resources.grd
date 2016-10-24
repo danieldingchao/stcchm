@@ -213,6 +213,48 @@ are declared in build/common.gypi.
 	<message name="IDS_ABOUT_KERNEL_VERSION" use_name_for_id = "true" desc="start up show homepage">
       Kernel Version <ph name="PRODUCT_VERSION">$1<ex>15.0.865.0</ex></ph>
     </message>
+	<message name="IDS_IMPORT_FROM_THEWORLD3" use_name_for_id = "true" desc="browser combo box: The World 3">
+          The World 3
+        </message>
+        <message name="IDS_IMPORT_FROM_THEWORLD5" use_name_for_id = "true" desc="browser combo box: The World 5">
+          The World 5
+        </message>
+        <message name="IDS_IMPORT_FROM_THEWORLD_CHROME" use_name_for_id = "true" desc="browser combo box: The World Chrome">
+          The World Chrome
+        </message>
+        <message name="IDS_IMPORT_FROM_360SE6" use_name_for_id = "true" desc="browser combo box: 360SE">
+          360SE
+        </message>
+        <message name="IDS_IMPORT_FROM_SG_EXPLORER" use_name_for_id = "true" desc="browser combo box: Sogou Explorer">
+          Sogou Explorer
+        </message>
+        <message name="IDS_IMPORT_FROM_MAXTHON" use_name_for_id = "true" desc="browser combo box: Maxthon">
+          Maxthon
+        </message>
+        <message name="IDS_IMPORT_FROM_GOOGLE_CHROME" use_name_for_id = "true" desc="browser combo box: Chrome">
+          Chrome
+        </message>
+        <message name="IDS_IMPORT_FROM_360CHROME" use_name_for_id = "true" desc="browser combo box: 360 Chrome">
+          360 Chrome
+        </message>
+        <message name="IDS_IMPORT_FROM_LIEBAO" use_name_for_id = "true" desc="browser combo box: Liebao">
+          Liebao
+        </message>
+		<message name="IDS_IMPORT_FROM_THEWORLD6" use_name_for_id = "true" desc="browser combo box: 360 Chrome">
+          TheWorld6
+        </message>
+        <message name="IDS_IMPORT_FROM_CENT" use_name_for_id = "true" desc="browser combo box: Liebao">
+          Cent Browser
+        </message>
+		<message name="IDS_IMPORT_FROM_7STAR" use_name_for_id = "true" desc="browser combo box: Liebao">
+          7Star Browser
+        </message>
+        <message name="IDS_IMPORT_FROM_LOCAL" use_name_for_id = "true" desc="browser combo box: Local">
+          Local Bookmarks
+        </message>
+        <message name="IDS_IMPORT_MOSTVISITED_CHKBOX" use_name_for_id = "true" desc="Checkbox for importing mostvisited">
+          Mostvisited
+        </message>
 	
       <!-- TODO add all of your "string table" messages here.  Remember to
       change nontranslateable parts of the messages into placeholders (using the

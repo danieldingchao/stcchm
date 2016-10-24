@@ -2391,6 +2391,8 @@ split_static_library("browser") {
       sources += [
         "printing/pdf_to_emf_converter.cc",
         "printing/pdf_to_emf_converter.h",
+        "importer/theworld_importer_utils.cc",
+        "importer/theworld_importer_utils.h",
       ]
     }
     if (enable_print_preview) {

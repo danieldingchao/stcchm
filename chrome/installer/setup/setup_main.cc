@@ -2135,16 +2135,21 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance,
   current_version.reset(installer_state.GetCurrentVersion(original_state));
 
   if (current_version.get() && current_version->IsValid()) {
+	  if (!last_install_path.empty()) {
+		  if (base::DirectoryExists(last_install_path)) {
+			  installer_state.SetTargetPath(last_install_path);
+		  }
+	  }
 	  std::unique_ptr<FileVersionInfo> version_info(
 		  FileVersionInfo::CreateFileVersionInfo(cmd_line.GetProgram()));
 	  base::Version install_version(base::WideToUTF8(version_info->file_version()));
 
 	  if (current_version->CompareTo(install_version) == 0)
 		  cmd_line.AppendSwitch(installer::switches::kSameVersionExist);
-	  //else if (install_version.CompareTo(current_version.get()) == -1))
+	  else if (install_version.CompareTo(install_version) == -1)
 	  cmd_line.AppendSwitch(installer::switches::kHigherVersionExist);
-	  //else
-			//  cmd_line.AppendSwitch(installer::switches::kLowerVersionExist);
+	  else
+		cmd_line.AppendSwitch(installer::switches::kLowerVersionExist);
   }
 
   installer::ConfigureCrashReporting(installer_state);

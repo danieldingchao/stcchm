@@ -84,6 +84,8 @@ DefaultWebClientState GetDefaultBrowser();
 // user. This method is very fast so it can be invoked in the UI thread.
 bool IsFirefoxDefaultBrowser();
 
+bool IsDefaultBrowser(std::wstring const & xp_filename, std::wstring const & vista_appid);
+
 // Attempt to determine if this instance of Chrome is the default client
 // application for the given protocol and return the appropriate state.
 DefaultWebClientState IsDefaultProtocolClient(const std::string& protocol);

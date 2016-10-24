@@ -24,6 +24,13 @@ struct ImportedBookmarkEntry {
   std::vector<base::string16> path;
   base::string16 title;
   base::Time creation_time;
+
+  base::Time modify_time;
+  int is_best;
+  int id;
+  int parent_id;
+  int parent_idx;
+  int cnt;//chrome node type,0:bookmark_node;1:other_node;2:mobile_node
 };
 
 #endif  // CHROME_COMMON_IMPORTER_IMPORTED_BOOKMARK_ENTRY_H_

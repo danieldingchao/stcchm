@@ -99,6 +99,13 @@ IPC_MESSAGE_CONTROL1(ProfileImportProcessHostMsg_AutofillFormDataImportStart,
 IPC_MESSAGE_CONTROL1(ProfileImportProcessHostMsg_AutofillFormDataImportGroup,
                      std::vector<ImporterAutofillFormDataEntry>)
 
+IPC_MESSAGE_CONTROL2(ProfileImportProcessHostMsg_NotifyChromeDefaultSearchEngine,
+					base::string16 /* url */,
+					base::string16 /* name */)
+
+IPC_MESSAGE_CONTROL0(ProfileImportProcessHostMsg_NotifyTopSitesImportStart)
+
+
 #if defined(OS_WIN)
 IPC_MESSAGE_CONTROL1(ProfileImportProcessHostMsg_NotifyIE7PasswordInfo,
                      importer::ImporterIE7PasswordInfo) // password_info

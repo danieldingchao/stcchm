@@ -304,6 +304,7 @@ void ExternalProcessImporterClient::CancelImportProcessOnIOThread() {
 
 void ExternalProcessImporterClient::NotifyItemFinishedOnIOThread(
     importer::ImportItem import_item) {
+  if (utility_process_host_.get())
   utility_process_host_->Send(
       new ProfileImportProcessMsg_ReportImportItemFinished(import_item));
 }

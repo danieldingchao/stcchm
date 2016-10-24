@@ -43,7 +43,8 @@ ExternalProcessImporterBridge::ExternalProcessImporterBridge(
 
 void ExternalProcessImporterBridge::AddBookmarks(
     const std::vector<ImportedBookmarkEntry>& bookmarks,
-    const base::string16& first_folder_name) {
+	const base::string16& first_folder_name,
+	const importer::BOOKMARK_TYPE type) {
   Send(new ProfileImportProcessHostMsg_NotifyBookmarksImportStart(
       first_folder_name, bookmarks.size()));
 
@@ -69,6 +70,21 @@ void ExternalProcessImporterBridge::AddBookmarks(
 void ExternalProcessImporterBridge::AddHomePage(const GURL& home_page) {
   Send(new ProfileImportProcessHostMsg_NotifyHomePageImportReady(home_page));
 }
+
+
+void ExternalProcessImporterBridge::AddStartupPage(const GURL& home_page) {
+	NOTIMPLEMENTED();
+}
+
+void ExternalProcessImporterBridge::SetDefaultSearchEngine(base::string16 url, base::string16 name) {
+	//Send(new ProfileImportProcessHostMsg_NotifyChromeDefaultSearchEngine(url,
+	//	name));
+}
+
+void ExternalProcessImporterBridge::SetTopSites() {
+	//Send(new ProfileImportProcessHostMsg_NotifyTopSitesImportStart());
+}
+
 
 #if defined(OS_WIN)
 void ExternalProcessImporterBridge::AddIE7PasswordInfo(

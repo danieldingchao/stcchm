@@ -13,6 +13,9 @@
 #include "build/build_config.h"
 
 namespace chrome {
+extern const base::FilePath::CharType kFaviconsFilename[];
+extern const base::FilePath::CharType kBookmarksFileName[];
+extern const base::FilePath::CharType kLoginDataFileName[];
 extern const char kFixedHomePage[];
 extern const char kChromeVersion[];
 extern const base::FilePath::CharType kBrowserProcessExecutableName[];

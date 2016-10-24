@@ -1,4 +1,4 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+﻿// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -575,6 +575,40 @@ bool IsFirefoxDefaultBrowser() {
       ff_default = true;
   }
   return ff_default;
+}
+
+bool IsDefaultBrowser(std::wstring const & xp_filename,
+	std::wstring const & vista_appid) {
+	bool find_default = false;
+	if (base::win::GetVersion() >= base::win::VERSION_VISTA) {
+		base::string16 app_cmd;
+		base::win::RegKey key(HKEY_CURRENT_USER, ShellUtil::kRegVistaUrlPrefs, KEY_READ);
+		if (key.Valid() && key.ReadValue(L"Progid", &app_cmd) == ERROR_SUCCESS) {
+			base::string16 vista_appid_lower(base::ToLowerASCII(vista_appid));
+			app_cmd = base::ToLowerASCII(app_cmd);
+
+			if (app_cmd == vista_appid_lower)
+				find_default = true;
+			// 对于chrome设置为默认的情况需要特殊处理，因为chrome为默认浏览器时，
+			// 注册表值是ChromeHTML加上后缀，后缀内容可能不同
+			else if (vista_appid_lower == L"chromehtml" &&
+				app_cmd.find(vista_appid_lower) == 0)
+				find_default = true;
+
+		}
+	}
+	else {
+		base::string16 key_path(L"http");
+		key_path.append(ShellUtil::kRegShellOpen);
+		base::win::RegKey key(HKEY_CLASSES_ROOT, key_path.c_str(), KEY_READ);
+		base::string16 app_cmd;
+		if (key.Valid() && key.ReadValue(L"", &app_cmd) == ERROR_SUCCESS) {
+			if (base::string16::npos !=
+				base::ToLowerASCII(app_cmd).find(base::ToLowerASCII(xp_filename)))
+				find_default = true;
+		}
+	}
+	return find_default;
 }
 
 DefaultWebClientState IsDefaultProtocolClient(const std::string& protocol) {

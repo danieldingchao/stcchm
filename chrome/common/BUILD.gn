@@ -333,6 +333,20 @@ static_library("common") {
       public_deps += [ "//ui/keyboard:keyboard_with_content" ]
     }
   }
+  if (is_win) {
+    sources += [
+      "importer/360se_importer/Common.h",
+      "importer/360se_importer/MiscFunc.h",
+      "importer/360se_importer/database/CppSQLite3.cpp",
+      "importer/360se_importer/database/CppSQLite3.h",
+      "importer/360se_importer/database/FavDBManager.cpp",
+      "importer/360se_importer/database/FavDBManager.h",
+      "importer/360se_importer/Util/CodeMisc.cpp",
+      "importer/360se_importer/Util/CodeMisc.h",
+      "importer/imported_favicon_usage.cc",
+      "importer/imported_favicon_usage.h",
+    ]
+  }
 
   if (is_win || is_mac) {
     sources += [

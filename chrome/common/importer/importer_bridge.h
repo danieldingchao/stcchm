@@ -38,9 +38,16 @@ class ImporterBridge : public base::RefCountedThreadSafe<ImporterBridge> {
 
   virtual void AddBookmarks(
       const std::vector<ImportedBookmarkEntry>& bookmarks,
-      const base::string16& first_folder_name) = 0;
+      const base::string16& first_folder_name,
+	  const importer::BOOKMARK_TYPE type = importer::BOOKMARK_BAR_NODE) = 0;
 
   virtual void AddHomePage(const GURL& home_page) = 0;
+
+  virtual void AddStartupPage(const GURL& home_page) = 0;
+  
+  virtual void SetDefaultSearchEngine(base::string16 url, base::string16 name) = 0;
+
+  virtual void SetTopSites() = 0;
 
 #if defined(OS_WIN)
   virtual void AddIE7PasswordInfo(

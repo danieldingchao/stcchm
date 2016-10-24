@@ -65,6 +65,7 @@ void ImportDataHandler::GetLocalizedValues(
     {"importSearch", IDS_IMPORT_SEARCH_ENGINES_CHKBOX},
     {"importPasswords", IDS_IMPORT_PASSWORDS_CHKBOX},
     {"importAutofillFormData", IDS_IMPORT_AUTOFILL_FORM_DATA_CHKBOX},
+    { "importMostvisited", IDS_IMPORT_MOSTVISITED_CHKBOX },
     {"importChooseFile", IDS_IMPORT_CHOOSE_FILE},
     {"importCommit", IDS_IMPORT_COMMIT},
     {"noProfileFound", IDS_IMPORT_NO_PROFILE_FOUND},
@@ -141,7 +142,7 @@ void ImportDataHandler::ImportData(const base::ListValue* args) {
 
   uint16_t selected_items = importer::NONE;
   if (args->GetString(1, &string_value) && string_value == "true") {
-    selected_items |= importer::HISTORY;
+    selected_items |= importer::MOST_VISITED;;
   }
   if (args->GetString(2, &string_value) && string_value == "true") {
     selected_items |= importer::FAVORITES;
@@ -183,7 +184,7 @@ void ImportDataHandler::InitializePage() {
     browser_profile->SetString("name", source_profile.importer_name);
     browser_profile->SetInteger("index", i);
     browser_profile->SetBoolean("history",
-        (browser_services & importer::HISTORY) != 0);
+		(browser_services & importer::MOST_VISITED) != 0);
     browser_profile->SetBoolean("favorites",
         (browser_services & importer::FAVORITES) != 0);
     browser_profile->SetBoolean("passwords",

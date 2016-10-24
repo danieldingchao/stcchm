@@ -50,9 +50,16 @@ class ExternalProcessImporterBridge : public ImporterBridge {
 
   // Begin ImporterBridge implementation:
   void AddBookmarks(const std::vector<ImportedBookmarkEntry>& bookmarks,
-                    const base::string16& first_folder_name) override;
+	  const base::string16& first_folder_name,
+	  const importer::BOOKMARK_TYPE type = importer::BOOKMARK_BAR_NODE) override;
 
   void AddHomePage(const GURL& home_page) override;
+
+  void AddStartupPage(const GURL& home_page);
+
+  void SetDefaultSearchEngine(base::string16 url, base::string16 name);
+
+  void SetTopSites();
 
 #if defined(OS_WIN)
   void AddIE7PasswordInfo(

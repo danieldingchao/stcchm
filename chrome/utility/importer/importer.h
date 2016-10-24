@@ -10,6 +10,8 @@
 #include "base/macros.h"
 #include "base/memory/ref_counted.h"
 
+#include "chrome/common/importer/imported_bookmark_entry.h"
+
 class ImporterBridge;
 
 namespace importer {
@@ -31,7 +33,6 @@ class Importer : public base::RefCountedThreadSafe<Importer> {
   virtual void Cancel();
 
   bool cancelled() const { return cancelled_; }
-
  protected:
   friend class base::RefCountedThreadSafe<Importer>;
 
@@ -39,7 +40,6 @@ class Importer : public base::RefCountedThreadSafe<Importer> {
   virtual ~Importer();
 
   scoped_refptr<ImporterBridge> bridge_;
-
  private:
   // True if the caller cancels the import process.
   bool cancelled_;

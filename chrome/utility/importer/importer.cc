@@ -4,6 +4,8 @@
 
 #include "chrome/utility/importer/importer.h"
 
+#include "base/command_line.h"
+#include "chrome/common/chrome_switches.h"
 #include "chrome/common/importer/importer_bridge.h"
 
 void Importer::Cancel() {

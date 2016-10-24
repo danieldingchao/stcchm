@@ -21,6 +21,9 @@
 #endif  // defined(OS_MACOSX)
 
 namespace chrome {
+const base::FilePath::CharType kFaviconsFilename[] = FPL("Favicons");
+const base::FilePath::CharType kBookmarksFileName[] = FPL("Bookmarks");
+const base::FilePath::CharType kLoginDataFileName[] = FPL("Login Data");
 const char kFixedHomePage[] = "http://hao.360.cn/?src=lm&ls=n673c19b19c";
 const char kChromeVersion[] = CHROME_VERSION_STRING;
 

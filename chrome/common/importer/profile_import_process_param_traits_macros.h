@@ -28,7 +28,7 @@
 #if defined(OS_WIN)
 IPC_ENUM_TRAITS_MIN_MAX_VALUE(importer::ImporterType,
                               importer::TYPE_UNKNOWN,
-                              importer::TYPE_EDGE)
+                              importer::TYPE_HTML)
 #else
 IPC_ENUM_TRAITS_MIN_MAX_VALUE(importer::ImporterType,
                               importer::TYPE_UNKNOWN,

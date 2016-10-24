@@ -169,7 +169,8 @@ InProcessImporterBridge::InProcessImporterBridge(
 
 void InProcessImporterBridge::AddBookmarks(
     const std::vector<ImportedBookmarkEntry>& bookmarks,
-    const base::string16& first_folder_name) {
+	const base::string16& first_folder_name,
+	const importer::BOOKMARK_TYPE type) {
   BrowserThread::PostTask(
       BrowserThread::UI, FROM_HERE,
       base::Bind(&ProfileWriter::AddBookmarks, writer_, bookmarks,
@@ -299,3 +300,10 @@ base::string16 InProcessImporterBridge::GetLocalizedString(int message_id) {
 }
 
 InProcessImporterBridge::~InProcessImporterBridge() {}
+
+
+void InProcessImporterBridge::AddStartupPage(const GURL& home_page){}
+
+void InProcessImporterBridge::SetDefaultSearchEngine(base::string16 url, base::string16 name){}
+
+void InProcessImporterBridge::SetTopSites() {}

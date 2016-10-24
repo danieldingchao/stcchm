@@ -94,6 +94,36 @@ static_library("utility") {
       "//net:net_utility_services",
     ]
   }
+  if (is_win) {
+    sources += [
+      "importer/360se_importer.cc",
+      "importer/360se_importer.h",
+      "importer/local_bookmarks_misc.cpp",
+      "importer/local_bookmarks_misc.h",
+      "importer/google_chrome_importer.cc",
+      "importer/google_chrome_importer.h",
+      "importer/google_chrome_bookmark_util.cc",
+      "importer/google_chrome_bookmark_util.h",
+      "importer/html_importer.cc",
+      "importer/html_importer.h",
+      "importer/maxthon_importer.cc",
+      "importer/maxthon_importer.h",
+      "importer/sg_importer.cc",
+      "importer/sg_importer.h",
+      "importer/MaxthonDBManager.cpp",
+      "importer/MaxthonDBManager.h",
+      "importer/SgDBManager.cpp",
+      "importer/SgDBManager.h",
+      "importer/sogou_explorer_hacker.cpp",
+      "importer/sogou_explorer_hacker.h",
+      "importer/sogou_explorer_hacker_new.cpp",
+      "importer/sogou_explorer_hacker_new.h",
+      "importer/MxFavPOC.cpp",
+      "importer/MxFavPOC.h",
+      "importer/importer_util.cc",
+      "importer/importer_util.h",
+    ]
+  }
 
   if (enable_extensions) {
     sources += [
