@@ -4,7 +4,7 @@
 
 #include "chrome/common/chrome_content_client.h"
 
-#if defined(GOOGLE_CHROME_BUILD)
+#if !defined(GOOGLE_CHROME_BUILD)
 const char ChromeContentClient::kNotPresent[] = "internal-not-yet-present";
 const char ChromeContentClient::kPDFPluginName[] = "Chrome PDF Viewer";
 #else

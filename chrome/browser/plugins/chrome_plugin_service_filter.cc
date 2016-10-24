@@ -207,6 +207,7 @@ bool ChromePluginServiceFilter::IsPluginAvailable(
 
   // If PreferHtmlOverPlugins is enabled and the plugin is Flash, we do
   // additional checks.
+  /*
   if (plugin->name == base::ASCIIToUTF16(content::kFlashPluginName) &&
       PluginUtils::ShouldPreferHtmlOverPlugins(
           context_info->host_content_settings_map.get())) {
@@ -246,6 +247,7 @@ bool ChromePluginServiceFilter::IsPluginAvailable(
       return false;
     }
   }
+  */
 
   return true;
 }

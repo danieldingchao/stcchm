@@ -333,6 +333,31 @@ bool GetComponentUpdatedPepperFlash(content::PepperPluginInfo* plugin) {
 }
 #endif  // defined(OS_LINUX)
 
+bool GetBundledPepperFlash(content::PepperPluginInfo* plugin) {
+#if defined(FLAPPER_AVAILABLE)
+  base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
+
+  // Ignore bundled Pepper Flash if there is Pepper Flash specified from the
+  // command-line.
+  if (command_line->HasSwitch(switches::kPpapiFlashPath))
+    return false;
+
+  bool force_disable =
+      command_line->HasSwitch(switches::kDisableBundledPpapiFlash);
+  if (force_disable)
+    return false;
+
+  base::FilePath flash_path;
+  if (!PathService::Get(chrome::FILE_PEPPER_FLASH_PLUGIN, &flash_path))
+    return false;
+
+  *plugin = CreatePepperFlashInfo(flash_path, FLAPPER_VERSION_STRING, false,
+                                  false, true);
+  return true;
+#else
+  return false;
+#endif  // FLAPPER_AVAILABLE
+}
 bool GetSystemPepperFlash(content::PepperPluginInfo* plugin) {
   base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
   // Do not try and find System Pepper Flash if there is a specific path on
@@ -503,6 +528,10 @@ void ChromeContentClient::AddPepperPlugins(
     flash_versions.push_back(component_flash.release());
 #endif  // defined(OS_LINUX)
 
+  std::unique_ptr<content::PepperPluginInfo> bundled_flash(
+      new content::PepperPluginInfo);
+  if (GetBundledPepperFlash(bundled_flash.get()))
+    flash_versions.push_back(bundled_flash.release());
   std::unique_ptr<content::PepperPluginInfo> system_flash(
       new content::PepperPluginInfo);
   if (GetSystemPepperFlash(system_flash.get()))
@@ -514,7 +543,7 @@ void ChromeContentClient::AddPepperPlugins(
   if (max_flash) {
     plugins->push_back(*max_flash);
   } else {
-#if defined(GOOGLE_CHROME_BUILD) && defined(FLAPPER_AVAILABLE)
+#if !defined(GOOGLE_CHROME_BUILD) && defined(FLAPPER_AVAILABLE)
     // Add a fake Flash plugin even though it doesn't actually exist - if a
     // web page requests it, it will be component-updated on-demand. There is
     // nothing that guarantees the component update will give us the
