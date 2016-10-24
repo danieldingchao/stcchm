@@ -236,6 +236,8 @@
 #include "components/omnibox/browser/autocomplete_match.h"
 #include "components/omnibox/browser/autocomplete_provider.h"
 
+#include "chrome/browser/ui/lemon/lemon_updater.h"
+
 using base::TimeDelta;
 using base::UserMetricsAction;
 using content::NativeWebKeyboardEvent;
@@ -389,6 +391,8 @@ Browser::Browser(const CreateParams& params)
   else
     unload_controller_.reset(new chrome::UnloadController(this));
 
+  lemon_updater_.reset(new LemonUpdater(profile_->GetPrefs(), profile_->GetRequestContext()));
+  
   tab_strip_model_->AddObserver(this);
 
   toolbar_model_.reset(new ToolbarModelImpl(toolbar_model_delegate_.get(),

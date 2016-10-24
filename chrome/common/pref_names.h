@@ -15,7 +15,7 @@
 namespace prefs {
 // lemon add
 extern const char kFixedHomePage[];
-
+extern const char kNtpTips[];
 extern const char kAdfilterLevel[];
 extern const char kAdfilterCssJs[];
 extern const char kAdfilterPopup[];

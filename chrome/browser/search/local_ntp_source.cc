@@ -43,6 +43,10 @@
 #include "ui/resources/grit/ui_resources.h"
 #include "url/gurl.h"
 
+#include "chrome/browser/profiles/profile.h"
+#include "chrome/common/pref_names.h"
+#include "components/prefs/pref_service.h"
+
 namespace {
 
 // Signifies a locally constructed resource, i.e. not from grit/.
@@ -149,6 +153,13 @@ std::unique_ptr<base::DictionaryValue> GetTranslatedStrings(bool is_google) {
 std::string GetConfigData(Profile* profile) {
   base::DictionaryValue config_data;
   bool is_google = DefaultSearchProviderIsGoogle(profile);
+  std::string ntptips = profile->GetPrefs()->GetString(prefs::kNtpTips);
+  if (!ntptips.empty()) {
+    config_data.SetString("mostVisitedSiteTips", ntptips);
+  }
+  else {
+    config_data.SetString("mostVisitedSiteTips", l10n_util::GetStringUTF16(IDS_NEW_TAB_MOST_VISITED_SITE_TIPS));
+  }
   config_data.Set("translatedStrings",
                   GetTranslatedStrings(is_google).release());
   config_data.SetBoolean("isGooglePage", is_google);

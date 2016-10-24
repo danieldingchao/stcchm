@@ -245,6 +245,8 @@
 #include "chrome/browser/ui/webui/md_history_ui.h"
 #endif
 
+
+#include "chrome/browser/ui/lemon/lemon_updater.h"
 namespace {
 
 #if defined(OS_WIN)
@@ -609,6 +611,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
 #if defined(OS_CHROMEOS) && defined(ENABLE_APP_LIST)
   ArcAppListPrefs::RegisterProfilePrefs(registry);
 #endif
+  LemonUpdater::RegisterProfilePrefs(registry);
 
 #if defined(OS_WIN)
   component_updater::RegisterProfilePrefsForSwReporter(registry);

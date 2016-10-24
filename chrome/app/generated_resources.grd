@@ -213,6 +213,15 @@ are declared in build/common.gypi.
 	<message name="IDS_ABOUT_KERNEL_VERSION" use_name_for_id = "true" desc="start up show homepage">
       Kernel Version <ph name="PRODUCT_VERSION">$1<ex>15.0.865.0</ex></ph>
     </message>
+		<message name="IDS_SPONSOR_US" use_name_for_id="true" desc="Lemon Browser is a free software">
+        Donate Lemon Browser.
+      </message>
+	  <message name="IDS_SPONSOR_DESCRIPTION" use_name_for_id="true" desc="Lemon Browser is a free software">
+        Lemon Browser is a free software without any advertisement,If you think we did something great,consider make a donation through wechat pay.
+      </message>
+	  <message name="IDS_NEW_TAB_MOST_VISITED_SITE_TIPS" use_name_for_id = "true" desc="ntp most visited site tips">
+        This page displays the most visited site u visit,it will update automatically with ur usage.
+      </message>
 	<message name="IDS_IMPORT_FROM_THEWORLD3" use_name_for_id = "true" desc="browser combo box: The World 3">
           The World 3
         </message>

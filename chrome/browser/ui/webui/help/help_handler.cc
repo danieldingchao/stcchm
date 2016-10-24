@@ -334,6 +334,14 @@ void HelpHandler::GetLocalizedValues(base::DictionaryValue* localized_strings) {
         base::UTF8ToUTF16(CHROME_VERSION_STRING)));
 
   localized_strings->SetString(
+    "productSponsor",
+    l10n_util::GetStringUTF16(IDS_SPONSOR_DESCRIPTION));
+
+  localized_strings->SetString(
+    "sponsorUs",
+    l10n_util::GetStringUTF16(IDS_SPONSOR_US));
+
+  localized_strings->SetString(
       "productCopyright",
       base::i18n::MessageFormatter::FormatWithNumberedArgs(
           l10n_util::GetStringUTF16(IDS_ABOUT_VERSION_COPYRIGHT),

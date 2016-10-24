@@ -331,3 +331,8 @@ html[dir=rtl] #recent-tabs {
   height: 100%;
   width: 100%;
 }
+
+.most_visited_site_tips {
+    font-size: 13px;
+    margin-top: 50px;
+}

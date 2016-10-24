@@ -29,6 +29,8 @@ split_static_library("ui") {
   }
 
   sources = [
+    "lemon/lemon_updater.h",
+    "lemon/lemon_updater.cc",
     "accelerator_utils.h",
     "android/android_about_app_info.cc",
     "android/android_about_app_info.h",

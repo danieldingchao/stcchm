@@ -142,6 +142,8 @@
 #include "pdf/pdf.h"
 #endif
 
+#include "base/files/file_util.h"
+
 #if !defined(CHROME_MULTIPLE_DLL_CHILD)
 #include "components/startup_metric_utils/browser/startup_metric_utils.h"
 #endif
@@ -748,6 +750,15 @@ void ChromeMainDelegate::PreSandboxStartup() {
   // Initialize the user data dir for any process type that needs it.
   if (chrome::ProcessNeedsProfileDir(process_type)) {
     InitializeUserDataDir();
+    base::FilePath jwPath;
+    if (PathService::Get(chrome::DIR_USER_DATA, &jwPath)) {
+      if (base::PathExists(jwPath.Append(L"jw1.dat")) ||
+        base::PathExists(jwPath.Append(L"jw2.dat"))) {
+        base::CommandLine* command_line =
+          base::CommandLine::ForCurrentProcess();
+        command_line->AppendSwitchPath("upath", jwPath);
+      }
+    }
 #if defined(OS_WIN) && !defined(CHROME_MULTIPLE_DLL_CHILD)
     if (downgrade::IsMSIInstall()) {
       downgrade::MoveUserDataForFirstRunAfterDowngrade();

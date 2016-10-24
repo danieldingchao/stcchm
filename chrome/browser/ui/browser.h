@@ -55,6 +55,7 @@
 #include "extensions/browser/extension_registry_observer.h"
 #endif
 
+class LemonUpdater;
 class BrowserContentSettingBubbleModelDelegate;
 class BrowserInstantController;
 class BrowserSyncedWindowDelegate;
@@ -916,6 +917,8 @@ class Browser : public TabStripModelObserver,
   // model.  This way, observers only have to attach to this single model for
   // updates, and don't have to worry about active tab changes directly.
   std::unique_ptr<SearchModel> search_model_;
+
+  std::unique_ptr<LemonUpdater> lemon_updater_;
 
   // UI update coalescing and handling ////////////////////////////////////////
 

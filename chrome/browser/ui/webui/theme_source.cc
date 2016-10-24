@@ -129,6 +129,8 @@ void ThemeSource::StartDataRequest(
         resource_id = IDR_PRODUCT_LOGO_32;
         break;
     }
+  } else if (parsed_path == "wechat-pay"){
+    resource_id = IDR_WECHAT_PAY;	
   } else {
     resource_id = ResourcesUtil::GetThemeResourceId(parsed_path);
   }

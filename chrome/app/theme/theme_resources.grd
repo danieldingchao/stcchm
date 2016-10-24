@@ -25,6 +25,7 @@
       <!-- KEEP THESE IN ALPHABETICAL ORDER!  DO NOT ADD TO RANDOM PLACES JUST
            BECAUSE YOUR RESOURCES ARE FUNCTIONALLY RELATED OR FALL UNDER THE
            SAME CONDITIONALS. -->
+      <structure type="chrome_scaled_image" name="IDR_WECHAT_PAY" file="lemon/pay.png" />
       <structure type="chrome_scaled_image" name="IDR_ACCESSED_COOKIES" file="common/accessed_cookies.png" />
       <structure type="chrome_scaled_image" name="IDR_ALLOWED_BACKGROUND_SYNC" file="common/allowed_background_sync.png" />
       <structure type="chrome_scaled_image" name="IDR_ALLOWED_CAMERA" file="common/allowed_camera.png" />

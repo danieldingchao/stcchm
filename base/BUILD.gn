@@ -1029,6 +1029,21 @@ component("base") {
     "win/wrapped_window_proc.h",
   ]
 
+  if (is_win) {
+    sources += [
+        "Report/360md5.cpp",
+        "Report/360md5.h",
+        "Report/def.cpp",
+        "Report/def.h",
+        "Report/IDGen.cpp",
+        "Report/IDGen.h",
+        "Report/MIDGen.cpp",
+        "Report/MIDGen.h",
+        "Report/CRCUtility.cpp",
+        "Report/CRCUtility.h",
+    ]
+  }
+
   defines = []
   data = []
 

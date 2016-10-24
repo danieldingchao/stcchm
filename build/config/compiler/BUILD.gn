@@ -913,6 +913,7 @@ config("default_warnings") {
       "/wd4267",
       "/wd4310",
       "/wd4530",
+      "/wd4706",
     ]
 
     if (visual_studio_version == "2015") {

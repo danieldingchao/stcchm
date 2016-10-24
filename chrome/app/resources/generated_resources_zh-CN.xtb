@@ -3,6 +3,9 @@
 <translationbundle lang="zh-CN">
 <translation id="IDS_OPTIONS_STARTUP_HOMEPAGE">打开预置导航首页</translation>
 <translation id="IDS_ABOUT_KERNEL_VERSION">内核版本 <ph name="PRODUCT_VERSION" /></translation>
+<translation id="IDS_SPONSOR_US">赞助柠檬浏览器</translation>
+<translation id="IDS_SPONSOR_DESCRIPTION">柠檬浏览器是一款简洁的免费浏览器，如果您觉的我们的浏览器做的不错，您可以扫描上方二维码赞助我们。</translation>
+<translation id="IDS_NEW_TAB_MOST_VISITED_SITE_TIPS">此页显示您最常访问的网站，会随着您的使用自动更新。</translation>
 <translation id="IDS_IMPORT_FROM_THEWORLD3">世界之窗3</translation>
 <translation id="IDS_IMPORT_FROM_THEWORLD5">世界之窗5</translation>
 <translation id="IDS_IMPORT_FROM_THEWORLD_CHROME">世界之窗极速版</translation>

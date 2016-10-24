@@ -193,7 +193,6 @@ var attribution;
  */
 var fakebox;
 
-
 /**
  * The container for NTP elements.
  * @type {Element}
@@ -764,6 +763,7 @@ function init() {
     document.body.classList.add(CLASSES.NON_GOOGLE_PAGE);
   }
 
+
   // Modify design for experimental icon NTP, if specified.
   if (configData.useIcons)
     modifyNtpDesignForIcons();
@@ -885,6 +885,13 @@ function init() {
     renderTheme();
   };
 
+  var ntptips = document.createElement('div');
+  ntptips.id = 'MostVisitedTips';
+  ntptips.className = "most_visited_site_tips";
+  ntptips.innerHTML = configData.mostVisitedSiteTips;
+  $('most-visited').appendChild(ntptips);
+	
+	//encodeURIComponent(configData.translatedStrings.removeThumbnailTooltip)
   window.addEventListener('message', handlePostMessage);
 }
 
