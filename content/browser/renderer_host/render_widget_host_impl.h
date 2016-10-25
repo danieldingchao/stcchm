@@ -51,6 +51,7 @@ struct FrameHostMsg_HittestData_Params;
 struct ViewHostMsg_SelectionBounds_Params;
 struct ViewHostMsg_UpdateRect_Params;
 
+class MouseGesture;
 namespace base {
 class RefCountedBytes;
 }
@@ -337,6 +338,8 @@ class CONTENT_EXPORT RenderWidgetHostImpl : public RenderWidgetHost,
       const blink::WebTouchEvent& touch_event) override;
   void SetCursor(const WebCursor& cursor) override;
   void ShowContextMenuAtPoint(const gfx::Point& point) override;
+
+  MouseGesture* GetMouseGesture() override;
 
   // Queues a synthetic gesture for testing purposes.  Invokes the on_complete
   // callback when the gesture is finished running.

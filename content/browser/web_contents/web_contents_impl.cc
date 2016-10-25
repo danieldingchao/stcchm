@@ -5271,4 +5271,12 @@ void WebContentsImpl::RemoveBindingSet(const std::string& interface_name) {
     binding_sets_.erase(it);
 }
 
+MouseGesture* WebContentsImpl::GetMouseGesture() {
+  if (delegate_) {
+    return delegate_->GetMouseGesture();
+  }
+  return NULL;
+}
+
+
 }  // namespace content

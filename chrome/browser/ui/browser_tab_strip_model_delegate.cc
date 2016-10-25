@@ -41,6 +41,10 @@ BrowserTabStripModelDelegate::BrowserTabStripModelDelegate(Browser* browser)
 BrowserTabStripModelDelegate::~BrowserTabStripModelDelegate() {
 }
 
+bool BrowserTabStripModelDelegate::CanCloseLastTab() {
+  return browser_->ShouldCloseWindow();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // BrowserTabStripModelDelegate, TabStripModelDelegate implementation:
 

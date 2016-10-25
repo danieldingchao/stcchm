@@ -2216,4 +2216,10 @@ BrowserAccessibilityManager*
       delegate_->GetOrCreateRootBrowserAccessibilityManager() : NULL;
 }
 
+MouseGesture* RenderWidgetHostImpl::GetMouseGesture() {
+  if(owner_delegate())
+    return owner_delegate()->GetMouseGesture();
+  return NULL;
+}
+
 }  // namespace content

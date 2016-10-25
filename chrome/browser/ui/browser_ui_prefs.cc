@@ -20,6 +20,8 @@
 #endif
 #include "chrome/browser/adfilter/adfilter_service.h"
 
+#include "chrome/browser/ui/views/mouse_gesture/mouse_gesture.h"
+
 namespace {
 
 uint32_t GetHomeButtonAndHomePageIsNewTabPageFlags() {
@@ -126,6 +128,7 @@ void RegisterBrowserUserPrefs(user_prefs::PrefRegistrySyncable* registry) {
 #else
   registry->RegisterBooleanPref(prefs::kFullscreenAllowed, true);
 #endif
+  MouseGestureData::RegisterUserPrefs(registry);
 }
 
 }  // namespace chrome

@@ -19,6 +19,8 @@ class BrowserTabStripModelDelegate : public TabStripModelDelegate {
   explicit BrowserTabStripModelDelegate(Browser* browser);
   ~BrowserTabStripModelDelegate() override;
 
+  bool CanCloseLastTab() override;
+
  private:
   // Overridden from TabStripModelDelegate:
   void AddTabAt(const GURL& url, int index, bool foreground) override;

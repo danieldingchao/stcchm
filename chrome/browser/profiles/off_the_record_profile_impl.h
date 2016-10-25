@@ -105,7 +105,7 @@ class OffTheRecordProfileImpl : public Profile {
   content::SSLHostStateDelegate* GetSSLHostStateDelegate() override;
   content::PermissionManager* GetPermissionManager() override;
   content::BackgroundSyncController* GetBackgroundSyncController() override;
-
+  virtual MouseGestureData* GetMouseGestureData() override;
  private:
   void InitIoData();
 

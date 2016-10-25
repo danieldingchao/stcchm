@@ -1501,6 +1501,10 @@ split_static_library("ui") {
       "views/website_settings/permission_selector_row_observer.h",
       "views/website_settings/website_settings_popup_view.cc",
       "views/website_settings/website_settings_popup_view.h",
+      "views/mouse_gesture/mouse_gesture.cc",
+      "views/mouse_gesture/mouse_gesture.h",
+      "views/mouse_gesture/mouse_gesture_label.cc",
+      "views/mouse_gesture/mouse_gesture_label.h",
     ]
     deps += [
       "//chrome/browser/ui/views",

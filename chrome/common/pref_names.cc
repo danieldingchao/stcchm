@@ -21,6 +21,41 @@ const char kAdfilterStatisticCount[] = "adfilter.statistic_day_count";
 const char kUserAdfilterRulseLastDir[] = "adfilter.LastDirectory";
 const char KUserAdfilterRulseDisableList[] = "adfilter.disableList";
 
+const char kMouseGestureProfile[] = "MouseGesture";
+const char kMGPOpenLabelInBookmark[] = "MouseGesture.MouseGestureOpenLabelInBookmark";
+const char kMGPOpenLabelInAddressbar[] = "MouseGesture.MouseGestureOpenLabelInAddressbar";
+const char kMGPRightButtonCloseTab[] = "MouseGesture.kMouseGestureRightButtonCloseTab";
+const char kMGPUserTheWorldOpenTabOrder[] = "MouseGesture.kMouseGestureUserTheWorldOpenTabOrder";
+const char kMGPUserMouseGesture[] = "MouseGesture.kMouseGestureUserMouseGesture";
+const char kMGPUserMouseGestureTips[] = "MouseGesture.kMouseGestureUserMouseGestureTips";
+const char kMGPUserWheelChangeTabOrder[] = "MouseGesture.kMGPUserWheelChangeTabOrder";
+const char kMGPUserHoverActiveTabOrder[] = "MouseGesture.kMGPUserHoverActiveTabOrder";
+const char kMGPUserHoverActiveTimeval[] = "MouseGesture.kMGPUserHoverActiveTimeval";
+const char kMGPUserOpenNewTabOrder[] = "MouseGesture.kMGPUserOpenNewTabOrder";
+const char kMGPUserCloseTabOrder[] = "MouseGesture.kMGPUserCloseTabOrder";
+
+const char kMouseGestureProfileAction1[] = "MouseGesture.U";
+const char kMouseGestureProfileAction2[] = "MouseGesture.D";
+const char kMouseGestureProfileAction3[] = "MouseGesture.L";
+const char kMouseGestureProfileAction4[] = "MouseGesture.R";
+const char kMouseGestureProfileAction5[] = "MouseGesture.UL";
+const char kMouseGestureProfileAction6[] = "MouseGesture.UR";
+const char kMouseGestureProfileAction7[] = "MouseGesture.DL";
+const char kMouseGestureProfileAction8[] = "MouseGesture.DR";
+const char kMouseGestureProfileAction9[] = "MouseGesture.RL";
+const char kMouseGestureProfileAction10[] = "MouseGesture.LR";
+const char kMouseGestureProfileAction11[] = "MouseGesture.UD";
+const char kMouseGestureProfileAction12[] = "MouseGesture.DU";
+const char kMouseGestureProfileAction13[] = "MouseGesture.RU";
+const char kMouseGestureProfileAction14[] = "MouseGesture.RD";
+const char kMouseGestureProfileAction15[] = "MouseGesture.LU";
+const char kMouseGestureProfileAction16[] = "MouseGesture.LD";
+const char kMouseGestureProfileAction17[] = "MouseGesture.BA";
+const char kMouseGestureProfileAction18[] = "MouseGesture.BC";
+const char kMouseGestureProfileAction19[] = "MouseGesture.BCU";
+const char kMouseGestureProfileAction20[] = "MouseGesture.BCD";
+
+
 // *************** PROFILE PREFS ***************
 // These are attached to the user profile
 

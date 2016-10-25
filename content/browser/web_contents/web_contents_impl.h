@@ -50,6 +50,7 @@
 #include "ui/gfx/geometry/size.h"
 
 struct ViewHostMsg_DateTimeDialogValue_Params;
+class MouseGesture;
 
 namespace shell {
 class InterfaceProvider;
@@ -712,6 +713,7 @@ class CONTENT_EXPORT WebContentsImpl
   bool IsHidden() override;
   int GetOuterDelegateFrameTreeNodeId() override;
 
+  virtual MouseGesture* GetMouseGesture() override;
   // NotificationObserver ------------------------------------------------------
 
   void Observe(int type,

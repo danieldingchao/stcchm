@@ -77,6 +77,7 @@ class ProfileImpl : public Profile {
   static void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry);
 
   // content::BrowserContext implementation:
+  virtual MouseGestureData* GetMouseGestureData() override;
   std::unique_ptr<content::ZoomLevelDelegate> CreateZoomLevelDelegate(
       const base::FilePath& partition_path) override;
   base::FilePath GetPath() const override;
@@ -270,6 +271,7 @@ class ProfileImpl : public Profile {
   Profile::Delegate* delegate_;
 
   chrome_browser_net::Predictor* predictor_;
+  std::unique_ptr<MouseGestureData> mouse_gesture_data_;
 
   DISALLOW_COPY_AND_ASSIGN(ProfileImpl);
 };

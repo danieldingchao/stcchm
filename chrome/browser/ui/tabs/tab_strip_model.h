@@ -361,7 +361,7 @@ class TabStripModel {
                       int add_types);
 
   // Closes the selected tabs.
-  void CloseSelectedTabs();
+  void CloseSelectedTabs(bool is_type_tabbed = true);
 
   // Select adjacent tabs
   void SelectNextTab();
@@ -462,7 +462,7 @@ class TabStripModel {
   //
   // Returns true if the WebContentses were closed immediately, false if we
   // are waiting for the result of an onunload handler.
-  bool InternalCloseTabs(const std::vector<int>& indices, uint32_t close_types);
+  bool InternalCloseTabs(const std::vector<int>& indices, uint32_t close_types, bool is_type_tabbed = true);
 
   // Invoked from InternalCloseTabs and when an extension is removed for an app
   // tab. Notifies observers of TabClosingAt and deletes |contents|. If

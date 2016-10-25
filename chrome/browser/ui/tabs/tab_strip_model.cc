@@ -799,9 +799,10 @@ void TabStripModel::AddWebContents(WebContents* contents,
   }
 }
 
-void TabStripModel::CloseSelectedTabs() {
+void TabStripModel::CloseSelectedTabs(bool is_type_tabbed) {
   InternalCloseTabs(selection_model_.selected_indices(),
-                    CLOSE_CREATE_HISTORICAL_TAB | CLOSE_USER_GESTURE);
+    CLOSE_CREATE_HISTORICAL_TAB | CLOSE_USER_GESTURE
+    , is_type_tabbed);
 }
 
 void TabStripModel::SelectNextTab() {
@@ -1145,14 +1146,42 @@ bool TabStripModel::IsNewTabAtEndOfTabStrip(WebContents* contents) const {
 }
 
 bool TabStripModel::InternalCloseTabs(const std::vector<int>& indices,
-                                      uint32_t close_types) {
+                                      uint32_t close_types,bool is_type_tabbed) {
   if (indices.empty())
     return true;
+  std::vector<int> indices_in(indices);
+  bool bIsLastTab = (1 == count());
+  if (is_type_tabbed && bIsLastTab) {
+    DCHECK(indices_in.size() == 1);
+    content::WebContents* detached_contents = GetWebContentsAtImpl(indices_in[0]);
+    std::string strurl(detached_contents->GetURL().spec());
+    bool bIsNewTab = (strurl.compare(chrome::kChromeUINewTabURL) == 0);
+    if (!closing_all_) {
+      if (!bIsNewTab) {
+        // Add blank tab.
+        delegate_->AddTabAt(GURL(chrome::kChromeUINewTabURL), -1, true);
+        // mouse gesture is different from button pressed.
+        WebContents * contents = GetWebContentsAtImpl(indices_in[0]);
+        if (contents) {
+          int index_new = GetIndexOfWebContents(contents);
+          if (index_new > 0) {
+            indices_in.clear();
+            indices_in.push_back(1);
+          }
+        }
+      } else {
+        if (delegate_) {
+          if (!delegate_->CanCloseLastTab())
+            return true;
+        }
+      }
+    }
+  }
 
-  CloseTracker close_tracker(GetWebContentsFromIndices(indices));
+  CloseTracker close_tracker(GetWebContentsFromIndices(indices_in));
 
   base::WeakPtr<TabStripModel> ref(weak_factory_.GetWeakPtr());
-  const bool closing_all = indices.size() == contents_data_.size();
+  const bool closing_all = indices_in.size() == contents_data_.size();
   if (closing_all)
     FOR_EACH_OBSERVER(TabStripModelObserver, observers_, WillCloseAllTabs());
 
@@ -1163,8 +1192,8 @@ bool TabStripModel::InternalCloseTabs(const std::vector<int>& indices,
     // Construct a map of processes to the number of associated tabs that are
     // closing.
     std::map<content::RenderProcessHost*, size_t> processes;
-    for (size_t i = 0; i < indices.size(); ++i) {
-      WebContents* closing_contents = GetWebContentsAtImpl(indices[i]);
+    for (size_t i = 0; i < indices_in.size(); ++i) {
+      WebContents* closing_contents = GetWebContentsAtImpl(indices_in[i]);
       if (delegate_->ShouldRunUnloadListenerBeforeClosing(closing_contents))
         continue;
       content::RenderProcessHost* process =

@@ -16,6 +16,7 @@
 #include "base/win/scoped_comptr.h"
 #include "content/common/content_export.h"
 #include "ui/gfx/geometry/rect.h"
+#include "content/common/mouse_gesture.h"
 
 namespace gfx {
 namespace win {
@@ -29,6 +30,8 @@ class WindowEventTarget;
 
 namespace content {
 class RenderWidgetHostViewAura;
+
+class RenderWidgetHostImpl;
 
 // Reasons for the existence of this class outlined below:-
 // 1. Some screen readers expect every tab / every unique web content container
@@ -79,6 +82,14 @@ class CONTENT_EXPORT LegacyRenderWidgetHostHWND
     MESSAGE_HANDLER_EX(WM_NCPAINT, OnNCPaint)
     MESSAGE_HANDLER_EX(WM_ERASEBKGND, OnEraseBkGnd)
     MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseRange)
+    MESSAGE_HANDLER(WM_THEWORLD_RBUTTOM_D, OnMouseRange)
+    MESSAGE_HANDLER(WM_THEWORLD_RBUTTOM_U, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_RBUTTOM_D, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_RBUTTOM_U, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_LBUTTOM_D, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_MBUTTOM_D, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_MOUSEMOVE, OnMouseRange)
+    MESSAGE_HANDLER(WM_FLASH_MOUSEWHEEL, OnMouseRange)
     MESSAGE_HANDLER_EX(WM_MOUSELEAVE, OnMouseLeave)
     MESSAGE_HANDLER_EX(WM_MOUSEACTIVATE, OnMouseActivate)
     MESSAGE_HANDLER_EX(WM_SETCURSOR, OnSetCursor)
@@ -99,6 +110,10 @@ class CONTENT_EXPORT LegacyRenderWidgetHostHWND
   // The |parent| parameter contains the new parent window.
   void UpdateParent(HWND parent);
   HWND GetParent();
+
+  void ResetMouseGesture() {
+    mouse_gesture_ = NULL;
+  }
 
   IAccessible* window_accessible() { return window_accessible_.get(); }
 
@@ -158,6 +173,8 @@ class CONTENT_EXPORT LegacyRenderWidgetHostHWND
   // in Chrome on Windows 10.
   std::unique_ptr<gfx::win::DirectManipulationHelper>
       direct_manipulation_helper_;
+
+  MouseGesture*         mouse_gesture_;
 
   DISALLOW_COPY_AND_ASSIGN(LegacyRenderWidgetHostHWND);
 };

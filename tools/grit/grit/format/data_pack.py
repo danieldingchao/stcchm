@@ -159,8 +159,10 @@ def RePackFromDataPackStrings(inputs, whitelist,
   for content in inputs:
     # Make sure we have no dups.
     duplicate_keys = set(content.resources.keys()) & set(resources.keys())
-    if duplicate_keys:
-      raise exceptions.KeyError('Duplicate keys: ' + str(list(duplicate_keys)))
+    #if duplicate_keys:
+    #  print 'key error:',content.resources
+    #  raise exceptions.KeyError('Duplicate keys: ' + str(list(duplicate_keys)))
+	# todo by daniel
 
     # Make sure encoding is consistent.
     if encoding in (None, BINARY):

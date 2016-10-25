@@ -21,6 +21,7 @@
 class GURL;
 class SkBitmap;
 struct FrameHostMsg_DidCommitProvisionalLoad_Params;
+class MouseGesture;
 
 namespace base {
 class ListValue;
@@ -239,6 +240,8 @@ class CONTENT_EXPORT RenderViewHostDelegate {
   // Whether the user agent is overridden using the Chrome for Android "Request
   // Desktop Site" feature.
   virtual bool IsOverridingUserAgent();
+
+  virtual MouseGesture* GetMouseGesture() { return NULL; };
 
  protected:
   virtual ~RenderViewHostDelegate() {}

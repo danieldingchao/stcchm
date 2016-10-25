@@ -37,6 +37,8 @@ class FilePath;
 class ListValue;
 }
 
+class MouseGesture;
+
 namespace content {
 class BrowserContext;
 class ColorChooser;
@@ -543,6 +545,8 @@ class CONTENT_EXPORT WebContentsDelegate {
 
   // Requests the app banner. This method is called from the DevTools.
   virtual void RequestAppBannerFromDevTools(content::WebContents* web_contents);
+
+  virtual MouseGesture* GetMouseGesture() { return NULL; }
 
  protected:
   virtual ~WebContentsDelegate();

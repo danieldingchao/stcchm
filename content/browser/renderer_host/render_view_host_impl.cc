@@ -1332,4 +1332,11 @@ void RenderViewHostImpl::GrantFileAccessFromDropData(DropData* drop_data) {
   }
 }
 
+MouseGesture* RenderViewHostImpl::GetMouseGesture() {
+  if (NULL != delegate_) {
+    return delegate_->GetMouseGesture();
+  }
+  return NULL;
+}
+
 }  // namespace content

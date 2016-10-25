@@ -156,6 +156,7 @@
 #include "chrome/browser/supervised_user/supervised_user_settings_service_factory.h"
 #endif
 #include "chrome/browser/adfilter/adfilter_service.h"
+#include "chrome/browser/ui/views/mouse_gesture/mouse_gesture.h"
 
 using base::Time;
 using base::TimeDelta;
@@ -1286,4 +1287,12 @@ ProfileImpl::CreateDomainReliabilityMonitor(PrefService* local_state) {
 
   return service->CreateMonitor(
       BrowserThread::GetTaskRunnerForThread(BrowserThread::IO));
+}
+
+MouseGestureData* ProfileImpl::GetMouseGestureData() {
+  if (!mouse_gesture_data_.get()) {
+    mouse_gesture_data_.reset(new MouseGestureData());
+    mouse_gesture_data_->Init(this);
+  }
+  return mouse_gesture_data_.get();
 }

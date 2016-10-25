@@ -264,6 +264,134 @@ are declared in build/common.gypi.
         <message name="IDS_IMPORT_MOSTVISITED_CHKBOX" use_name_for_id = "true" desc="Checkbox for importing mostvisited">
           Mostvisited
         </message>
+		
+		<!--mouse gesture-->
+      <message name="IDS_MORE_SETTING_DLG_U" use_name_for_id = "true">
+        Up
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_D" use_name_for_id = "true">
+        Down
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_L" use_name_for_id = "true">
+        Left
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_R" use_name_for_id = "true">
+        Right
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_UL" use_name_for_id = "true">
+        Up Left
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_UR" use_name_for_id = "true">
+        Up Right
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_DL" use_name_for_id = "true">
+        Down Left
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_DR" use_name_for_id = "true">
+        Down Right
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_RL" use_name_for_id = "true">
+        Right Left
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_LR" use_name_for_id = "true">
+        Left Right
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_UD" use_name_for_id = "true">
+        Up Down
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_DU" use_name_for_id = "true">
+        Down Up
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_RU" use_name_for_id = "true">
+        Right Up
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_RD" use_name_for_id = "true">
+        Right Down
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_LU" use_name_for_id = "true">
+        Left Top
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_LD" use_name_for_id = "true">
+        Left Down
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_BA" use_name_for_id = "true">
+        Left Click
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_BC" use_name_for_id = "true">
+        Middle Click
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_BCU" use_name_for_id = "true">
+        Wheel up
+      </message>
+      <message name="IDS_MORE_SETTING_DLG_BCD" use_name_for_id = "true">
+        Wheel Down
+      </message>
+      <message name="ID_MGA_NONE" use_name_for_id = "true">
+        No Action
+      </message>
+      <message name="ID_MGA_SCROLLPAGEUP" use_name_for_id = "true">
+        PageUp
+      </message>
+      <message name="ID_MGA_SCROLLPAGEDOWN" use_name_for_id = "true">
+        PageDown
+      </message>
+      <message name="ID_MGA_SCROLLLEFT" use_name_for_id = "true">
+        Scroll Left
+      </message>
+      <message name="ID_MGA_SCROLLRIGHT" use_name_for_id = "true">
+        Scroll Right
+      </message>
+      <message name="ID_MGA_BACK" use_name_for_id = "true">
+        Backward
+      </message>
+      <message name="ID_MGA_FORWARD" use_name_for_id = "true">
+        Forward
+      </message>
+      <message name="ID_MGA_RESTORE_TAB" use_name_for_id = "true">
+        Restore Closed Tab
+      </message>
+      <message name="ID_MGA_CLOSETAB" use_name_for_id = "true">
+        Close Tab
+      </message>
+      <message name="ID_MGA_CLOSEOTHERTABS" use_name_for_id = "true">
+        Close Other Tab
+      </message>
+      <message name="ID_MGA_RELOAD" use_name_for_id = "true">
+        Reload(Refresh)
+      </message>
+      <message name="ID_MGA_NEWTAB" use_name_for_id = "true">
+        Open New Tab
+      </message>
+      <message name="ID_MGA_HOME_KEY" use_name_for_id = "true">
+        Open Home Page
+      </message>
+      <message name="ID_MGA_SCROLLBEGIN" use_name_for_id = "true">
+        Scroll Home
+      </message>
+      <message name="ID_MGA_SCROLLEND" use_name_for_id = "true">
+        Scroll End
+      </message>
+      <message name="ID_MGA_KEYLEFT" use_name_for_id = "true">
+        Simulate Key Left
+      </message>
+      <message name="ID_MGA_KEYRIGHT" use_name_for_id = "true">
+        Simulate Key Right
+      </message>
+      <message name="ID_MGA_PREV_TAB" use_name_for_id = "true">
+        Previous Tab
+      </message>
+      <message name="ID_MGA_NEXT_TAB" use_name_for_id = "true">
+        Next Tab
+      </message>
+      <message name="ID_MGA_FULLSCREEN" use_name_for_id = "true">
+        Full Screen Switch
+      </message>
+      <message name="ID_MGA_STOP" use_name_for_id = "true">
+        Stop
+      </message>
+      <message name="ID_MGA_MINI" use_name_for_id = "true" desc="Lemon ID">
+        Minimize
+      </message>
 	
       <!-- TODO add all of your "string table" messages here.  Remember to
       change nontranslateable parts of the messages into placeholders (using the

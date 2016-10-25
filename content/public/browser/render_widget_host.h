@@ -19,6 +19,8 @@
 #include "ui/gfx/geometry/size.h"
 #include "ui/surface/transport_dib.h"
 
+class MouseGesture;
+
 namespace gfx {
 class Rect;
 }
@@ -261,6 +263,8 @@ class CONTENT_EXPORT RenderWidgetHost : public IPC::Sender {
 
   // Sends a compositor proto to the render widget.
   virtual void HandleCompositorProto(const std::vector<uint8_t>& proto) = 0;
+
+  virtual MouseGesture* GetMouseGesture() = 0;;
 };
 
 }  // namespace content

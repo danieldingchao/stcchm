@@ -68,6 +68,8 @@ struct MHTMLGenerationParams;
 struct PageImportanceSignals;
 struct RendererPreferences;
 
+class WebContentsView;
+
 // WebContents is the core class in content/. A WebContents renders web content
 // (usually HTML) in a rectangular area.
 //
@@ -210,6 +212,8 @@ class WebContents : public PageNavigator,
   // This method is deprecated. DO NOT USE! Pick either |GetVisibleURL| or
   // |GetLastCommittedURL| as appropriate.
   virtual const GURL& GetURL() const = 0;
+
+  virtual WebContentsView* GetView() const = 0;
 
   // Gets the virtual URL currently being displayed in the URL bar, if there is
   // one. This URL might be a pending navigation that hasn't committed yet, so

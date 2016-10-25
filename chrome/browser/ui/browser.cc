@@ -236,6 +236,9 @@
 #include "components/omnibox/browser/autocomplete_match.h"
 #include "components/omnibox/browser/autocomplete_provider.h"
 
+#include "content/browser/web_contents/web_contents_view.h"
+#include "ui/views/win/hwnd_util.h"
+#include "chrome/browser/ui/views/mouse_gesture/mouse_gesture.h"
 #include "chrome/browser/ui/lemon/lemon_updater.h"
 
 using base::TimeDelta;
@@ -350,6 +353,7 @@ class Browser::InterstitialObserver : public content::WebContentsObserver {
 Browser::Browser(const CreateParams& params)
     : extension_registry_observer_(this),
       type_(params.type),
+      mouse_gesture_((MouseGestureCore*)NULL),
       profile_(params.profile),
       window_(NULL),
       tab_strip_model_delegate_(new chrome::BrowserTabStripModelDelegate(this)),
@@ -470,6 +474,8 @@ Browser::Browser(const CreateParams& params)
 }
 
 Browser::~Browser() {
+  if (mouse_gesture_.get())
+    mouse_gesture_->UnInit();
   // Stop observing notifications before continuing with destruction. Profile
   // destruction will unload extensions and reentrant calls to Browser:: should
   // be avoided while it is being torn down.
@@ -2614,4 +2620,122 @@ void Browser::OnSearchText(const base::string16& text) {
 
     chrome::Navigate(&params);
   }
+}
+
+void Browser::MouseGesturePageOperation(int nType) {
+  HWND hChild = NULL;
+  LPARAM lParam = 0;
+  HWND hTargetWnd = NULL;
+  content::WebContents* pTabContents = tab_strip_model()->GetActiveWebContents();
+  if (pTabContents) {
+    content::WebContentsView* pTabContentView = NULL;
+    pTabContentView = pTabContents->GetView();
+    if (pTabContentView) {
+      pTabContents->Focus();
+      hTargetWnd = views::HWNDForNativeView(pTabContentView->GetContentNativeView());
+    }
+  }
+
+#ifdef _DEBUG
+  wchar_t out[MAX_PATH] = { 0 };
+  wsprintf(out, L"\nMouse gesture: 0x%08x handle nType:%d", hTargetWnd, nType);
+  OutputDebugString(out);
+#endif
+
+  if (!hTargetWnd || !IsWindow(hTargetWnd))
+    return;
+
+  switch (nType)
+  {
+  case ID_MGA_MINI:
+    if (window_ && window_->GetNativeWindow()) {
+#ifdef FOR_360CHROME
+      PostMessage(views::HWNDForNativeWindow(window_->GetNativeWindow()),
+        WM_SYSCOMMAND, SC_MINIMIZE, 0);
+#else
+      HWND frame_wnd = views::HWNDForNativeWindow(window_->GetNativeWindow());
+      PostMessage(::GetAncestor(frame_wnd, GA_ROOT), WM_SYSCOMMAND, SC_MINIMIZE, 0);
+#endif
+    }
+    break;
+
+  case ID_MGA_SCROLLPAGEUP:// UP
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_PRIOR, 0); // page down VK_NEXT
+    break;
+
+  case ID_MGA_SCROLLPAGEDOWN:// Down
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_NEXT, 0);
+    break;
+
+  case ID_MGA_SCROLLLEFT:// LEFT
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_LEFT, lParam);
+    break;
+
+  case ID_MGA_SCROLLRIGHT:// RIGHT
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_RIGHT, lParam);
+    break;
+
+  case ID_MGA_SCROLLBEGIN:// 
+    pTabContents->GetRenderViewHost()->ClearFocusedElement();
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_HOME, 0);
+    break;
+  case ID_MGA_SCROLLEND:// 
+    pTabContents->GetRenderViewHost()->ClearFocusedElement();
+    PostMessage(hTargetWnd, WM_KEYDOWN, VK_END, 0);
+    break;
+  case ID_MGA_KEYLEFT:
+  {
+    WORD okc;
+    okc = MapVirtualKey(VK_LEFT, 0);
+    keybd_event((BYTE)VK_LEFT, (BYTE)okc, 0, 0);
+    keybd_event((BYTE)VK_LEFT, (BYTE)okc, KEYEVENTF_KEYUP, 0);
+  }
+  break;
+  case ID_MGA_KEYRIGHT:
+  {
+    WORD okc;
+    okc = MapVirtualKey(VK_RIGHT, 0);
+    keybd_event((BYTE)VK_RIGHT, (BYTE)okc, 0, 0);
+    keybd_event((BYTE)VK_RIGHT, (BYTE)okc, KEYEVENTF_KEYUP, 0);
+  }
+  break;
+  case ID_MGA_CLOSEOTHERTABS:
+  {
+    /*ContextMenuCommand cmd = CommandCloseOtherTabs;*/
+    int selected = tab_strip_model()->active_index();
+    tab_strip_model()->ExecuteContextMenuCommand(selected, TabStripModel::CommandCloseOtherTabs);
+  }
+  break;
+  case ID_MGA_FULLSCREEN:
+  {
+    // ToggleFullscreenMode();
+    WORD okc;
+    okc = MapVirtualKey(VK_F11, 0);
+    keybd_event((BYTE)VK_F11, (BYTE)okc, 0, 0);
+    keybd_event((BYTE)VK_F11, (BYTE)okc, KEYEVENTF_KEYUP, 0);
+  }
+  break;
+  }
+}
+
+//360Chrome - mouse gesture
+void Browser::ShowMouseGestureActionString(std::wstring &text) {
+
+#ifdef FOR_360CHROME
+  if (NULL != GetStatusWorld()) {
+    GetStatusWorld()->SetStatus(text);
+  }
+#endif // FOR_360CHROME
+}
+
+MouseGestureCore* Browser::GetMouseGestureInternal() {
+  if (!mouse_gesture_.get()) {
+    mouse_gesture_.reset(new MouseGestureCore(profile_));
+    mouse_gesture_->Init(this, GetModuleHandle(L"chrome.dll"));
+  }
+  return (mouse_gesture_.get());
+}
+MouseGesture* Browser::GetMouseGesture() {
+  MouseGestureCore* mg = GetMouseGestureInternal();
+  return static_cast<MouseGesture*>(mg);
 }

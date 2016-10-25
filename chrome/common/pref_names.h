@@ -24,6 +24,42 @@ extern const char kAdfilterStatisticCount[];
 extern const char kUserAdfilterRulseLastDir[];
 extern const char KUserAdfilterRulseDisableList[];
 
+extern const char kMouseGestureProfile[];
+extern const char kMGPOpenLabelInBookmark[];
+extern const char kMGPOpenLabelInAddressbar[];
+extern const char kMGPRightButtonCloseTab[];
+extern const char kMGPUserTheWorldOpenTabOrder[];
+extern const char kMGPUserMouseGesture[];
+extern const char kMGPUserMouseGestureTips[];
+extern const char kMGPUserOpenNewTabOrder[];
+extern const char kMGPUserCloseTabOrder[];
+
+extern const char kMouseGestureProfileAction1[];
+extern const char kMouseGestureProfileAction2[];
+extern const char kMouseGestureProfileAction3[];
+extern const char kMouseGestureProfileAction4[];
+extern const char kMouseGestureProfileAction5[];
+extern const char kMouseGestureProfileAction6[];
+extern const char kMouseGestureProfileAction7[];
+extern const char kMouseGestureProfileAction8[];
+extern const char kMouseGestureProfileAction9[];
+extern const char kMouseGestureProfileAction10[];
+extern const char kMouseGestureProfileAction11[];
+extern const char kMouseGestureProfileAction12[];
+extern const char kMouseGestureProfileAction13[];
+extern const char kMouseGestureProfileAction14[];
+extern const char kMouseGestureProfileAction15[];
+extern const char kMouseGestureProfileAction16[];
+extern const char kMouseGestureProfileAction17[];
+extern const char kMouseGestureProfileAction18[];
+extern const char kMouseGestureProfileAction19[];
+extern const char kMouseGestureProfileAction20[];
+
+extern const char kMGPUserWheelChangeTabOrder[];
+extern const char kMGPUserHoverActiveTabOrder[];
+extern const char kMGPUserHoverActiveTimeval[];
+
+
 // Profile prefs. Please add Local State prefs below instead.
 #if defined(OS_CHROMEOS) && defined(ENABLE_APP_LIST)
 extern const char kArcApps[];

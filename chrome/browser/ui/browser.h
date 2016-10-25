@@ -74,6 +74,9 @@ class TabStripModelDelegate;
 class ValidationMessageBubble;
 struct WebApplicationInfo;
 
+class MouseGesture;
+class MouseGestureCore;
+
 namespace chrome {
 class BrowserCommandController;
 class FastUnloadController;
@@ -519,6 +522,14 @@ class Browser : public TabStripModelObserver,
   bool RunUnloadListenerBeforeClosing(content::WebContents* web_contents);
 
   void OnSearchText(const base::string16& text);
+
+  friend class MouseGesture;
+
+  void MouseGesturePageOperation(int nType); // mouse gesture actions 
+  void ShowMouseGestureActionString(std::wstring &text);
+  MouseGesture* GetMouseGesture() override;
+  MouseGestureCore* GetMouseGestureInternal();
+
  private:
   friend class BrowserTest;
   friend class FullscreenControllerInteractiveTest;
@@ -1015,6 +1026,8 @@ class Browser : public TabStripModelObserver,
 
   // The following factory is used to close the frame at a later time.
   base::WeakPtrFactory<Browser> weak_factory_;
+
+  std::unique_ptr<MouseGestureCore> mouse_gesture_;
 
   DISALLOW_COPY_AND_ASSIGN(Browser);
 };

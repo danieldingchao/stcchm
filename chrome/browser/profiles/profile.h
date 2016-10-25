@@ -27,6 +27,7 @@ class PrefService;
 class PromoCounter;
 class ProtocolHandlerRegistry;
 class TestingProfile;
+class MouseGestureData;
 
 namespace android {
 class TabContentsProvider;
@@ -142,6 +143,7 @@ class Profile : public content::BrowserContext {
   static Profile* FromWebUI(content::WebUI* web_ui);
 
   // content::BrowserContext implementation ------------------------------------
+  virtual MouseGestureData* GetMouseGestureData() = 0;
 
   // Typesafe upcast.
   virtual TestingProfile* AsTestingProfile();

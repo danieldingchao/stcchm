@@ -29,6 +29,7 @@ namespace content {
 // other client is listening on MSAA events - if so, we enable full web
 // accessibility support.
 const int kIdScreenReaderHoneyPot = 1;
+const TCHAR* mouse_gesture_hwnd = _T("mouse_gesture_hwnd");
 
 // static
 LegacyRenderWidgetHostHWND* LegacyRenderWidgetHostHWND::Create(
@@ -54,6 +55,7 @@ LegacyRenderWidgetHostHWND* LegacyRenderWidgetHostHWND::Create(
 }
 
 void LegacyRenderWidgetHostHWND::Destroy() {
+  mouse_gesture_ = NULL;
   if (::IsWindow(hwnd()))
     ::DestroyWindow(hwnd());
 }
@@ -70,6 +72,11 @@ HWND LegacyRenderWidgetHostHWND::GetParent() {
 
 void LegacyRenderWidgetHostHWND::Show() {
   ::ShowWindow(hwnd(), SW_SHOW);
+  /*
+  if (render_widget_host_)
+    mouse_gesture_ = render_widget_host_->GetMouseGesture();
+  if (mouse_gesture_)
+    ::SetProp(GetParent(), mouse_gesture_hwnd, m_hWnd);*/
 }
 
 void LegacyRenderWidgetHostHWND::Hide() {
@@ -100,6 +107,7 @@ void LegacyRenderWidgetHostHWND::OnFinalMessage(HWND hwnd) {
 
 LegacyRenderWidgetHostHWND::LegacyRenderWidgetHostHWND(HWND parent)
     : mouse_tracking_enabled_(false),
+      mouse_gesture_(NULL),
       host_(NULL) {
   RECT rect = {0};
   Base::Create(parent, rect, L"Chrome Legacy Window",
@@ -225,6 +233,61 @@ LRESULT LegacyRenderWidgetHostHWND::OnMouseRange(UINT message,
       TrackMouseEvent(&tme);
     }
   }
+
+  if (message == WM_MBUTTONDOWN) {
+    PostMessage(WM_RENDER_MBUTTON_D, w_param, l_param);
+    //if (_bHideBrowserUseMiddleButton)
+    //  return 1;
+  }
+  if (message == WM_MOUSEMOVE || message == WM_RBUTTONDOWN || message == WM_MBUTTONUP
+    || message == WM_THEWORLD_RBUTTOM_D || message == WM_THEWORLD_RBUTTOM_U) { 
+  if (!mouse_gesture_&&host_){
+    mouse_gesture_ = host_->GetRenderWidgetHost()->GetMouseGesture();
+  }
+  if (mouse_gesture_){
+
+    UINT message_from_flash = 0;
+    switch (message)
+    {
+    case WM_FLASH_MBUTTOM_D: message_from_flash = WM_MBUTTONDOWN; break;
+    case WM_FLASH_RBUTTOM_D: message_from_flash = WM_RBUTTONDOWN; break;
+    case WM_FLASH_LBUTTOM_D: message_from_flash = WM_LBUTTONDOWN; break;
+    case WM_FLASH_MOUSEMOVE: message_from_flash = WM_MOUSEMOVE; break;
+    case WM_FLASH_MOUSEWHEEL: message_from_flash = WM_MOUSEWHEEL; break;
+    case WM_FLASH_RBUTTOM_U: message_from_flash = WM_RBUTTONUP; break;
+    }
+    if (message_from_flash){
+      if (mouse_gesture_){
+        mouse_gesture_->Run(m_hWnd, message_from_flash, w_param, l_param);
+      }
+      return 0;
+    }
+
+    static WPARAM wparam_rdown_ = 0;
+    int iReturn = mouse_gesture_->Run(m_hWnd, message, w_param, l_param);
+    if (iReturn){
+      if (iReturn == 2){
+        //eat down
+        if (message == WM_RBUTTONDOWN){
+          wparam_rdown_ = w_param;
+          return 0;
+        }
+        //eat up,and replay down/up
+        if (message == WM_RBUTTONUP){
+          ::PostMessage(hwnd(), WM_THEWORLD_RBUTTOM_D, wparam_rdown_, l_param);
+          ::PostMessage(hwnd(), WM_THEWORLD_RBUTTOM_U, 0, l_param);
+          return 0;
+        }
+      }
+      return 0;
+    }
+    if (message == WM_THEWORLD_RBUTTOM_D)
+      message = WM_RBUTTONDOWN;
+    if (message == WM_THEWORLD_RBUTTOM_U)
+      message = WM_RBUTTONUP;
+  }
+  }
+
   // The offsets for WM_NCXXX and WM_MOUSEWHEEL and WM_MOUSEHWHEEL messages are
   // in screen coordinates. We should not be converting them to parent
   // coordinates.

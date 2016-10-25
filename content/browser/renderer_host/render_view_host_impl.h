@@ -36,6 +36,7 @@
 #include "ui/base/window_open_disposition.h"
 
 class SkBitmap;
+class MouseGesture;
 
 namespace content {
 
@@ -166,6 +167,7 @@ class CONTENT_EXPORT RenderViewHostImpl : public RenderViewHost,
                            base::TerminationStatus status,
                            int exit_code) override;
 
+  virtual MouseGesture* GetMouseGesture() override;
   void set_delegate(RenderViewHostDelegate* d) {
     CHECK(d);  // http://crbug.com/82827
     delegate_ = d;
