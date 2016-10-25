@@ -270,33 +270,33 @@
             base::HistogramBase::kUmaTargetedHistogramFlag))
 
 #else
-#define UMA_HISTOGRAM_TIMES(name, sample) __noop
-#define UMA_HISTOGRAM_MEDIUM_TIMES(name, sample) __noop
-#define UMA_HISTOGRAM_LONG_TIMES(name, sample) __noop
-#define UMA_HISTOGRAM_LONG_TIMES_100(name, sample) __noop
-#define UMA_HISTOGRAM_CUSTOM_TIMES(name, sample, min, max, bucket_count) __noop
-#define UMA_HISTOGRAM_COUNTS(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_100(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_1000(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_10000(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_100000(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_1M(name, sample) __noop
-#define UMA_HISTOGRAM_COUNTS_10M(name, sample) __noop
-#define UMA_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max, bucket_count) __noop
-#define UMA_HISTOGRAM_MEMORY_KB(name, sample) __noop
-#define UMA_HISTOGRAM_MEMORY_MB(name, sample) __noop
-#define UMA_HISTOGRAM_MEMORY_LARGE_MB(name, sample) __noop
-#define UMA_HISTOGRAM_PERCENTAGE(name, under_one_hundred) __noop
-#define UMA_HISTOGRAM_BOOLEAN(name, sample) __noop
-#define UMA_HISTOGRAM_ENUMERATION(name, sample, boundary_value) __noop
-#define UMA_HISTOGRAM_CUSTOM_ENUMERATION(name, sample, custom_ranges) __noop
-#define SCOPED_UMA_HISTOGRAM_TIMER(name) __noop
-#define SCOPED_UMA_HISTOGRAM_LONG_TIMER(name) __noop
-#define SCOPED_UMA_HISTOGRAM_TIMER_EXPANDER(name, is_long, key) __noop
-#define SCOPED_UMA_HISTOGRAM_TIMER_UNIQUE(name, is_long, key)  __noop
-#define UMA_STABILITY_HISTOGRAM_COUNTS_100(name, sample) __noop
+#define UMA_HISTOGRAM_TIMES(name, sample) void(0)
+#define UMA_HISTOGRAM_MEDIUM_TIMES(name, sample) void(0)
+#define UMA_HISTOGRAM_LONG_TIMES(name, sample) void(0)
+#define UMA_HISTOGRAM_LONG_TIMES_100(name, sample) void(0)
+#define UMA_HISTOGRAM_CUSTOM_TIMES(name, sample, min, max, bucket_count) void(0)
+#define UMA_HISTOGRAM_COUNTS(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_100(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_1000(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_10000(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_100000(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_1M(name, sample) void(0)
+#define UMA_HISTOGRAM_COUNTS_10M(name, sample) void(0)
+#define UMA_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max, bucket_count) void(0)
+#define UMA_HISTOGRAM_MEMORY_KB(name, sample) void(0)
+#define UMA_HISTOGRAM_MEMORY_MB(name, sample) void(0)
+#define UMA_HISTOGRAM_MEMORY_LARGE_MB(name, sample) void(0)
+#define UMA_HISTOGRAM_PERCENTAGE(name, under_one_hundred) void(0)
+#define UMA_HISTOGRAM_BOOLEAN(name, sample) void(0)
+#define UMA_HISTOGRAM_ENUMERATION(name, sample, boundary_value) void(0)
+#define UMA_HISTOGRAM_CUSTOM_ENUMERATION(name, sample, custom_ranges) void(0)
+#define SCOPED_UMA_HISTOGRAM_TIMER(name) void(0)
+#define SCOPED_UMA_HISTOGRAM_LONG_TIMER(name) void(0)
+#define SCOPED_UMA_HISTOGRAM_TIMER_EXPANDER(name, is_long, key) void(0)
+#define SCOPED_UMA_HISTOGRAM_TIMER_UNIQUE(name, is_long, key)  void(0)
+#define UMA_STABILITY_HISTOGRAM_COUNTS_100(name, sample) void(0)
 #define UMA_STABILITY_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max,          \
-                                              bucket_count) __noop
-#define UMA_STABILITY_HISTOGRAM_ENUMERATION(name, sample, enum_max) __noop
+                                              bucket_count) void(0)
+#define UMA_STABILITY_HISTOGRAM_ENUMERATION(name, sample, enum_max) void(0)
 #endif
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_H_

@@ -202,7 +202,7 @@
 // enabled, then this does nothing.
 // - category and name strings must have application lifetime (statics or
 //   literals). They may not include " chars.
-#if 0
+#if !defined(OS_WIN)
 #define TRACE_EVENT0(category_group, name)    \
   INTERNAL_TRACE_EVENT_ADD_SCOPED(category_group, name)
 #define TRACE_EVENT_WITH_FLOW0(category_group, name, bind_id, flow_flags)  \
@@ -1028,7 +1028,7 @@
 #define TRACE_BIND_IDS(category_group, name, id, bind_id) \
   INTERNAL_TRACE_EVENT_ADD_BIND_IDS(category_group, name, id, bind_id);
 
-#if 0
+#if !defined(OS_WIN)
 // Macro to efficiently determine if a given category group is enabled.
 #define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category_group, ret)             \
   do {                                                                      \

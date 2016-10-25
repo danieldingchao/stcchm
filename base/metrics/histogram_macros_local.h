@@ -87,17 +87,17 @@
 #else
 #endif
 
-#define LOCAL_HISTOGRAM_TIMES(name, sample) __noop
-#define LOCAL_HISTOGRAM_CUSTOM_TIMES(name, sample, min, max, bucket_count) __noop
-#define LOCAL_HISTOGRAM_COUNTS(name, sample) __noop
-#define LOCAL_HISTOGRAM_COUNTS_100(name, sample) __noop
-#define LOCAL_HISTOGRAM_COUNTS_10000(name, sample) __noop
-#define LOCAL_HISTOGRAM_COUNTS_1000000(name, sample) __noop
-#define LOCAL_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max, bucket_count) __noop
-#define HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) __noop
-#define LOCAL_HISTOGRAM_PERCENTAGE(name, under_one_hundred) __noop
-#define LOCAL_HISTOGRAM_BOOLEAN(name, sample) __noop
-#define LOCAL_HISTOGRAM_ENUMERATION(name, sample, boundary_value) __noop
-#define LOCAL_HISTOGRAM_CUSTOM_ENUMERATION(name, sample, custom_ranges) __noop
-#define LOCAL_HISTOGRAM_MEMORY_KB(name, sample) __noop
+#define LOCAL_HISTOGRAM_TIMES(name, sample) void(0)
+#define LOCAL_HISTOGRAM_CUSTOM_TIMES(name, sample, min, max, bucket_count) void(0)
+#define LOCAL_HISTOGRAM_COUNTS(name, sample) void(0)
+#define LOCAL_HISTOGRAM_COUNTS_100(name, sample) void(0)
+#define LOCAL_HISTOGRAM_COUNTS_10000(name, sample) void(0)
+#define LOCAL_HISTOGRAM_COUNTS_1000000(name, sample) void(0)
+#define LOCAL_HISTOGRAM_CUSTOM_COUNTS(name, sample, min, max, bucket_count) void(0)
+#define HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) void(0)
+#define LOCAL_HISTOGRAM_PERCENTAGE(name, under_one_hundred) void(0)
+#define LOCAL_HISTOGRAM_BOOLEAN(name, sample) void(0)
+#define LOCAL_HISTOGRAM_ENUMERATION(name, sample, boundary_value) void(0)
+#define LOCAL_HISTOGRAM_CUSTOM_ENUMERATION(name, sample, custom_ranges) void(0)
+#define LOCAL_HISTOGRAM_MEMORY_KB(name, sample) void(0)
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_LOCAL_H_

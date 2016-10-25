@@ -130,14 +130,14 @@
 #define HISTOGRAM_POINTER_USE(atomic_histogram_pointer,                   \
                               constant_histogram_name,                    \
                               histogram_add_method_invocation,            \
-                              histogram_factory_get_invocation) __noop
+                              histogram_factory_get_invocation) void(0)
 #define STATIC_HISTOGRAM_POINTER_BLOCK(constant_histogram_name,               \
                                        histogram_add_method_invocation,       \
-                                       histogram_factory_get_invocation)      __noop
+                                       histogram_factory_get_invocation)      void(0)
 #define INTERNAL_HISTOGRAM_CUSTOM_COUNTS_WITH_FLAG(name, sample, min, max,     \
-                                                   bucket_count, flag) __noop
-#define INTERNAL_HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) __noop
-#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_EXPANDER(name, is_long, key) __noop
-#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_UNIQUE(name, is_long, key) __noop
+                                                   bucket_count, flag) void(0)
+#define INTERNAL_HISTOGRAM_ENUMERATION_WITH_FLAG(name, sample, boundary, flag) void(0)
+#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_EXPANDER(name, is_long, key) void(0)
+#define INTERNAL_SCOPED_UMA_HISTOGRAM_TIMER_UNIQUE(name, is_long, key) void(0)
 #endif
 #endif  // BASE_METRICS_HISTOGRAM_MACROS_INTERNAL_H_

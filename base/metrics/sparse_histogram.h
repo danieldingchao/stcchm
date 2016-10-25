@@ -51,7 +51,7 @@ namespace base {
       histogram->Add(sample); \
     } while (0)
 #else
-#define UMA_HISTOGRAM_SPARSE_SLOWLY(name, sample) __noop
+#define UMA_HISTOGRAM_SPARSE_SLOWLY(name, sample) void(0)
 #endif
 class HistogramSamples;
 class PersistentHistogramAllocator;

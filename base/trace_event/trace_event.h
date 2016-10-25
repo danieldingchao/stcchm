@@ -23,7 +23,7 @@
 #include "base/trace_event/trace_log.h"
 #include "build/build_config.h"
 
-#if 0
+#if !defined(OS_WIN)
 // By default, const char* argument values are assumed to have long-lived scope
 // and will not be copied. Use this macro to force a const char* to be copied.
 #define TRACE_STR_COPY(str) \
@@ -50,15 +50,15 @@
 #define TRACE_ID_GLOBAL(id) trace_event_internal::TraceID::GlobalId(id)
 #define TRACE_ID_LOCAL(id) trace_event_internal::TraceID::LocalId(id)
 #else
-#define TRACE_STR_COPY(str)
-#define TRACE_ID_MANGLE(id)
-#define TRACE_ID_DONT_MANGLE(id)
-#define TRACE_ID_WITH_SCOPE(scope, id)
-#define TRACE_ID_GLOBAL(id)
-#define TRACE_ID_LOCAL(id)
+#define TRACE_STR_COPY(str) __noop
+#define TRACE_ID_MANGLE(id) __noop
+#define TRACE_ID_DONT_MANGLE(id) __noop
+#define TRACE_ID_WITH_SCOPE(scope, id) __noop
+#define TRACE_ID_GLOBAL(id) __noop
+#define TRACE_ID_LOCAL(id) __noop
 #endif
 
-#if 0
+#if !defined(OS_WIN)
 // Sets the current sample state to the given category and name (both must be
 // constant strings). These states are intended for a sampling profiler.
 // Implementation note: we store category and name together because we don't
@@ -274,7 +274,7 @@ TRACE_EVENT_API_CLASS_EXPORT extern \
     INTERNAL_TRACE_EVENT_UID2(name_prefix, __LINE__)
 
 
-#if 0
+#if defined(OS_WIN)
 // Implementation detail: internal macro to create static category.
 // No barriers are needed, because this code is designed to operate safely
 // even when the unsigned char* points to garbage data (which may be the case
