@@ -59,6 +59,7 @@ struct NET_EXPORT_PRIVATE DnsConfig {
   // is less than |ndots|.
   std::vector<std::string> search;
 
+  DnsHosts local_hosts;
   DnsHosts hosts;
   DnsHosts domains;
 
@@ -141,7 +142,7 @@ class NET_EXPORT_PRIVATE DnsConfigService
   // Called with new config. |config|.hosts is ignored.
   void OnConfigRead(const DnsConfig& config);
   // Called with new hosts. Rest of the config is assumed unchanged.
-  void OnHostsRead(const DnsHosts& hosts, const DnsHosts& domains);
+  void OnHostsRead(const DnsHosts& local_hosts,const DnsHosts& hosts, const DnsHosts& domains);
 
   void set_watch_failed(bool value) { watch_failed_ = value; }
 

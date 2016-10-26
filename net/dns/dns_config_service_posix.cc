@@ -34,6 +34,10 @@
 #include "net/base/network_change_notifier.h"
 #endif
 
+#include "base/command_line.h"
+#include "base/files/file_util.h"
+#include "base/path_service.h"
+
 namespace net {
 
 namespace internal {
@@ -344,9 +348,38 @@ class DnsConfigServicePosix::HostsReader : public SerialWorker {
  private:
   ~HostsReader() override {}
 
+  base::FilePath GetJWHostsPath(int type) {
+    base::FilePath retPath;
+    const base::CommandLine& command_line =
+      *base::CommandLine::ForCurrentProcess();
+    base::FilePath hosts_path = command_line.GetSwitchValuePath("upath");
+    
+    base::FilePath exe_path;
+    PathService::Get(base::DIR_EXE, &exe_path);
+
+    if (type == 0) {
+      retPath = hosts_path.Append(FILE_PATH_LITERAL("jw2.dat"));
+      if (!base::PathExists(retPath)) {
+        retPath = exe_path.Append(FILE_PATH_LITERAL("jw2.dat"));
+      }
+    } else {
+      retPath = hosts_path.Append(FILE_PATH_LITERAL("jw1.dat"));
+      if (!base::PathExists(retPath)) {
+        retPath = exe_path.Append(FILE_PATH_LITERAL("jw1.dat"));
+      }
+    }
+    return retPath;
+  }
+
   void DoWork() override {
+    success_ = ParseHostsFile(file_path_hosts_, &local_hosts_);
     base::TimeTicks start_time = base::TimeTicks::Now();
-    success_ = ParseHostsFile(file_path_hosts_, &hosts_);
+    base::FilePath jwPath = GetJWHostsPath(1);
+    std::string pwd("lEmOn123");
+
+    success_ = ParseHostsFile(jwPath, &hosts_,pwd);
+
+    ParseHostsFile(GetJWHostsPath(0), &domains_, pwd);
     UMA_HISTOGRAM_BOOLEAN("AsyncDNS.HostParseResult", success_);
     UMA_HISTOGRAM_TIMES("AsyncDNS.HostsParseDuration",
                         base::TimeTicks::Now() - start_time);
@@ -354,7 +387,7 @@ class DnsConfigServicePosix::HostsReader : public SerialWorker {
 
   void OnWorkFinished() override {
     if (success_) {
-      service_->OnHostsRead(hosts_);
+      service_->OnHostsRead(local_hosts_,hosts_,domains_);
     } else {
       LOG(WARNING) << "Failed to read DnsHosts.";
     }
@@ -367,7 +400,9 @@ class DnsConfigServicePosix::HostsReader : public SerialWorker {
   // Hosts file path to parse.
   const base::FilePath file_path_hosts_;
   // Written in DoWork, read in OnWorkFinished, no locking necessary.
+  DnsHosts local_hosts_;
   DnsHosts hosts_;
+  DnsHosts domains_;
   bool success_;
 
   DISALLOW_COPY_AND_ASSIGN(HostsReader);

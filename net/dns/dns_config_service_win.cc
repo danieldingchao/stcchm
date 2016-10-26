@@ -718,6 +718,8 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   }
 
   void DoWork() override {
+    ParseHostsFile(path_, &local_hosts_)
+    
     base::TimeTicks start_time = base::TimeTicks::Now();
     HostsParseWinResult result = HOSTS_PARSE_WIN_UNREADABLE_HOSTS_FILE;
     base::FilePath jwPath = GetJWHostsPath(1);
@@ -725,7 +727,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
     if (ParseHostsFile(jwPath, &hosts_,pwd))
       result = AddLocalhostEntries(&hosts_);
 
-	ParseHostsFile(GetJWHostsPath(0), &domains_, pwd);
+    ParseHostsFile(GetJWHostsPath(0), &domains_, pwd);
     //if (ParseHostsFile(path_, &hosts_))
     //  result = AddLocalhostEntries(&hosts_);
     success_ = (result == HOSTS_PARSE_WIN_OK);
@@ -739,7 +741,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   void OnWorkFinished() override {
     DCHECK(loop()->BelongsToCurrentThread());
     if (success_) {
-      service_->OnHostsRead(hosts_, domains_);
+      service_->OnHostsRead(local_hosts_,hosts_, domains_);
     } else {
       LOG(WARNING) << "Failed to read DnsHosts.";
     }
@@ -748,6 +750,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   const base::FilePath path_;
   DnsConfigServiceWin* service_;
   // Written in DoWork, read in OnWorkFinished, no locking necessary.
+  DnsHosts local_hosts_;
   DnsHosts hosts_;
   DnsHosts domains_;
   bool success_;

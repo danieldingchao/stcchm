@@ -123,6 +123,7 @@ if (!is_android && !is_mac) {
     public_deps = []
     deps = [
       "//build/config/sanitizers:deps",
+      ":lemon_files",
     ]
 
     data = [
@@ -156,7 +157,6 @@ if (!is_android && !is_mac) {
       deps += [
         ":chrome_dll",
         ":chrome_exe_version",
-        ":lemon_files",
         ":copy_first_run",
         ":file_pre_reader",
         ":visual_elements_resources",

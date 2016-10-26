@@ -2229,14 +2229,32 @@ bool HostResolverImpl::ServeFromHosts(const Key& key,
   // HOSTS lookups are case-insensitive.
   std::string hostname = base::ToLowerASCII(key.hostname);
 
+  const DnsHosts& local_hosts = dns_client_->GetConfig()->local_hosts;
   const DnsHosts& hosts = dns_client_->GetConfig()->hosts;
   const DnsHosts& domains = dns_client_->GetConfig()->domains;
+
 
   // If |address_family| is ADDRESS_FAMILY_UNSPECIFIED other implementations
   // (glibc and c-ares) return the first matching line. We have more
   // flexibility, but lose implicit ordering.
   // We prefer IPv6 because "happy eyeballs" will fall back to IPv4 if
   // necessary.
+  if (key.address_family == ADDRESS_FAMILY_IPV6 ||
+      key.address_family == ADDRESS_FAMILY_UNSPECIFIED) {
+    DnsHosts::const_iterator it = local_hosts.find(
+        DnsHostsKey(hostname, ADDRESS_FAMILY_IPV6));
+    if (it != local_hosts.end())
+      addresses->push_back(IPEndPoint(it->second, info.port()));
+  }
+
+  if (key.address_family == ADDRESS_FAMILY_IPV4 ||
+      key.address_family == ADDRESS_FAMILY_UNSPECIFIED) {
+    DnsHosts::const_iterator it = local_hosts.find(
+        DnsHostsKey(hostname, ADDRESS_FAMILY_IPV4));
+    if (it != local_hosts.end())
+      addresses->push_back(IPEndPoint(it->second, info.port()));
+  }
+
   if (key.address_family == ADDRESS_FAMILY_IPV6 ||
       key.address_family == ADDRESS_FAMILY_UNSPECIFIED) {
     DnsHosts::const_iterator it = hosts.find(

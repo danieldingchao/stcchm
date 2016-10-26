@@ -752,12 +752,9 @@ void ChromeMainDelegate::PreSandboxStartup() {
     InitializeUserDataDir();
     base::FilePath jwPath;
     if (PathService::Get(chrome::DIR_USER_DATA, &jwPath)) {
-      if (base::PathExists(jwPath.Append(L"jw1.dat")) ||
-        base::PathExists(jwPath.Append(L"jw2.dat"))) {
-        base::CommandLine* command_line =
+      base::CommandLine* command_line =
           base::CommandLine::ForCurrentProcess();
-        command_line->AppendSwitchPath("upath", jwPath);
-      }
+      command_line->AppendSwitchPath("upath", jwPath);
     }
 #if defined(OS_WIN) && !defined(CHROME_MULTIPLE_DLL_CHILD)
     if (downgrade::IsMSIInstall()) {
