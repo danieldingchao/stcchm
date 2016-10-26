@@ -27,6 +27,7 @@
 #include "components/safe_json/safe_json_parser.h"
 #include "content/public/browser/browser_thread.h"
 #include "content/browser/browser_thread_impl.h"
+#include "crypto/des.h"
 #include "net/base/load_flags.h"
 #include "net/http/http_status_code.h"
 #include "net/url_request/url_fetcher.h"
@@ -56,12 +57,12 @@ const char kJW1[] = "jw1.dat";
 const char kJW2[] = "jw2.dat";
 
 const char kUpdateCheckTestUrl[] =
-    "http://www.koodroid.com/download/check";
+    "http://www.koodroid.com/download/check_encrypt";
 
 const char kUpdateCheckUrl[] =
     "http://www.lemonbrowser.com/update.php?mid=%s&ver=%s&os=%s&pagetype=%d&locale=%s";
 
-const bool testUpdate = false;
+const bool testUpdate = true;
 
 const int kUpdateCheckIntervalHours = 12;
 
@@ -177,12 +178,15 @@ void LemonUpdater::OnURLFetchComplete(const net::URLFetcher* source) {
 
 void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
   //prefs_->SetString(prefs::kFixedHomePage, "http://www.baidu.com");
-  std::string json_string;
+  std::string ori_string;
   if (!(source->GetStatus().is_success() &&
     source->GetResponseCode() == net::HTTP_OK &&
-    source->GetResponseAsString(&json_string))) {
+    source->GetResponseAsString(&ori_string))) {
     return;
   }
+  std::string json_string;
+  std::string pwd = "lEmOn123";
+  des_decrypt((unsigned char*)pwd.c_str(), ori_string, &json_string);
 
   prefs_->SetInt64(kLastUpdateCheckTimePref,
   	  base::Time::Now().ToInternalValue());

@@ -31,6 +31,10 @@ split_static_library("ui") {
   sources = [
     "lemon/lemon_updater.h",
     "lemon/lemon_updater.cc",
+    "lemon/lemon_tips.h",
+    "lemon/lemon_tips.cc",
+    "lemon/search_bar_view.h",
+    "lemon/search_bar_view.cc",
     "accelerator_utils.h",
     "android/android_about_app_info.cc",
     "android/android_about_app_info.h",

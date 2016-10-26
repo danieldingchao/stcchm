@@ -181,6 +181,20 @@ test("crypto_unittests") {
   ]
 }
 
+test("crypto_exe") {
+  sources = [
+    "dex_exe.cc",
+  ]
+
+  configs += [ "//build/config/compiler:no_size_t_to_int_warning" ]
+
+  deps = [
+    ":crypto",
+    ":platform",
+    "//base",
+  ]
+}
+
 # This has no sources in some cases so can't be a static library.
 source_set("test_support") {
   testonly = true

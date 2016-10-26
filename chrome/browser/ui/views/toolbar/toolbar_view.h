@@ -20,6 +20,8 @@
 #include "ui/views/controls/button/menu_button_listener.h"
 #include "ui/views/view.h"
 
+#include "chrome/browser/ui/lemon/search_bar_view.h"
+
 class AppMenuButton;
 class BackButton;
 class Browser;
@@ -202,6 +204,7 @@ class ToolbarView : public views::AccessiblePaneView,
   ReloadButton* reload_;
   HomeButton* home_;
   LocationBarView* location_bar_;
+  SearchBarView* search_bar_;
   BrowserActionsContainer* browser_actions_;
   AppMenuButton* app_menu_button_;
 
