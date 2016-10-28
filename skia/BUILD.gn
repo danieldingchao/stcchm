@@ -35,6 +35,7 @@ config("skia_config") {
   include_dirs = [
     "config",
     "ext",
+    "//third_party/freetype2/src/include",
     "//third_party/skia/include/c",
     "//third_party/skia/include/config",
     "//third_party/skia/include/core",

@@ -274,7 +274,7 @@ TRACE_EVENT_API_CLASS_EXPORT extern \
     INTERNAL_TRACE_EVENT_UID2(name_prefix, __LINE__)
 
 
-#if defined(OS_WIN)
+#if !defined(OS_WIN)
 // Implementation detail: internal macro to create static category.
 // No barriers are needed, because this code is designed to operate safely
 // even when the unsigned char* points to garbage data (which may be the case

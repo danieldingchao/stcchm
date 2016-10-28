@@ -8,6 +8,7 @@ config("freetype2_config") {
   include_dirs = [
     "include",
     "src/include",
+    "/usr/include/freetype2",
   ]
 }
 

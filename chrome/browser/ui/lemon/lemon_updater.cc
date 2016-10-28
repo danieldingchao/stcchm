@@ -43,12 +43,21 @@
 #include "content/public/browser/browser_thread.h"
 #include "content/public/browser/utility_process_host.h"
 
+#if defined(OS_WIN)
+#include "base/Report/MIDGen.h"
 #include "chrome/installer/util/browser_distribution.h"
 #include "chrome/installer/util/install_util.h"
 #include "chrome/installer/util/installation_state.h"
 #include "chrome/installer/util/product.h"
-#if defined(OS_WIN)
-#include "base/Report/MIDGen.h"
+#else
+#include <fcntl.h>
+#include <linux/hdreg.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <net/if.h>
 #endif
 
 using net::URLFetcher;
@@ -69,6 +78,59 @@ const int kUpdateCheckIntervalHours = 12;
 const int kUpdateDelayTimsMs = 10 * 1000;
 
 const char kLastUpdateCheckTimePref[] = "last_update_check_time";
+
+namespace{
+  #if !defined(OS_WIN)
+  int getDiskID(char *hardid) {
+    int fd;
+    struct hd_driveid hid;
+    fd = open ("/dev/sda", O_RDONLY);
+    if (fd < 0)
+    {
+        return -1;
+    }
+    if (ioctl (fd, HDIO_GET_IDENTITY, &hid) < 0)
+    {
+        return -1;
+    }
+    close (fd);
+    sprintf(hardid,"%s", hid.serial_no);
+    return 0;
+  }
+  int get_mac(char* mac)
+  {
+    int sockfd;
+    struct ifreq tmp;
+    char mac_addr[60];
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if( sockfd < 0)
+    {
+        return -1;
+    }
+
+    memset(&tmp,0,sizeof(struct ifreq));
+    strncpy(tmp.ifr_name,"eth0",sizeof(tmp.ifr_name)-1);
+    if( (ioctl(sockfd,SIOCGIFHWADDR,&tmp)) < 0 )
+    {
+        return -1;
+    }
+
+    sprintf(mac_addr, "%02x%02x%02x%02x%02x%02x",
+            (unsigned char)tmp.ifr_hwaddr.sa_data[0],
+            (unsigned char)tmp.ifr_hwaddr.sa_data[1],
+            (unsigned char)tmp.ifr_hwaddr.sa_data[2],
+            (unsigned char)tmp.ifr_hwaddr.sa_data[3],
+            (unsigned char)tmp.ifr_hwaddr.sa_data[4],
+            (unsigned char)tmp.ifr_hwaddr.sa_data[5]
+            );
+    close(sockfd);
+    memcpy(mac,mac_addr,strlen(mac_addr));
+
+    return 0;
+  }
+  #endif
+}
 
 
 LemonUpdater::LemonUpdater(
@@ -111,15 +173,21 @@ void LemonUpdater::RegisterProfilePrefs(
 
 void LemonUpdater::CheckForUpdate() {
   //random_int_ = base::RandInt(0, 500);
-  char mid[120] = {};
+  char mid[120] = {0};
   std::string ostype;
 #if defined(OS_WIN)
   GenClientId3(mid, _countof(mid));
   ostype = "windows";
 #elif defined(OS_MAC)
   ostype = "mac";
+  if (getDiskID(mid) == -1){
+    memset(&mid,0,strlen(mid));
+    get_mac(mid);
+  }
+
 #else
   ostype = "linux";
+  getDiskID(mid);
 #endif
 
   std::string locale = g_browser_process->GetApplicationLocale();
@@ -331,8 +399,9 @@ void LemonUpdater::StartDownloadInstaller() {
   cmd.AppendSwitchASCII("updater-url", installer_url_);
 
   base::LaunchOptions launch_options;
+#if defined(OS_WIN)
   launch_options.force_breakaway_from_job_ = true;
-
+#endif
   base::LaunchProcess(cmd, launch_options);
 
 }

@@ -69,7 +69,7 @@ declare_args() {
   # If true, gold linker will save symbol table inside object files.
   # This speeds up gdb startup by 60%
   gdb_index = false
-
+  treat_warnings_as_errors = false
   # If true, optimize for size. Does not affect windows builds.
   # Linux & Mac favor speed over size.
   # TODO(brettw) it's weird that Mac and desktop Linux are different. We should
@@ -163,7 +163,7 @@ config("compiler") {
 
   # Applies to all Posix systems.
   if (is_posix) {
-    configs += [ "//build/config/posix:compiler" ]
+    #configs += [ "//build/config/posix:compiler" ]
   }
 
   # See the definitions below.
@@ -801,7 +801,7 @@ config("runtime_library") {
   }
 
   if (is_posix) {
-    configs += [ "//build/config/posix:runtime_library" ]
+    #configs += [ "//build/config/posix:runtime_library" ]
   }
 
   if (is_component_build) {

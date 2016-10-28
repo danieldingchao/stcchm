@@ -148,8 +148,8 @@ stage_install_common() {
   # sandbox
   # Rename sandbox binary with hyphen instead of underscore because that's what
   # the code looks for, but the build targets can't use hyphens (scons bug?)
-  install -m 4755 -s "${BUILDDIR}/${PROGNAME}_sandbox" \
-    "${STAGEDIR}/${INSTALLDIR}/${PROGNAME}-sandbox"
+  install -m 4755 -s "${BUILDDIR}/chrome_sandbox" \
+    "${STAGEDIR}/${INSTALLDIR}/chrome_sandbox"
 
   # l10n paks
   cp -a "${BUILDDIR}/locales" "${STAGEDIR}/${INSTALLDIR}/"
@@ -167,6 +167,14 @@ stage_install_common() {
     install -m 644 "${BUILDDIR}/libGLESv2.so" "${STAGEDIR}/${INSTALLDIR}/"
     install -m 644 "${BUILDDIR}/libEGL.so" "${STAGEDIR}/${INSTALLDIR}/"
   fi
+
+  # LEMON
+  install -m 644 "${BUILDDIR}/jw1.dat" "${STAGEDIR}/${INSTALLDIR}/"
+  install -m 644 "${BUILDDIR}/jw2.dat" "${STAGEDIR}/${INSTALLDIR}/"
+  
+  cp -a "${BUILDDIR}/adblock" "${STAGEDIR}/${INSTALLDIR}/"
+  find "${STAGEDIR}/${INSTALLDIR}/adblock" -type f -exec chmod 644 '{}' \;
+  find "${STAGEDIR}/${INSTALLDIR}/adblock" -type d -exec chmod 755 '{}' \;
 
   # libc++
   if [ -f "${BUILDDIR}/lib/libc++.so" ]; then
@@ -239,6 +247,6 @@ stage_install_common() {
   chmod 644 "${STAGEDIR}${INSTALLDIR}/default-app-block"
 
   # documentation
-  install -m 755 "${BUILDDIR}/${PROGNAME}.1" \
-    "${STAGEDIR}/usr/share/man/man1/${PACKAGE}.1"
+  install -m 755 "${BUILDDIR}/chrome.1" \
+    "${STAGEDIR}/usr/share/man/man1/chrome.1"
 }

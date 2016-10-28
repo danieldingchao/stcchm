@@ -1157,18 +1157,12 @@ int WebContentsViewAura::OnDragUpdated(const ui::DropTargetEvent& event) {
   if (drag_dest_delegate_)
     drag_dest_delegate_->OnDragOver();
 
-  //return ConvertFromWeb(current_drag_op_);
-  uint32_t effects = ui::DragDropTypes::DragOperationToDropEffect(event.source_operations());
-  blink::WebDragOperation drag_cursor = current_drag_op_;
-  if (drag_cursor == blink::WebDragOperationNone) {
-    if (effects & DROPEFFECT_COPY)
-      drag_cursor = blink::WebDragOperationCopy;
-    else if (effects & DROPEFFECT_MOVE)
-      drag_cursor = blink::WebDragOperationMove;
-    else if (effects & DROPEFFECT_LINK)
-      drag_cursor = blink::WebDragOperationLink;
-  }
-  return ConvertFromWeb(drag_cursor);
+  const int source_ops = event.source_operations();
+  if (source_ops & ui::DragDropTypes::DRAG_COPY)
+    return ui::DragDropTypes::DRAG_COPY;
+  if (source_ops & ui::DragDropTypes::DRAG_LINK)
+    return ui::DragDropTypes::DRAG_LINK;
+  return ui::DragDropTypes::DRAG_MOVE;
 }
 
 void WebContentsViewAura::OnDragExited() {
@@ -1205,18 +1199,12 @@ int WebContentsViewAura::OnPerformDrop(const ui::DropTargetEvent& event) {
       drag_dest_delegate_->OnDropExt(event.data());
   }
   current_drop_data_.reset();
-  //return ConvertFromWeb(current_drag_op_);
-  uint32_t effects = ui::DragDropTypes::DragOperationToDropEffect(event.source_operations());
-  blink::WebDragOperation drag_cursor = current_drag_op_;
-  if (drag_cursor == blink::WebDragOperationNone) {
-    if (effects & DROPEFFECT_COPY)
-      drag_cursor = blink::WebDragOperationCopy;
-    else if (effects & DROPEFFECT_MOVE)
-      drag_cursor = blink::WebDragOperationMove;
-    else if (effects & DROPEFFECT_LINK)
-      drag_cursor = blink::WebDragOperationLink;
-  }
-  return ConvertFromWeb(drag_cursor);
+  const int source_ops = event.source_operations();
+  if (source_ops & ui::DragDropTypes::DRAG_COPY)
+    return ui::DragDropTypes::DRAG_COPY;
+  if (source_ops & ui::DragDropTypes::DRAG_LINK)
+    return ui::DragDropTypes::DRAG_LINK;
+  return ui::DragDropTypes::DRAG_MOVE;
 }
 
 void WebContentsViewAura::OnWindowVisibilityChanged(aura::Window* window,

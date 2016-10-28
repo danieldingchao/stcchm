@@ -85,8 +85,10 @@ void WebDragBookmarkHandlerAura::OnDropExt(const ui::OSExchangeData& data) {
   }
 
   WindowOpenDisposition eWindowOpenDisposition = WindowOpenDisposition::NEW_BACKGROUND_TAB;
+#if defined(OS_WIN)
   if (HIBYTE(GetKeyState(VK_SHIFT)))
     eWindowOpenDisposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+#endif
 
   // if HasPlainTextURL, HasURL also return true
   if (data.HasURL(ui::OSExchangeData::CONVERT_FILENAMES)) {
@@ -105,7 +107,7 @@ void WebDragBookmarkHandlerAura::OnDropExt(const ui::OSExchangeData& data) {
   } else if (data.HasString()) {
     base::string16 plain_text;
     data.GetString(&plain_text);
-    if (browser && 0 != plain_text.find(L"javascript:")) {
+    if (browser/* && 0 != plain_text.find(FILE_PATH_LITERAL("javascript:")*/) {
       if (!plain_text.empty()) {
         browser->OnSearchText(plain_text);
       }

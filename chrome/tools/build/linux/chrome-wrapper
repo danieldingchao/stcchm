@@ -92,8 +92,8 @@ fi
 # Always use our ffmpeg and other shared libs.
 export LD_LIBRARY_PATH="$HERE:$HERE/lib:$HERE/lib.target${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
-MISSING_LIBS=$(ldd "$HERE/chrome" 2> /dev/null |grep "not found$" | cut -d" " -f 1|sed 's/\t//')
-CHROME_ARCH=$(check_executable "$HERE/chrome")
+MISSING_LIBS=$(ldd "$HERE/lemon" 2> /dev/null |grep "not found$" | cut -d" " -f 1|sed 's/\t//')
+CHROME_ARCH=$(check_executable "$HERE/lemon")
 uname -m | grep -qs x86_64
 if [ $? = 1 ]; then
     LIBDIRS="/lib /lib32 /usr/lib /usr/lib32"
@@ -160,4 +160,4 @@ while [ "$#" -gt 0 ]; do
 done
 set -- "${ARGS[@]}" "$@"
 
-exec $CMD_PREFIX "$HERE/chrome" "$@"
+exec $CMD_PREFIX "$HERE/lemon" "$@"

@@ -159,7 +159,7 @@ process_version("save_build_info") {
   process_only = true
   sources = [
     "//build/util/LASTCHANGE",
-    "//chrome/VERSION",
+    "//chrome/VERSION_LEMON",
     branding_file_path,
   ]
   output = "$root_out_dir/installer/version.txt"
@@ -178,6 +178,7 @@ group("installer_deps") {
     ":save_build_info",
     ":theme_files",
     "//chrome",
+    "//chrome:lemon_files",
     "//chrome:packed_resources",
     "//sandbox/linux:chrome_sandbox",
   ]
@@ -220,22 +221,24 @@ template("linux_package") {
   packaging_files_binaries = [
     # TODO(mmoss) Any convenient way to get all the relevant build
     # files? (e.g. all locales, resources, etc.)
-    "$root_out_dir/chrome",
+    "$root_out_dir/lemon",
     "$root_out_dir/chrome_sandbox",
+    "$root_out_dir/jw1.dat",
+    "$root_out_dir/jw2.dat",
     "$root_out_dir/xdg-mime",
     "$root_out_dir/xdg-settings",
     "$root_out_dir/locales/en-US.pak",
 
-    "$root_out_dir/nacl_helper",
-    "$root_out_dir/nacl_helper_bootstrap",
+   # "$root_out_dir/nacl_helper",
+   # "$root_out_dir/nacl_helper_bootstrap",
   ]
 
   if (current_cpu == "x86") {
-    packaging_files_binaries += [ "$root_out_dir/nacl_irt_x86_32.nexe" ]
+    #packaging_files_binaries += [ "$root_out_dir/nacl_irt_x86_32.nexe" ]
   } else if (current_cpu == "x64") {
-    packaging_files_binaries += [ "$root_out_dir/nacl_irt_x86_64.nexe" ]
+    #packaging_files_binaries += [ "$root_out_dir/nacl_irt_x86_64.nexe" ]
   } else if (current_cpu == "arm") {
-    packaging_files_binaries += [ "$root_out_dir/nacl_irt_arm.nexe" ]
+    #packaging_files_binaries += [ "$root_out_dir/nacl_irt_arm.nexe" ]
   }
 
   # The widevine BUILD.gn only produces shared libraries for x86 and x64

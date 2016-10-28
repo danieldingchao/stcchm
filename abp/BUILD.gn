@@ -1,3 +1,5 @@
+import("//build/config/features.gni")
+
 component("abp") {
   sources = [
     "abp.cc",
@@ -14,7 +16,7 @@ component("abp") {
   ]
   deps = [
     ":lemon_files",
-    "//base:base",
+    "//base",
     "//base/third_party/dynamic_annotations:dynamic_annotations",
     "//net",
     "//url",

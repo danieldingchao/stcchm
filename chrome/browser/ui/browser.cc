@@ -2611,9 +2611,10 @@ void Browser::OnSearchText(const base::string16& text) {
 
   if (navigation_url.is_valid()) {
     WindowOpenDisposition eWindowOpenDisposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+#if defined(OS_WIN)
     if (HIBYTE(GetKeyState(VK_SHIFT)))
       eWindowOpenDisposition = WindowOpenDisposition::NEW_BACKGROUND_TAB;
-
+#endif
     chrome::NavigateParams params(this, navigation_url, ui::PAGE_TRANSITION_LINK);
     params.disposition = eWindowOpenDisposition;
     params.tabstrip_add_types = TabStripModel::ADD_NONE;

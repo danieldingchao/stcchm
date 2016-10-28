@@ -66,9 +66,9 @@ scoped_refptr<Importer> CreateImporterByType(ImporterType type) {
 		return new MaxthonBrowserImporter();
 	case TYPE_LOCAL:
 		return new GoogleChromeImporter(GoogleChromeImporter::TW_LOCAL);
-#endif
 	case TYPE_HTML:
 		return new HtmlImporter();
+#endif
     case TYPE_BOOKMARKS_FILE:
       return new BookmarksFileImporter();
     case TYPE_FIREFOX:

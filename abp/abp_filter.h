@@ -4,6 +4,7 @@
 #include "abp/abp.h"
 #include "base/logging.h"
 #include <map>
+#include <memory>
 
 namespace abp{
 //////////////////////////////////////////////////////////////////////////

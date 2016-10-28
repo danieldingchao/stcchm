@@ -382,8 +382,10 @@ void BrowserTabStripController::CreateNewTab(const ui::Event& event) {
     }
     if (!clipbord.empty()) {
       base::string16 trimed16 = base::CollapseWhitespace(clipbord, false);
-      std::vector<base::string16> vector_open_urls;
-      base::WStringTokenizer tokenizer(trimed16, L" ");
+      std::vector<base::string16> vector_open_urls;/*
+      base::string16 delims;
+      //base::WStringTokenizer tokenizer(trimed16, " ");
+      base::WStringTokenizer tokenizer(trimed16, base::ASCIIToUTF16(" ").c_str());
       while (tokenizer.GetNext())
         vector_open_urls.push_back(tokenizer.token());
 
@@ -395,7 +397,7 @@ void BrowserTabStripController::CreateNewTab(const ui::Event& event) {
               base::IntToString16(vector_open_urls.size())));
         if (messagebox_result != chrome::MESSAGE_BOX_RESULT_YES)
           return;
-      }
+      }*/
 
       std::vector<base::string16>::iterator it;
       for (it = vector_open_urls.begin(); it != vector_open_urls.end(); ++it) {

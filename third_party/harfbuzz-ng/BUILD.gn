@@ -27,7 +27,10 @@ if (use_system_harfbuzz) {
   }
 } else {
   config("harfbuzz-ng_config") {
-    include_dirs = [ "src" ]
+    include_dirs = [ 
+      "src",
+      "//third_party/freetype2/src/include",
+    ]
   }
 
   config("harfbuzz_warnings") {
