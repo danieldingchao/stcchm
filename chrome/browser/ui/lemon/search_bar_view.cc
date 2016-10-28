@@ -11,7 +11,10 @@
 #include "base/i18n/rtl.h"
 #include "base/stl_util.h"
 #include "chrome/browser/ui/browser.h"
+#include "chrome/browser/ui/views/location_bar/location_bar_layout.h"
+#include "chrome/browser/ui/views/location_bar/background_with_1_px_border.h"
 #include "chrome/grit/theme_resources.h"
+#include "ui/native_theme/native_theme.h"
 #include "ui/views/controls/label.h"
 #include "ui/views/widget/widget.h"
 #include "ui/base/resource/resource_bundle.h"
@@ -42,6 +45,15 @@ SearchBarView::~SearchBarView() {
 
 void SearchBarView::Init(Browser* browser) {
   browser_ = browser;
+  SetPaintToLayer(true);
+  layer()->SetFillsBoundsOpaquely(false);
+  layer()->SetMasksToBounds(true);
+  const ui::NativeTheme* native_theme = GetNativeTheme();
+
+  SkColor color = native_theme->GetSystemColor(
+      ui::NativeTheme::kColorId_TextfieldDefaultBackground);
+  set_background(
+    new BackgroundWith1PxBorder(color, kBorderColor));
   icon_view_ = new views::ImageView();
   ResourceBundle& rb = ui::ResourceBundle::GetSharedInstance();
   const gfx::ImageSkia& search_icon_image =
@@ -56,6 +68,12 @@ void SearchBarView::Init(Browser* browser) {
 }
 
 void SearchBarView::Layout() {
+  LocationBarLayout leading_decorations(
+    LocationBarLayout::LEFT_EDGE, 20,
+    20);
+  leading_decorations.AddDecoration(0, height(), true,
+    0, 0,
+    0, icon_view_);
   int x = 4;
   int y = (height() - icon_view_->GetPreferredSize().height()) / 2;
   icon_view_->SetBounds(x, y, icon_view_->GetPreferredSize().width(),
@@ -65,9 +83,9 @@ void SearchBarView::Layout() {
   gfx::Insets insets = text_field_->GetInsets();
   insets.Set(insets.left() + icon_view_->GetPreferredSize().width() + 6,
     insets.top(), insets.right(), insets.bottom());
+  text_field_->SetBoundsRect(gfx::Rect(20, 2, width() - 24, height()-4));
   text_field_->SetBorder(
-    views::Border::CreateEmptyBorder(0, 30, 0, 50));
-  //insets.left = insets.left + icon_view_->GetPreferredSize().width() + 6;
+    views::Border::CreateEmptyBorder(0, 0, 0, 0));
 }
 
 bool SearchBarView::HandleKeyEvent(views::Textfield* sender,
