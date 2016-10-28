@@ -213,6 +213,30 @@ are declared in build/common.gypi.
 	<message name="IDS_ABOUT_KERNEL_VERSION" use_name_for_id = "true" desc="start up show homepage">
       Kernel Version <ph name="PRODUCT_VERSION">$1<ex>15.0.865.0</ex></ph>
     </message>
+      <message name="IDS_FACEBOOK_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        Facebook - Log In or Sign Up
+      </message>
+      <message name="IDS_GITHUB_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        How people build software GitHub
+      </message>
+      <message name="IDS_STACKOVERFLOW_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        Stack Overflow
+      </message>
+      <message name="IDS_ANDROID_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        Android Developers
+      </message>
+      <message name="IDS_CHROMIUM_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        The Chromium Projects
+      </message>
+      <message name="IDS_TWITTER_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        Twitter. It's what's happening.
+      </message>
+      <message name="IDS_ANDROIDXREF_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        AndroidXRef
+      </message>
+      <message name="IDS_TENSORFLOW_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
+        TensorFlow an Open Source Software Library for Machine Intelligence
+      </message>
 		<message name="IDS_SPONSOR_US" use_name_for_id="true" desc="Lemon Browser is a free software">
         Donate Lemon Browser.
       </message>

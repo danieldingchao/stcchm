@@ -31,6 +31,14 @@
       <structure type="chrome_scaled_image" name="IDR_MOUSEGESTURE_ARROW_DOWN" file="lemon/gesture_arrow_down.png" />
       <structure type="chrome_scaled_image" name="IDR_WECHAT_PAY" file="lemon/pay.png" />
       <structure type="chrome_scaled_image" name="IDR_BAIDU" file="lemon/baidu.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_GITHUB" file="ntp/github.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_STACKOVERFLOW" file="ntp/stackoverflow.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_TENSORFLOW" file="ntp/tensorflow.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_FACEBOOK" file="ntp/facebook.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_ANDROID" file="ntp/android.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_CHROMIUM" file="ntp/chromium.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_TWITTER" file="ntp/twitter.png" />
+      <structure type="chrome_scaled_image" name="IDR_NTP_ANDROIDXREF" file="ntp/androidxref.png" />
       <structure type="chrome_scaled_image" name="IDR_ACCESSED_COOKIES" file="common/accessed_cookies.png" />
       <structure type="chrome_scaled_image" name="IDR_ALLOWED_BACKGROUND_SYNC" file="common/allowed_background_sync.png" />
       <structure type="chrome_scaled_image" name="IDR_ALLOWED_CAMERA" file="common/allowed_camera.png" />

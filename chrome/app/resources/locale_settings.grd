@@ -202,6 +202,31 @@
         8
       </message>
 
+      <message name="IDS_FACEBOOK_URL" translateable="false">
+        https://www.facebook.com/
+      </message>
+      <message name="IDS_GITHUB_URL" translateable="false">
+        https://www.github.com/
+      </message>
+      <message name="IDS_STACKOVERFLOW_URL" translateable="false">
+        https://stackoverflow.com/
+      </message>
+      <message name="IDS_ANDROID_URL" translateable="false">
+        https://developer.android.com/index.html
+      </message>
+      <message name="IDS_CHROMIUM_URL" translateable="false">
+        https://www.chromium.org/
+      </message>
+      <message name="IDS_TWITTER_URL" translateable="false">
+        https://twitter.com/
+      </message>
+      <message name="IDS_ANDROIDXREF_URL" translateable="false">
+        http://androidxref.com/6.0.1_r10/
+      </message>
+      <message name="IDS_TENSORFLOW_URL" translateable="false">
+        https://www.tensorflow.org/
+      </message>
+
       <!-- The URL for the the Welcome to Chrome page shown on first run. -->
       <message name="IDS_WELCOME_PAGE_URL" translateable="false">
         http://tools.google.com/chrome/intl/[GRITLANGCODE]/welcome.html
