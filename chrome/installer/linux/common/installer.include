@@ -176,6 +176,10 @@ stage_install_common() {
   find "${STAGEDIR}/${INSTALLDIR}/adblock" -type f -exec chmod 644 '{}' \;
   find "${STAGEDIR}/${INSTALLDIR}/adblock" -type d -exec chmod 755 '{}' \;
 
+  cp -a "${BUILDDIR}/PepperFlash" "${STAGEDIR}/${INSTALLDIR}/"
+  find "${STAGEDIR}/${INSTALLDIR}/PepperFlash" -type f -exec chmod 644 '{}' \;
+  find "${STAGEDIR}/${INSTALLDIR}/PepperFlash" -type d -exec chmod 755 '{}' \;
+
   # libc++
   if [ -f "${BUILDDIR}/lib/libc++.so" ]; then
     install -m 755 -d "${STAGEDIR}/${INSTALLDIR}/lib/"
