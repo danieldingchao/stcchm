@@ -718,7 +718,7 @@ class DnsConfigServiceWin::HostsReader : public SerialWorker {
   }
 
   void DoWork() override {
-    ParseHostsFile(path_, &local_hosts_)
+    ParseHostsFile(path_, &local_hosts_);
     
     base::TimeTicks start_time = base::TimeTicks::Now();
     HostsParseWinResult result = HOSTS_PARSE_WIN_UNREADABLE_HOSTS_FILE;
