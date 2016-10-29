@@ -20,6 +20,7 @@ const char kAdfilterStatisticCount[] = "adfilter.statistic_day_count";
 // user adfilter rulse
 const char kUserAdfilterRulseLastDir[] = "adfilter.LastDirectory";
 const char KUserAdfilterRulseDisableList[] = "adfilter.disableList";
+const char kClearBrowsingDataOnExitKey[] = "browser.clear_browsing_data_on_exit_key";
 
 const char kMouseGestureProfile[] = "MouseGesture";
 const char kMGPOpenLabelInBookmark[] = "MouseGesture.MouseGestureOpenLabelInBookmark";

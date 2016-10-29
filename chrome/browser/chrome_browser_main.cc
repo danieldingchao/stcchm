@@ -279,6 +279,11 @@
 #include "chrome/browser/metrics/desktop_session_duration/desktop_session_duration_tracker.h"
 #endif
 
+#include "chrome/browser/browsing_data/browsing_data_remover.h"
+#include "chrome/browser/browsing_data/browsing_data_helper.h"
+#include "chrome/browser/browsing_data/browsing_data_remover_factory.h"
+#include "components/browsing_data/core/pref_names.h"
+
 using content::BrowserThread;
 
 namespace {
@@ -2145,6 +2150,7 @@ void ChromeBrowserMainParts::PostMainMessageLoopRun() {
   for (size_t i = 0; i < chrome_extra_parts_.size(); ++i)
     chrome_extra_parts_[i]->PostMainMessageLoopRun();
 
+  ClearBrowsingDataOnExit();
   // Some tests don't set parameters.ui_task, so they started translate
   // language fetch that was never completed so we need to cleanup here
   // otherwise it will be done by the destructor in a wrong thread.
@@ -2232,4 +2238,87 @@ void ChromeBrowserMainParts::PostDestroyThreads() {
 
 void ChromeBrowserMainParts::AddParts(ChromeBrowserMainExtraParts* parts) {
   chrome_extra_parts_.push_back(parts);
+}
+
+bool g_on_exit_clean = false;
+void ChromeBrowserMainParts::ClearBrowsingDataOnExit() {
+  if (!profile_)
+    return;
+  g_on_exit_clean = true;
+
+  PrefService* prefs = profile_->GetPrefs();
+  if (!prefs)
+    return;
+  if (!prefs->GetBoolean(prefs::kClearBrowsingDataOnExitKey))
+    return ;
+
+  int site_data_mask = BrowsingDataRemover::REMOVE_SITE_DATA;
+
+  int remove_mask = 0;
+  int origin_mask = 0;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteBrowsingHistory)) {
+    remove_mask |= BrowsingDataRemover::REMOVE_HISTORY;
+  }
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteDownloadHistory)) {
+    remove_mask |= BrowsingDataRemover::REMOVE_DOWNLOADS;
+  }
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteCache))
+    remove_mask |= BrowsingDataRemover::REMOVE_CACHE;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteCookies)) {
+    remove_mask |= site_data_mask;
+    origin_mask |= BrowsingDataHelper::UNPROTECTED_WEB;
+  }
+  if (prefs->GetBoolean(browsing_data::prefs::kDeletePasswords))
+    remove_mask |= BrowsingDataRemover::REMOVE_PASSWORDS;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteFormData))
+    remove_mask |= BrowsingDataRemover::REMOVE_FORM_DATA;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteMediaLicenses))
+    remove_mask |= BrowsingDataRemover::REMOVE_MEDIA_LICENSES;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteHostedAppsData)) {
+    remove_mask |= site_data_mask;
+    origin_mask |= BrowsingDataHelper::PROTECTED_WEB;
+  }
+
+  // Record the deletion of cookies and cache.
+  BrowsingDataRemover::CookieOrCacheDeletionChoice choice =
+    BrowsingDataRemover::NEITHER_COOKIES_NOR_CACHE;
+  if (prefs->GetBoolean(browsing_data::prefs::kDeleteCookies)) {
+    choice = prefs->GetBoolean(browsing_data::prefs::kDeleteCache)
+      ? BrowsingDataRemover::BOTH_COOKIES_AND_CACHE
+      : BrowsingDataRemover::ONLY_COOKIES;
+  }
+  else if (prefs->GetBoolean(browsing_data::prefs::kDeleteCache)) {
+    choice = BrowsingDataRemover::ONLY_CACHE;
+  }
+
+  // Record the circumstances under which passwords are deleted.
+  if (prefs->GetBoolean(browsing_data::prefs::kDeletePasswords)) {
+    static const char* other_types[] = {
+      browsing_data::prefs::kDeleteBrowsingHistory,
+      browsing_data::prefs::kDeleteDownloadHistory,
+      browsing_data::prefs::kDeleteCache,
+      browsing_data::prefs::kDeleteCookies,
+      browsing_data::prefs::kDeleteFormData,
+      browsing_data::prefs::kDeleteHostedAppsData,
+      browsing_data::prefs::kDeleteMediaLicenses,
+    };
+    static size_t num_other_types = arraysize(other_types);
+    int checked_other_types = std::count_if(
+      other_types,
+      other_types + num_other_types,
+      [prefs](const std::string& pref) { return prefs->GetBoolean(pref); });
+  }
+
+  BrowsingDataRemover* remover_ = BrowsingDataRemoverFactory::GetForBrowserContext(profile_);
+  int period_selected = prefs->GetInteger(browsing_data::prefs::kDeleteTimePeriod);
+  remover_->Remove(
+    BrowsingDataRemover::Period(
+      static_cast<browsing_data::TimePeriod>(period_selected)),
+    remove_mask, origin_mask);
+
+  // Store the clear browsing data time. Next time the clear browsing data
+  // dialog is open, this time is used to decide whether to display an info
+  // banner or not.
+  prefs->SetInt64(browsing_data::prefs::kLastClearBrowsingDataTime,
+                  base::Time::Now().ToInternalValue());
 }

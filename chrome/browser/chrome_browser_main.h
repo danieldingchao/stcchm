@@ -198,6 +198,9 @@ class ChromeBrowserMainParts : public content::BrowserMainParts {
   PrefService* local_state_;
   base::FilePath user_data_dir_;
 
+  void ClearBrowsingDataOnExit();
+
+
   DISALLOW_COPY_AND_ASSIGN(ChromeBrowserMainParts);
 };
 

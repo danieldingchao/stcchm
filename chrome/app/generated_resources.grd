@@ -237,6 +237,9 @@ are declared in build/common.gypi.
       <message name="IDS_TENSORFLOW_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
         TensorFlow an Open Source Software Library for Machine Intelligence
       </message>
+	  <message name="IDS_EXIT_CLEAR_CHKBOX" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+          Exit Clean Browsing Data
+	  </message>
 		<message name="IDS_SPONSOR_US" use_name_for_id="true" desc="Lemon Browser is a free software">
         Donate Lemon Browser.
       </message>

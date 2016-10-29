@@ -103,10 +103,15 @@
     </div>
   </div>
   <div class="action-area">
-    <div class="hbox stretch">
-      <a id="clear-browser-data-old-learn-more-link" hidden
-          target="_blank" i18n-content="learnMore"
-          i18n-values="href:clearBrowsingDataLearnMoreUrl"></a>
+    <div id="exit-clear-browsing-data-enabled-container" class="checkbox">
+      <label>
+        <input id="exit-clear-browsing-data-enabled-checkbox"
+            pref="browser.clear_browsing_data_on_exit_key" type="checkbox"
+			aria-controls="exit-clear-browsing-data-enabled-counter">
+        <span i18n-content="exit_clean_browsing_data"
+            class="exit-clear-browsing-data-enabled"  role="note"
+                aria-live="polite" id="exit-clear-browsing-data-enabled-counter"></span>
+      </label>
     </div>
     <div class="action-area-right">
       <div id="cbd-throbber" class="throbber"></div>

@@ -23,6 +23,7 @@ extern const char kAdfilterStatisticDate[];
 extern const char kAdfilterStatisticCount[];
 extern const char kUserAdfilterRulseLastDir[];
 extern const char KUserAdfilterRulseDisableList[];
+extern const char kClearBrowsingDataOnExitKey[];
 
 extern const char kMouseGestureProfile[];
 extern const char kMGPOpenLabelInBookmark[];

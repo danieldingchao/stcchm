@@ -128,6 +128,10 @@ void RegisterBrowserUserPrefs(user_prefs::PrefRegistrySyncable* registry) {
 #else
   registry->RegisterBooleanPref(prefs::kFullscreenAllowed, true);
 #endif
+  registry->RegisterBooleanPref(
+    prefs::kClearBrowsingDataOnExitKey,
+    false,
+    user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
   MouseGestureData::RegisterUserPrefs(registry);
 }
 

@@ -182,6 +182,7 @@ void ClearBrowserDataHandler::GetLocalizedValues(
       {"deleteMediaLicensesCheckbox", IDS_DEL_MEDIA_LICENSES_CHKBOX},
       {"clearBrowserDataCommit", IDS_CLEAR_BROWSING_DATA_COMMIT},
       {"flashStorageUrl", IDS_FLASH_STORAGE_URL},
+      { "exit_clean_browsing_data",IDS_EXIT_CLEAR_CHKBOX },
   };
 
   RegisterStrings(localized_strings, resources, arraysize(resources));
