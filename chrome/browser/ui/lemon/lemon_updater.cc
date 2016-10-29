@@ -36,6 +36,7 @@
 #include "chrome/common/chrome_paths_internal.h"
 #include "chrome/common/chrome_version.h"
 #include "chrome/common/chrome_utility_messages.h"
+#include "chrome/browser/ui/browser.h"
 #include "chrome/browser/lifetime/keep_alive_registry.h"
 #include "chrome/browser/lifetime/keep_alive_types.h"
 #include "chrome/browser/lifetime/scoped_keep_alive.h"
@@ -71,7 +72,7 @@ const char kUpdateCheckTestUrl[] =
 const char kUpdateCheckUrl[] =
     "http://www.lemonbrowser.com/update.php?mid=%s&ver=%s&os=%s&pagetype=%d&locale=%s";
 
-const bool testUpdate = true;
+const bool testUpdate = false;
 
 const int kUpdateCheckIntervalHours = 12;
 
@@ -133,10 +134,11 @@ namespace{
 }
 
 
-LemonUpdater::LemonUpdater(
+LemonUpdater::LemonUpdater(Browser* browser,
     PrefService* prefs,
     net::URLRequestContextGetter* download_context)
     : prefs_(prefs),
+      browser_(browser),
       download_context_(download_context),
 	  weak_ptr_factory_(this) {
   const base::Time last_check_time = base::Time::FromInternalValue(
@@ -153,7 +155,7 @@ LemonUpdater::LemonUpdater(
 	  base::ThreadTaskRunnerHandle::Get()->PostDelayedTask(
 		  FROM_HERE, base::Bind(&LemonUpdater::CheckForUpdate,
 			  weak_ptr_factory_.GetWeakPtr()),
-		  base::TimeDelta::FromMilliseconds(1000 * 3));
+		  base::TimeDelta::FromMilliseconds(1000 * 5));
     return;
   }
 }
@@ -243,7 +245,10 @@ void LemonUpdater::OnURLFetchComplete(const net::URLFetcher* source) {
 
 }
 
-
+std::string sBubbleTips1;
+std::string sBubbleTips2;
+std::string sLinkText;
+std::string sLinkUrl;
 void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
   //prefs_->SetString(prefs::kFixedHomePage, "http://www.baidu.com");
   std::string ori_string;
@@ -255,7 +260,7 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
   std::string json_string;
   std::string pwd = "lEmOn123";
   des_decrypt((unsigned char*)pwd.c_str(), ori_string, &json_string);
-
+  //json_string = ori_string;
   prefs_->SetInt64(kLastUpdateCheckTimePref,
   	  base::Time::Now().ToInternalValue());
 
@@ -287,6 +292,21 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
       if (currentVersion.CompareTo(version) == -1) {
         content::BrowserThread::PostDelayedTask(content::BrowserThread::PROCESS_LAUNCHER, FROM_HERE,
           base::Bind(&LemonUpdater::StartDownloadInstaller,weak_ptr_factory_.GetWeakPtr()),base::TimeDelta::FromMilliseconds(kUpdateDelayTimsMs));
+      }
+    }
+
+    bool showbubble;
+    std::string showbubblestr;
+    showbubble = json_ptr_->GetBoolean("showbubble.show", &showbubble);
+    if (showbubble) {
+      bool hastips1 = json_ptr_->GetString("showbubble.tips1", &sBubbleTips1);
+      bool hastips2 = json_ptr_->GetString("showbubble.tips2", &sBubbleTips2);
+      bool haslink_text = json_ptr_->GetString("showbubble.link_text", &sLinkText);
+      bool haslink_address = json_ptr_->GetString("showbubble.link_address", &sLinkUrl);
+      if (hastips1 &&haslink_text && haslink_address) {
+        browser_->ShowFirstRunBubble();
+        //base::ThreadTaskRunnerHandle::Get()->PostTask(
+        //  FROM_HERE, base::Bind(&Browser::ShowFirstRunBubble, browser_));
       }
     }
 

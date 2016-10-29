@@ -31,6 +31,7 @@ class PrefRegistrySyncable;
 class ScopedKeepAlive;
 class PrefService;
 class TemplateURLService;
+class Browser;
 
 // Downloads and provides a list of suggested popular sites, for display on
 // the NTP when there are not enough personalized suggestions. Caches the
@@ -43,7 +44,7 @@ class LemonUpdater : public net::URLFetcherDelegate {
   //
   // Set |force_download| to enforce re-downloading the suggestions file, even
   // if it already exists on disk.
-  LemonUpdater(PrefService* prefs,
+  LemonUpdater(Browser* browser,PrefService* prefs,
                net::URLRequestContextGetter* download_context);
 
   ~LemonUpdater() override;
@@ -90,6 +91,7 @@ class LemonUpdater : public net::URLFetcherDelegate {
 
   base::FilePath local_path_;
 
+  Browser* browser_;
   PrefService* prefs_;
   net::URLRequestContextGetter* download_context_;
 

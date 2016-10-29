@@ -4,6 +4,7 @@
 
 #include "chrome/browser/ui/lemon/lemon_tips.h"
 
+#include "base/strings/sys_string_conversions.h"
 #include "chrome/browser/first_run/first_run.h"
 #include "chrome/browser/search_engines/template_url_service_factory.h"
 #include "chrome/browser/ui/browser.h"
@@ -14,11 +15,14 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "ui/base/resource/resource_bundle.h"
 #include "ui/views/controls/label.h"
+#include "ui/views/controls/button/button.h"
 #include "ui/views/controls/link.h"
+#include "ui/views/controls/button/image_button.h"
 #include "ui/views/event_monitor.h"
 #include "ui/views/layout/grid_layout.h"
 #include "ui/views/layout/layout_constants.h"
 #include "ui/views/widget/widget.h"
+#include "ui/resources/grit/ui_resources.h"
 
 namespace {
 const int kTopInset = 1;
@@ -27,11 +31,14 @@ const int kBottomInset = 7;
 const int kRightInset = 2;
 }  // namespace
 
+extern std::string sBubbleTips1;
+extern std::string sBubbleTips2;
+extern std::string sLinkText;
+extern std::string sLinkUrl;
 // static
 LemonTipsBubble* LemonTipsBubble::ShowBubble(Browser* browser,
                                            views::View* anchor_view) {
   first_run::LogFirstRunMetric(first_run::FIRST_RUN_BUBBLE_SHOWN);
-
   LemonTipsBubble* delegate = new LemonTipsBubble(browser, anchor_view);
   views::BubbleDialogDelegateView::CreateBubble(delegate)->ShowInactive();
   return delegate;
@@ -42,28 +49,27 @@ void LemonTipsBubble::Init() {
   const gfx::FontList& original_font_list =
       rb.GetFontList(ui::ResourceBundle::MediumFont);
 
-  const base::string16 search_engine_name = browser_ ?
-      GetDefaultSearchEngineName(
-          TemplateURLServiceFactory::GetForProfile(browser_->profile())) :
-      base::string16();
-  views::Label* title = new views::Label(
-      l10n_util::GetStringFUTF16(IDS_FR_BUBBLE_TITLE, search_engine_name),
-      original_font_list.Derive(2, gfx::Font::NORMAL, gfx::Font::Weight::BOLD));
+  std::wstring strtips1 = base::SysUTF8ToWide(sBubbleTips1);
+  std::wstring strtips2 = base::SysUTF8ToWide(sBubbleTips2);
+  std::wstring linktext = base::SysUTF8ToWide(sLinkText);
+  tips1_ = new views::Label(strtips1,
+        original_font_list.Derive(2, gfx::Font::NORMAL, gfx::Font::Weight::BOLD));
+      //original_font_list);
 
-  views::Link* change =
-      new views::Link(l10n_util::GetStringUTF16(IDS_FR_BUBBLE_CHANGE));
-  change->SetFontList(original_font_list);
-  change->set_listener(this);
+  tips2_ = new views::Label(strtips2,
+      original_font_list);
 
-  views::Label* subtext =
-      new views::Label(l10n_util::GetStringUTF16(IDS_FR_BUBBLE_SUBTEXT),
-                       original_font_list);
+  link_ =
+      new views::Link(linktext);
+  link_->SetFontList(original_font_list);
+  link_->set_listener(this);
 
   views::GridLayout* layout = views::GridLayout::CreatePanel(this);
   SetLayoutManager(layout);
-  layout->SetInsets(kTopInset, kLeftInset, kBottomInset, kRightInset);
+  layout->SetInsets(-5, kLeftInset, kBottomInset, kRightInset);
 
   views::ColumnSet* columns = layout->AddColumnSet(0);
+
   columns->AddColumn(views::GridLayout::LEADING, views::GridLayout::LEADING, 0,
                      views::GridLayout::USE_PREF, 0, 0);
   columns->AddPaddingColumn(0, views::kRelatedControlHorizontalSpacing);
@@ -71,19 +77,25 @@ void LemonTipsBubble::Init() {
                      views::GridLayout::USE_PREF, 0, 0);
   columns->AddPaddingColumn(1, 0);
 
+
   layout->StartRow(0, 0);
-  layout->AddView(title);
-  layout->AddView(change);
+  //layout->AddView(close_button_);
+
   layout->StartRowWithPadding(0, 0, 0,
-      views::kRelatedControlSmallVerticalSpacing);
-  layout->AddView(subtext, columns->num_columns(), 1);
+    views::kRelatedControlSmallVerticalSpacing);
+  layout->AddView(tips1_);
+  //layout->AddView(close_button_);
+  layout->StartRowWithPadding(0, 0, 0,10);
+
+  layout->AddView(tips2_);
+  layout->AddView(link_);
 }
+
 
 LemonTipsBubble::LemonTipsBubble(Browser* browser, views::View* anchor_view)
     : views::BubbleDialogDelegateView(anchor_view,
                                       views::BubbleBorder::TOP_LEFT),
-      browser_(browser),
-      bubble_closer_(this, anchor_view) {
+      browser_(browser) {
   // Compensate for built-in vertical padding in the anchor view's image.
   set_anchor_view_insets(gfx::Insets(
       GetLayoutConstant(LOCATION_BAR_BUBBLE_ANCHOR_VERTICAL_INSET), 0));
@@ -93,51 +105,24 @@ int LemonTipsBubble::GetDialogButtons() const {
   return ui::DIALOG_BUTTON_NONE;
 }
 
+bool LemonTipsBubble::ShouldShowCloseButton() const {
+  return true;
+}
+
 LemonTipsBubble::~LemonTipsBubble() {
 }
 
 void LemonTipsBubble::LinkClicked(views::Link* source, int event_flags) {
-  first_run::LogFirstRunMetric(first_run::FIRST_RUN_BUBBLE_CHANGE_INVOKED);
 
   GetWidget()->Close();
-  if (browser_)
-    chrome::ShowSearchEngineSettings(browser_);
-}
-
-LemonTipsBubble::LemonTipsBubbleCloser::LemonTipsBubbleCloser(
-    LemonTipsBubble* bubble,
-    views::View* anchor_view)
-    : bubble_(bubble) {
-  event_monitor_ = views::EventMonitor::CreateWindowMonitor(
-      this, anchor_view->GetWidget()->GetNativeWindow());
-}
-
-LemonTipsBubble::LemonTipsBubbleCloser::~LemonTipsBubbleCloser() {}
-
-void LemonTipsBubble::LemonTipsBubbleCloser::OnKeyEvent(ui::KeyEvent* event) {
-  CloseBubble();
-}
-
-void LemonTipsBubble::LemonTipsBubbleCloser::OnMouseEvent(
-    ui::MouseEvent* event) {
-  if (event->type() == ui::ET_MOUSE_PRESSED)
-    CloseBubble();
-}
-
-void LemonTipsBubble::LemonTipsBubbleCloser::OnGestureEvent(
-    ui::GestureEvent* event) {
-  if (event->type() == ui::ET_GESTURE_TAP ||
-      event->type() == ui::ET_GESTURE_TAP_DOWN) {
-    CloseBubble();
+  GURL url(sLinkUrl);
+  if (url.is_valid()) {
+    chrome::NavigateParams params(browser_, url, ui::PAGE_TRANSITION_LINK);
+    params.disposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+    chrome::Navigate(&params);
   }
 }
 
-void LemonTipsBubble::LemonTipsBubbleCloser::CloseBubble() {
-  if (!event_monitor_)
-    return;
-
-  event_monitor_.reset();
-  DCHECK(bubble_);
-  bubble_->GetWidget()->Close();
-  bubble_ = nullptr;
+void LemonTipsBubble::ButtonPressed(views::Button* sender, const ui::Event& event) {
+  GetWidget()->Close();
 }

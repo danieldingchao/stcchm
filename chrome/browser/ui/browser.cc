@@ -395,7 +395,7 @@ Browser::Browser(const CreateParams& params)
   else
     unload_controller_.reset(new chrome::UnloadController(this));
 
-  lemon_updater_.reset(new LemonUpdater(profile_->GetPrefs(), profile_->GetRequestContext()));
+  lemon_updater_.reset(new LemonUpdater(this,profile_->GetPrefs(), profile_->GetRequestContext()));
   
   tab_strip_model_->AddObserver(this);
 

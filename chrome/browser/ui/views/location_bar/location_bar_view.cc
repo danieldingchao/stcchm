@@ -98,6 +98,8 @@
 #include "chrome/browser/ui/views/first_run_bubble.h"
 #endif
 
+#include "chrome/browser/ui/lemon/lemon_tips.h"
+
 using content::WebContents;
 using views::View;
 
@@ -985,7 +987,8 @@ void LocationBarView::ShowFirstRunBubbleInternal() {
     return;
   Browser* browser = chrome::FindBrowserWithWebContents(web_contents);
   if (browser)
-    FirstRunBubble::ShowBubble(browser, location_icon_view_);
+    LemonTipsBubble::ShowBubble(browser, location_icon_view_);
+    //FirstRunBubble::ShowBubble(browser, location_icon_view_);
 #endif
 }
 
