@@ -34,6 +34,38 @@
     <h3 i18n-content="sectionTitleProxy"></h3>
     <div id="proxy-section-content"></div>
   </section>
+  
+  <section id="ad_block_section">
+    <h3 i18n-content="sectionTitleAdBlock"></h3>
+    <div>
+    <div class="radio">
+        <span class="controlled-setting-with-label">
+        <input id="enable_adblock" type="radio" name="adblock" value="2"
+            pref="adfilter.adfilter_level">
+        <span>
+            <label for="enable_adblock" i18n-content="enableAdblock"></label>
+            <span class="controlled-setting-indicator" value="2"
+            pref="adfilter.adfilter_level">
+            </span>
+        </span>
+        </span>
+    </div>
+    <div class="radio">
+        <span class="controlled-setting-with-label">
+        <input id="disable_adblock" type="radio" name="adblock" value="0"
+            pref="adfilter.adfilter_level">
+        <span>
+            <label for="disable_adblock" i18n-content="disableAdblock"></label>
+            <span class="controlled-setting-indicator" value="0"
+            pref="adfilter.adfilter_level">
+            </span>
+        </span>
+        </span>
+    </div>
+    
+    </div>
+  </section>
+
 
   <section id="appearance-section">
     <h3 i18n-content="sectionTitleAppearance"></h3>

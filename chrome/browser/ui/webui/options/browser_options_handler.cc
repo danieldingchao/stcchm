@@ -235,6 +235,10 @@ void BrowserOptionsHandler::GetLocalizedValues(base::DictionaryValue* values) {
 #endif  // defined(OS_CHROMEOS)
 
   static OptionsStringResource resources[] = {
+	{ "sectionTitleAdBlock", IDS_ADBLOCK_TITLE },
+    { "enableAdblock", IDS_ENABLE_ADBLOCK },
+    { "disableAdblock", IDS_DISABLE_ADBLOCK },
+
     // Please keep these in alphabetical order.
     { "accessibilityFeaturesLink", IDS_OPTIONS_ACCESSIBILITY_FEATURES_LINK },
     { "accessibilityTitle", IDS_OPTIONS_SETTINGS_SECTION_TITLE_ACCESSIBILITY },

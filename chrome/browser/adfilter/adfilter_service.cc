@@ -234,13 +234,13 @@ void AdfilterService::LoadRules(ADFilterLevle adfilterlevel){
 
   rulesinited_ = true;
   base::ThreadRestrictions::ScopedAllowIO allowio;
-  //if( !base::PathExists(adfilter_rules_dir_) ) {
-  //  base::FilePath adfilter_rules_dir;
-  //  if( PathService::Get(chrome::DIR_APP, &adfilter_rules_dir) ) {
-  //      adfilter_rules_dir = adfilter_rules_dir.AppendASCII(kAdfilterRulesDir);
-  //    base::CopyDirectory(adfilter_rules_dir, adfilter_rules_dir_, false);
-  //  }
-  //}
+  if( !base::PathExists(adfilter_rules_dir_) ) {
+    base::FilePath adfilter_rules_dir;
+    if( PathService::Get(chrome::DIR_APP, &adfilter_rules_dir) ) {
+        adfilter_rules_dir = adfilter_rules_dir.AppendASCII(kAdfilterRulesDir);
+      base::CopyDirectory(adfilter_rules_dir, adfilter_rules_dir_, false);
+    }
+  }
 
   switch( adfilterlevel ) {
     case ADFilter_Uninitialize:

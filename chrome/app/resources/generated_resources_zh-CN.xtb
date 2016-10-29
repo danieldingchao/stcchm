@@ -20,6 +20,9 @@
 <translation id="IDS_IMPORT_FROM_LOCAL">登录前的收藏</translation>
 <translation id="IDS_IMPORT_MOSTVISITED_CHKBOX">最常访问</translation>
 <translation id="IDS_EXIT_CLEAR_CHKBOX">退出时清除历史记录</translation>
+<translation id="IDS_ADBLOCK_TITLE">广告过滤</translation>
+<translation id="IDS_ENABLE_ADBLOCK">开启广告过滤</translation>
+<translation id="IDS_DISABLE_ADBLOCK">禁用广告过滤</translation>
 <!-- options.tpMoreMouseGesture -->
 <translation id="IDS_MORE_SETTING_DLG_U">上</translation>
 <translation id="IDS_MORE_SETTING_DLG_D">下</translation>

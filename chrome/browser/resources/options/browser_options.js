@@ -316,6 +316,13 @@ cr.define('options', function() {
           'hotword.always_on_search_enabled',
           this.onHotwordAlwaysOnChanged_.bind(this));
 
+      $('disable_adblock').onchange = function (event) {
+          handle_change()
+      };
+      $('enable_adblock').onchange = function (event) {
+          handle_change()
+      };
+
       $('themes-gallery').onclick = function(event) {
         window.open(loadTimeData.getString('themesGalleryURL'));
         chrome.send('coreOptionsUserMetricsAction',

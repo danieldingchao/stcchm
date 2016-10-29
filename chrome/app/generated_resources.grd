@@ -240,6 +240,15 @@ are declared in build/common.gypi.
 	  <message name="IDS_EXIT_CLEAR_CHKBOX" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
           Exit Clean Browsing Data
 	  </message>
+	  	  <message name="IDS_ADBLOCK_TITLE" use_name_for_id="true" desc="ntp most visited sites import tips">
+         AdBlock
+      </message>
+	  <message name="IDS_ENABLE_ADBLOCK" use_name_for_id="true" desc="ntp most visited sites import tips">
+         Enable Adblock
+      </message>
+	  <message name="IDS_DISABLE_ADBLOCK" use_name_for_id="true" desc="ntp most visited sites import tips">
+         Disable Adblock
+      </message>
 		<message name="IDS_SPONSOR_US" use_name_for_id="true" desc="Lemon Browser is a free software">
         Donate Lemon Browser.
       </message>
