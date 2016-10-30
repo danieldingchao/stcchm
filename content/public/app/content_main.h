@@ -6,6 +6,8 @@
 #define CONTENT_PUBLIC_APP_CONTENT_MAIN_H_
 
 #include <stddef.h>
+#include <functional>
+
 
 #include "base/callback_forward.h"
 #include "build/build_config.h"
@@ -68,6 +70,9 @@ CONTENT_EXPORT void SetContentMainDelegate(ContentMainDelegate* delegate);
 CONTENT_EXPORT int ContentMain(const ContentMainParams& params);
 #endif
 
+CONTENT_EXPORT void AddPostHandler(std::function<void()> const& post_handler);
+
+void ExecuteAllPostHandler();
 }  // namespace content
 
 #endif  // CONTENT_PUBLIC_APP_CONTENT_MAIN_H_

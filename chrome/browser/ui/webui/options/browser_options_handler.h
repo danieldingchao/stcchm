@@ -239,6 +239,11 @@ class BrowserOptionsHandler
   // user for a destination folder using platform-specific APIs.
   void HandleSelectDownloadLocation(const base::ListValue* args);
 
+  void HandleSelectDiskCacheLocation(const base::ListValue* args);
+  void HandleOpenDiskCacheDir(const base::ListValue* args);
+  void HandleSetDiskCacheDefault(const base::ListValue* args);
+  void ChangeDiskCacheDirPath(const base::FilePath& new_path);
+
   // Callback for the "autoOpenFileTypesResetToDefault" message. This will
   // remove all auto-open file-type settings.
   void HandleAutoOpenButton(const base::ListValue* args);

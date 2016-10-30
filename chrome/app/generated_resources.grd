@@ -300,6 +300,25 @@ are declared in build/common.gypi.
         <message name="IDS_IMPORT_MOSTVISITED_CHKBOX" use_name_for_id = "true" desc="Checkbox for importing mostvisited">
           Mostvisited
         </message>
+	  <message name="IDS_DISKCACHE_RELAUNCH_DIALOG" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        This change need to relaunch TheWorld to take effect,Are you sure to relaunch TheWorld?
+      </message>
+      <message name="IDS_DISKCACHE_GROUP_NAME" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        Disk Cache
+      </message>
+      <message name="IDS_DISKCACHE_BROWSER_TITLE" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        Disk Cache Directory:
+      </message>
+      <message name="IDS_DISKCACHE_NEED_RELAUNCH" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        After change,the cache in current dir will be cleard.Relaunch TheWorld to take effect
+      </message>
+      <message name="IDS_DISKCACHE_OPEN_DIR" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        Open DiskCache Directory
+      </message>
+      <message name="IDS_DISKCACHE_DIR_SET_DEFAULT" use_name_for_id="true" desc="Checkbox for deleting Cookies and other site data">
+        Set Default
+      </message>
+
 		
 		<!--mouse gesture-->
       <message name="IDS_MORE_SETTING_DLG_U" use_name_for_id = "true">

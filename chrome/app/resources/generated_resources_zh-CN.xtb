@@ -3,8 +3,8 @@
 <translationbundle lang="zh-CN">
 <translation id="IDS_OPTIONS_STARTUP_HOMEPAGE">打开预置导航首页</translation>
 <translation id="IDS_ABOUT_KERNEL_VERSION">内核版本 <ph name="PRODUCT_VERSION" /></translation>
-<translation id="IDS_SPONSOR_US">赞助柠檬浏览器</translation>
-<translation id="IDS_SPONSOR_DESCRIPTION">柠檬浏览器是一款简洁的免费浏览器，如果您觉的我们的浏览器做的不错，您可以扫描上方二维码赞助我们。</translation>
+<translation id="IDS_SPONSOR_US">微信赞助柠檬浏览器</translation>
+<translation id="IDS_SPONSOR_DESCRIPTION">柠檬浏览器是一款简洁的免费浏览器，如果您觉的我们的浏览器很赞，您可以扫描上方微信二维码赞助我们。</translation>
 <translation id="IDS_NEW_TAB_MOST_VISITED_SITE_TIPS">此页显示您最常访问的网站，会随着您的使用自动更新。</translation>
 <translation id="IDS_IMPORT_FROM_THEWORLD3">世界之窗3</translation>
 <translation id="IDS_IMPORT_FROM_THEWORLD5">世界之窗5</translation>
@@ -23,6 +23,12 @@
 <translation id="IDS_ADBLOCK_TITLE">广告过滤</translation>
 <translation id="IDS_ENABLE_ADBLOCK">开启广告过滤</translation>
 <translation id="IDS_DISABLE_ADBLOCK">禁用广告过滤</translation>
+<translation id="IDS_DISKCACHE_RELAUNCH_DIALOG">这项修改需要重启浏览器才能生效。确定现在就要重启浏览器吗？</translation>
+<translation id="IDS_DISKCACHE_GROUP_NAME">自定义缓存</translation>
+<translation id="IDS_DISKCACHE_BROWSER_TITLE">自定义缓存目录位置：</translation>
+<translation id="IDS_DISKCACHE_NEED_RELAUNCH">更改后，将清空现有缓存，重启生效</translation>
+<translation id="IDS_DISKCACHE_OPEN_DIR">打开缓存目录</translation>
+<translation id="IDS_DISKCACHE_DIR_SET_DEFAULT">设回默认</translation>
 <!-- options.tpMoreMouseGesture -->
 <translation id="IDS_MORE_SETTING_DLG_U">上</translation>
 <translation id="IDS_MORE_SETTING_DLG_D">下</translation>
@@ -52,6 +58,7 @@
 <translation id="ID_MGA_BACK">后退</translation>
 <translation id="ID_MGA_FORWARD">前进</translation>
 <translation id="ID_MGA_RESTORE_TAB">恢复刚关闭的标签</translation>
+<translation id="ID_MGA_CLOSETAB">关闭标签页</translation>
 <translation id="ID_MGA_CLOSEOTHERTABS">关闭其他标签页</translation>
 <translation id="ID_MGA_RELOAD">重新载入（刷新）</translation>
 <translation id="ID_MGA_NEWTAB">打开新标签页</translation>

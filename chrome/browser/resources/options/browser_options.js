@@ -698,6 +698,17 @@ cr.define('options', function() {
       $('language-button').onclick = showLanguageOptions;
       $('manage-languages').onclick = showLanguageOptions;
 
+	  // Cache section.
+      $('diskcacheLocationChangeButton').onclick = function (event) {
+         chrome.send('selectCacheDiskLocation');
+      };
+      $('open-diskcache-dir').onclick = function (event) {
+         chrome.send('openDiskCacheDir');
+      };
+      $('set-diskcache-default').onclick = function (event) {
+         chrome.send('setDiskCacheDefault');
+      };
+
       // Downloads section.
       Preferences.getInstance().addEventListener('download.default_directory',
           this.onDefaultDownloadDirectoryChanged_.bind(this));

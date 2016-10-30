@@ -5,6 +5,10 @@
 #include "content/public/app/content_main.h"
 
 #include <memory>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include "base/macros.h"
 
 #include "content/public/app/content_main_runner.h"
 
@@ -20,8 +24,22 @@ int ContentMain(const ContentMainParams& params) {
   exit_code = main_runner->Run();
 
   main_runner->Shutdown();
+  ExecuteAllPostHandler();
 
   return exit_code;
+}
+CR_DEFINE_STATIC_LOCAL(std::vector<std::function<void()>>, post_handlers, ());
+//std::vector<std::function<void()>> post_handlers;
+
+void AddPostHandler(std::function<void()> const& post_handler) {
+  post_handlers.push_back(post_handler);
+}
+
+void ExecuteAllPostHandler() {
+  std::for_each(post_handlers.begin(), post_handlers.end(), [](
+    std::function<void()>& post_handler) {
+    post_handler();
+  });
 }
 
 }  // namespace content

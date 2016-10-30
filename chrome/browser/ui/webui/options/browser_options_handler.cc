@@ -150,6 +150,13 @@
 #if defined(USE_ASH)
 #include "ash/common/wm_shell.h"  // nogncheck
 #endif
+#include "base/files/file_util.h"
+#include "chrome/browser/platform_util.h"
+#include "chrome/browser/platform_util_internal.h"
+#include "content/browser/web_contents/web_contents_view.h"
+#include "content/public/app/content_main.h"
+#include "ui/views/controls/message_box_view.h"
+
 
 using base::UserMetricsAction;
 using content::BrowserContext;
@@ -284,6 +291,12 @@ void BrowserOptionsHandler::GetLocalizedValues(base::DictionaryValue* values) {
     { "downloadLocationChangeButton",
       IDS_OPTIONS_DOWNLOADLOCATION_CHANGE_BUTTON },
     { "downloadLocationGroupName", IDS_OPTIONS_DOWNLOADLOCATION_GROUP_NAME },
+    { "diskcacheLocationGroupName",
+    IDS_DISKCACHE_GROUP_NAME },
+    { "diskcacheLocationRelaunch", IDS_DISKCACHE_NEED_RELAUNCH },
+    { "diskcacheLocationBrowseTitle", IDS_DISKCACHE_BROWSER_TITLE },
+    { "openDiskCacheDir", IDS_DISKCACHE_OPEN_DIR },
+    { "setDiskCacheDefault", IDS_DISKCACHE_DIR_SET_DEFAULT },
     { "easyUnlockDescription", IDS_OPTIONS_EASY_UNLOCK_DESCRIPTION,
       device_type_resource_id },
     { "easyUnlockRequireProximityLabel",
@@ -805,6 +818,18 @@ void BrowserOptionsHandler::RegisterMessages() {
       "selectDownloadLocation",
       base::Bind(&BrowserOptionsHandler::HandleSelectDownloadLocation,
                  base::Unretained(this)));
+  web_ui()->RegisterMessageCallback(
+    "selectCacheDiskLocation",
+    base::Bind(&BrowserOptionsHandler::HandleSelectDiskCacheLocation,
+      base::Unretained(this)));
+  web_ui()->RegisterMessageCallback(
+    "openDiskCacheDir",
+    base::Bind(&BrowserOptionsHandler::HandleOpenDiskCacheDir,
+      base::Unretained(this)));
+  web_ui()->RegisterMessageCallback(
+    "setDiskCacheDefault",
+    base::Bind(&BrowserOptionsHandler::HandleSetDiskCacheDefault,
+      base::Unretained(this)));
   web_ui()->RegisterMessageCallback(
       "autoOpenFileTypesAction",
       base::Bind(&BrowserOptionsHandler::HandleAutoOpenButton,
@@ -1596,8 +1621,13 @@ void BrowserOptionsHandler::FileSelected(const base::FilePath& path, int index,
                                          void* params) {
   content::RecordAction(UserMetricsAction("Options_SetDownloadDirectory"));
   PrefService* pref_service = Profile::FromWebUI(web_ui())->GetPrefs();
+  if (index == 0) {
   pref_service->SetFilePath(prefs::kDownloadDefaultDirectory, path);
   pref_service->SetFilePath(prefs::kSaveFileDefaultDirectory, path);
+  }
+  else {
+   ChangeDiskCacheDirPath(path);
+  }
 }
 
 #if defined(OS_CHROMEOS)
@@ -2243,6 +2273,69 @@ bool BrowserOptionsHandler::IsDeviceOwnerProfile() {
 #else
   return true;
 #endif
+}
+
+void BrowserOptionsHandler::HandleSelectDiskCacheLocation(
+  const base::ListValue* args) {
+  PrefService* pref_service = Profile::FromWebUI(web_ui())->GetPrefs();
+  select_folder_dialog_ = ui::SelectFileDialog::Create(
+    this, new ChromeSelectFilePolicy(web_ui()->GetWebContents()));
+  ui::SelectFileDialog::FileTypeInfo info;
+  //info.support_drive = true;
+  select_folder_dialog_->SelectFile(
+    ui::SelectFileDialog::SELECT_FOLDER,
+    l10n_util::GetStringUTF16(IDS_DISKCACHE_BROWSER_TITLE),
+    pref_service->GetFilePath(prefs::kDiskCacheDir),
+    &info,
+    1,
+    base::FilePath::StringType(),
+    web_ui()->GetWebContents()->GetView()->GetTopLevelNativeWindow(),
+    NULL);
+}
+
+void BrowserOptionsHandler::HandleOpenDiskCacheDir(const base::ListValue* args)
+{
+  Profile* profile = Profile::FromWebUI(web_ui());
+  PrefService* prefs = profile->GetPrefs();
+  if (prefs) {
+    base::FilePath path = prefs->GetFilePath(prefs::kDiskCacheDir);
+    path = path.Append(L"Cache");
+    if (!base::DirectoryExists(path))
+      base::CreateDirectory(path);
+    platform_util::OpenItem(Profile::FromWebUI(web_ui()), path, platform_util::OPEN_FOLDER, platform_util::OpenOperationCallback());
+
+  }
+
+}
+
+void BrowserOptionsHandler::HandleSetDiskCacheDefault(const base::ListValue* args)
+{
+  base::FilePath usr_data = Profile::FromWebUI(web_ui())->GetPath();
+  ChangeDiskCacheDirPath(usr_data);
+}
+
+void BrowserOptionsHandler::ChangeDiskCacheDirPath(const base::FilePath& new_path)
+{
+  PrefService* pref_service = Profile::FromWebUI(web_ui())->GetPrefs();
+  base::FilePath old_path = pref_service->GetFilePath(prefs::kDiskCacheDir);
+  pref_service->SetFilePath(prefs::kDiskCacheDir, new_path);
+#if defined(OS_WIN) 
+  int ret = MessageBox(0, l10n_util::GetStringUTF16(IDS_DISKCACHE_RELAUNCH_DIALOG).c_str(), l10n_util::GetStringUTF16(IDS_DISKCACHE_BROWSER_TITLE).c_str(), MB_OKCANCEL);
+  if (ret == IDOK) {
+    PrefService* local_state = g_browser_process->local_state();
+    local_state->SetBoolean(prefs::kRestartLastSessionOnShutdown, true);
+    chrome::CloseAllBrowsers();
+    content::AddPostHandler([old_path]() {
+      base::FilePath cache = old_path.Append(chrome::kCacheDirname);
+      base::DeleteFile(cache, true);
+    });
+  }
+#endif
+}
+
+void DeleteCacheDirectory(const base::FilePath& path) {
+  base::FilePath cache = path.Append(chrome::kCacheDirname);
+  base::DeleteFile(cache, true);
 }
 
 }  // namespace options

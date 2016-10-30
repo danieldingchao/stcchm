@@ -585,6 +585,9 @@ void ProfileImpl::DoFinalInit() {
       g_browser_process->background_mode_manager()->RegisterProfile(this);
   }
 #endif  // BUILDFLAG(ENABLE_BACKGROUND)
+  base::FilePath path = GetPrefs()->GetFilePath(prefs::kDiskCacheDir);
+  if (path.empty() || !base::PathExists(path))
+     GetPrefs()->SetFilePath(prefs::kDiskCacheDir, base_cache_path_);
 
   base::FilePath cookie_path = GetPath();
   cookie_path = cookie_path.Append(chrome::kCookieFilename);
@@ -1260,7 +1263,8 @@ void ProfileImpl::GetCacheParameters(bool is_media_context,
 
   base::FilePath path(prefs_->GetFilePath(prefs::kDiskCacheDir));
   if (!path.empty())
-    *cache_path = path.Append(cache_path->BaseName());
+    *cache_path = path;
+    //*cache_path = path.Append(cache_path->BaseName());
 
   *max_size = is_media_context ? prefs_->GetInteger(prefs::kMediaCacheSize) :
                                  prefs_->GetInteger(prefs::kDiskCacheSize);
