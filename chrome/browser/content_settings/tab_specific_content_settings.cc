@@ -310,6 +310,8 @@ void TabSpecificContentSettings::OnContentBlocked(ContentSettingsType type) {
 void TabSpecificContentSettings::OnContentBlockedWithDetail(
     ContentSettingsType type,
     const base::string16& details) {
+  if (type == CONTENT_SETTINGS_TYPE_PLUGINS)
+    return;
   DCHECK(type != CONTENT_SETTINGS_TYPE_GEOLOCATION)
       << "Geolocation settings handled by OnGeolocationPermissionSet";
   DCHECK(type != CONTENT_SETTINGS_TYPE_MEDIASTREAM_MIC &&
