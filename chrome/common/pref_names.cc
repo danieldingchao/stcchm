@@ -1847,6 +1847,9 @@ const char kLogoutStartedLast[] = "chromeos.logout-started";
 // be an Android app).
 const char kIsBootstrappingSlave[] = "is_oobe_bootstrapping_slave";
 
+// A preference that controlles Android status reporting.
+const char kReportArcStatusEnabled[] = "arc.status_reporting_enabled";
+
 #endif  // defined(OS_CHROMEOS)
 
 // Whether there is a Flash version installed that supports clearing LSO data.

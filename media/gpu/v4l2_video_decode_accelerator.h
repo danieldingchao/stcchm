@@ -264,6 +264,10 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAccelerator
   // Handle the various device queues.
   void Enqueue();
   void Dequeue();
+  // Dequeue one input buffer. Return true if success.
+  bool DequeueInputBuffer();
+  // Dequeue one output buffer. Return true if success.
+  bool DequeueOutputBuffer();
 
   // Return true if there is a resolution change event pending.
   bool DequeueResolutionChangeEvent();
@@ -286,6 +290,10 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAccelerator
   // called any time a relevant queue could potentially be emptied: see
   // function definition.
   void NotifyFlushDoneIfNeeded();
+  // Returns true if VIDIOC_DECODER_CMD is supported.
+  bool IsDecoderCmdSupported();
+  // Send V4L2_DEC_CMD_START to the driver. Return true if success.
+  bool SendDecoderCmdStop();
 
   // Reset() task.  Drop all input buffers. If V4L2VDA is not doing resolution
   // change or waiting picture buffers, call FinishReset.
@@ -445,8 +453,18 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAccelerator
   int decoder_decode_buffer_tasks_scheduled_;
   // Picture buffers held by the client.
   int decoder_frames_at_client_;
+
   // Are we flushing?
   bool decoder_flushing_;
+  // True if VIDIOC_DECODER_CMD is supported.
+  bool decoder_cmd_supported_;
+  // True if flushing is waiting for last output buffer. After
+  // VIDIOC_DECODER_CMD is sent to the driver, this flag will be set to true to
+  // wait for the last output buffer. When this flag is true, flush done will
+  // not be sent. After an output buffer that has the flag V4L2_BUF_FLAG_LAST is
+  // received, this is set to false.
+  bool flush_awaiting_last_output_buffer_;
+
   // Got a reset request while we were performing resolution change or waiting
   // picture buffers.
   bool reset_pending_;

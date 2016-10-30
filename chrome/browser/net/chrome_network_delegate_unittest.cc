@@ -449,12 +449,14 @@ TEST_F(ChromeNetworkDelegateSafeSearchTest, SafeSearch) {
   std::unique_ptr<net::NetworkDelegate> delegate(CreateNetworkDelegate());
   SetDelegate(delegate.get());
 
+  static_assert(safe_search_util::YOUTUBE_RESTRICT_OFF      == 0 &&
+                safe_search_util::YOUTUBE_RESTRICT_MODERATE == 1 &&
+                safe_search_util::YOUTUBE_RESTRICT_STRICT   == 2 &&
+                safe_search_util::YOUTUBE_RESTRICT_COUNT    == 3,
+                "This test relies on mapping ints to enum values.");
+
   // Loop over all combinations of the two policies.
   for (int i = 0; i < 6; i++) {
-    static_assert(safe_search_util::YOUTUBE_RESTRICT_OFF      == 0 &&
-                  safe_search_util::YOUTUBE_RESTRICT_MODERATE == 1 &&
-                  safe_search_util::YOUTUBE_RESTRICT_STRICT   == 2,
-                  "Adjust youtube_restrict to match YouTubeRestrictMode enum");
     bool google_safe_search = (i / 3) != 0;
     int youtube_restrict = i % 3;
     SetSafeSearch(google_safe_search, youtube_restrict);

@@ -1172,27 +1172,17 @@ IN_PROC_BROWSER_TEST_F(PolicyTest, PolicyPreprocessing) {
   EXPECT_TRUE(expected.Equals(actual_from_profile));
 }
 
-IN_PROC_BROWSER_TEST_F(PolicyTest, ForceSafeSearch) {
-  // Makes the requests fail since all we want to check is that the redirection
-  // is done properly.
-  MakeRequestFail make_request_fail("google.com");
-
-  // Verifies that requests to Google Search engine with the SafeSearch
-  // enabled set the safe=active&ssui=on parameters at the end of the query.
-  // First check that nothing happens.
-  CheckSafeSearch(false);
-
-  // The code below relies on mapping consecutive ints to
-  // safe_search_util::YouTubeRestrictMode.
+IN_PROC_BROWSER_TEST_F(PolicyTest, LegacySafeSearch) {
   static_assert(safe_search_util::YOUTUBE_RESTRICT_OFF      == 0 &&
                 safe_search_util::YOUTUBE_RESTRICT_MODERATE == 1 &&
                 safe_search_util::YOUTUBE_RESTRICT_STRICT   == 2 &&
                 safe_search_util::YOUTUBE_RESTRICT_COUNT    == 3,
-                "This test relies on consecutive enum values starting from 0.");
+                "This test relies on mapping ints to enum values.");
 
   // Go over all combinations of (undefined, true, false) for the policies
   // ForceSafeSearch, ForceGoogleSafeSearch and ForceYouTubeSafetyMode as well
-  // as (undefined, off, moderate, strict) for ForceYouTubeRestrict.
+  // as (undefined, off, moderate, strict) for ForceYouTubeRestrict and make
+  // sure the prefs are set as expected.
   const int num_restrict_modes = 1 + safe_search_util::YOUTUBE_RESTRICT_COUNT;
   for (int i = 0; i < 3 * 3 * 3 * num_restrict_modes; i++) {
     int val = i;
@@ -1260,8 +1250,41 @@ IN_PROC_BROWSER_TEST_F(PolicyTest, ForceSafeSearch) {
             : safe_search_util::YOUTUBE_RESTRICT_OFF;
       EXPECT_EQ(prefs->GetInteger(prefs::kForceYouTubeRestrict), expected_mode);
     }
+  }
+}
 
-    CheckSafeSearch(google_safe_search == 1 || legacy_safe_search_enabled);
+IN_PROC_BROWSER_TEST_F(PolicyTest, ForceGoogleSafeSearch) {
+  // Makes the requests fail since all we want to check is that the redirection
+  // is done properly.
+  MakeRequestFail make_request_fail("google.com");
+
+  // Verifies that requests to Google Search engine with the SafeSearch
+  // enabled set the safe=active&ssui=on parameters at the end of the query.
+  // First check that nothing happens.
+  CheckSafeSearch(false);
+
+  // Go over all combinations of (undefined, true, false) for the
+  // ForceGoogleSafeSearch policy.
+  for (int safe_search = 0; safe_search < 3; safe_search++) {
+    // Override the Google safe search policy.
+    ApplySafeSearchPolicy(
+        nullptr,          // ForceSafeSearch
+        safe_search == 0  // ForceGoogleSafeSearch
+            ? nullptr
+            : base::MakeUnique<base::FundamentalValue>(safe_search == 1),
+        nullptr,          // ForceYouTubeSafetyMode
+        nullptr           // ForceYouTubeRestrict
+    );
+
+    // Verify that the safe search pref behaves the way we expect.
+    PrefService* prefs = browser()->profile()->GetPrefs();
+    EXPECT_EQ(safe_search != 0,
+              prefs->IsManagedPreference(prefs::kForceGoogleSafeSearch));
+    EXPECT_EQ(safe_search == 1,
+              prefs->GetBoolean(prefs::kForceGoogleSafeSearch));
+
+    // Verify that safe search actually works.
+    CheckSafeSearch(safe_search == 1);
   }
 }
 

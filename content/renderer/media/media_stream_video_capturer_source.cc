@@ -233,11 +233,10 @@ class LocalVideoCapturerSource final : public media::VideoCapturerSource {
   // Indicates if we are capturing generated content, e.g. Tab or Desktop.
   const bool is_content_capture_;
 
-  // This is run once to report whether the device was successfully started
-  // after a call to StartCapture().
+  // These two are valid between StartCapture() and StopCapture().
+  // |running_call_back_| is run when capture is successfully started, and when
+  // it is stopped or error happens.
   RunningCallback running_callback_;
-
-  // This is valid between StartCapture() and StopCapture().
   base::Closure stop_capture_cb_;
 
   // Placeholder keeping the callback between asynchronous device enumeration
@@ -355,7 +354,7 @@ void LocalVideoCapturerSource::OnStateUpdate(VideoCaptureState state) {
     return;
   switch (state) {
     case VIDEO_CAPTURE_STATE_STARTED:
-      base::ResetAndReturn(&running_callback_).Run(true);
+      running_callback_.Run(true);
       break;
 
     case VIDEO_CAPTURE_STATE_STOPPING:
@@ -367,7 +366,7 @@ void LocalVideoCapturerSource::OnStateUpdate(VideoCaptureState state) {
 
     case VIDEO_CAPTURE_STATE_PAUSED:
     case VIDEO_CAPTURE_STATE_RESUMED:
-      // Not applicable to reporting on device start success/failure.
+      // Not applicable to reporting on device starts or errors.
       break;
   }
 }
@@ -482,18 +481,25 @@ void MediaStreamVideoCapturerSource::StartSourceImpl(
     SetPowerLineFrequencyParamFromConstraints(constraints, &new_params);
   }
 
-  source_->StartCapture(new_params,
-                          frame_callback,
-                          base::Bind(&MediaStreamVideoCapturerSource::OnStarted,
-                                     base::Unretained(this)));
+  is_capture_starting_ = true;
+  source_->StartCapture(
+      new_params, frame_callback,
+      base::Bind(&MediaStreamVideoCapturerSource::OnRunStateChanged,
+                 base::Unretained(this)));
 }
 
 void MediaStreamVideoCapturerSource::StopSourceImpl() {
   source_->StopCapture();
 }
 
-void MediaStreamVideoCapturerSource::OnStarted(bool result) {
-  OnStartDone(result ? MEDIA_DEVICE_OK : MEDIA_DEVICE_TRACK_START_FAILURE);
+void MediaStreamVideoCapturerSource::OnRunStateChanged(bool is_running) {
+  if (is_capture_starting_) {
+    OnStartDone(is_running ? MEDIA_DEVICE_OK
+                           : MEDIA_DEVICE_TRACK_START_FAILURE);
+    is_capture_starting_ = false;
+  } else if (!is_running) {
+    StopSource();
+  }
 }
 
 const char*

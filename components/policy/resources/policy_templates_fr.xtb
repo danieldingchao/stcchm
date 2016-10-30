@@ -311,6 +311,7 @@ Si ce paramètre n'est pas défini, les utilisateurs peuvent ouvrir normalement 
       Si la règle HardwareAccelerationModeEnabled est définie sur "False", la règle Disable3DAPIs est ignorée, ce qui équivaut à définir Disable3DAPIs sur "True".</translation>
 <translation id="2168397434410358693">Délai d'inactivité (secteur)</translation>
 <translation id="2170233653554726857">Activer l'optimisation WPAD</translation>
+<translation id="2178899310296064282">Appliquer au moins le mode restreint modéré sur YouTube</translation>
 <translation id="2188979373208322108">Active la barre des favoris sur <ph name="PRODUCT_NAME" />. 
 
 Si vous activez ce paramètre, <ph name="PRODUCT_NAME" /> affiche une barre de favoris. 
@@ -580,6 +581,7 @@ Cette règle n'est respectée que si la règle "DefaultSearchProviderEnabled" es
       Si vous activez ou désactivez ce paramètre, les utilisateurs ne peuvent pas modifier ni ignorer le paramètre "Activer la protection contre le phishing et les logiciels malveillants" dans <ph name="PRODUCT_NAME" />.
 
       Si vous ne définissez pas cette règle, la navigation sécurisée est activée, mais les utilisateurs peuvent la modifier.</translation>
+<translation id="2787173078141616821">Transmettre des informations sur l'état d'Android</translation>
 <translation id="2801230735743888564">Autoriser les utilisateurs à jouer au jeu Easter Egg du dinosaure lorsque l'appareil est déconnecté.
 
 Si cette règle est définie sur "False", les utilisateurs ne pourront pas jouer au jeu Easter Egg du dinosaure lorsque l'appareil est déconnecté. Si ce paramètre est défini sur "True", les utilisateurs sont autorisés à jouer au jeu des dinosaures. Si cette règle n'est pas définie, les utilisateurs ne sont pas autorisés à jouer au jeu Easter Egg du dinosaure sur les appareils équipés de Chrome OS et enregistrés, mais ils peuvent y jouer dans d'autres circonstances.</translation>
@@ -815,6 +817,15 @@ Si elle n'est pas configurée, l'utilisateur peut être invité à effectuer l'i
 <translation id="3417418267404583991">Si cette règle est définie sur "true" ou si elle n'est pas configurée, <ph name="PRODUCT_OS_NAME" /> autorise les connexions en mode invité. Les connexions en mode invité correspondent à des sessions utilisateur anonymes et ne nécessitent pas de mot de passe.
 
        Si cette règle est définie sur "false", <ph name="PRODUCT_OS_NAME" /> n'autorise pas les sessions en mode invité.</translation>
+<translation id="3418871497193485241">Applique un mode restreint minimal sur YouTube et empêche l'utilisateur
+      de choisir un mode moins restrictif.
+
+      Si ce paramètre est défini sur "Strict", le mode restreint strict sur YouTube est toujours activé.
+
+      Si ce paramètre est défini sur "Modéré", l'utilisateur peut choisir le mode restreint modéré
+      ou le mode restreint strict sur YouTube, mais il ne peut pas désactiver le mode restreint.
+
+      Si ce paramètre est défini sur "Désactivé" ou si aucune valeur n'est définie, <ph name="PRODUCT_NAME" /> n'applique pas le mode restreint sur YouTube. Toutefois, des règles externes comme les règles de YouTube peuvent toujours appliquer le mode restreint.</translation>
 <translation id="3428247105888806363">Activer la prédiction réseau</translation>
 <translation id="3449886121729668969">Permet de configurer les paramètres de proxy pour <ph name="PRODUCT_NAME" />. Ces paramètres de proxy sont également disponibles pour les applications ARC.
 
@@ -866,11 +877,6 @@ Si elle n'est pas configurée, l'utilisateur peut être invité à effectuer l'i
 <translation id="3660562134618097814">Transférer des cookies de fournisseurs d'identité SAML lors de la connexion</translation>
 <translation id="3709266154059827597">Configurer la liste noire d'installation des extensions</translation>
 <translation id="3711895659073496551">Arrêter</translation>
-<translation id="3715448429089775791">Force l'activation du mode sécurisé de YouTube et empêche les utilisateurs de modifier ce paramètre.
-
-      Si vous activez ce paramètre, le mode sécurisé de YouTube est toujours actif.
-
-      Si vous le désactivez ou ne définissez aucune valeur, le mode sécurisé de YouTube n'est pas appliqué.</translation>
 <translation id="3750220015372671395">Bloquer la génération de clé sur ces sites</translation>
 <translation id="3756011779061588474">Bloquer le mode développeur</translation>
 <translation id="3758089716224084329">Permet de préciser le serveur proxy utilisé par <ph name="PRODUCT_NAME" /> et d'empêcher les utilisateurs de modifier les paramètres de proxy.
@@ -941,6 +947,12 @@ Si elle n'est pas configurée, l'utilisateur peut être invité à effectuer l'i
 <translation id="384743459174066962">Permet de définir une liste de formats d'URL spécifiant les sites qui ne sont pas autorisés à ouvrir des pop-ups. 
 
 Si cette règle n'est pas configurée, la valeur par défaut globale sera utilisée pour tous les sites à partir de la règle "DefaultPopupsSetting", si elle est définie, ou à défaut, à partir de la configuration personnelle de l'utilisateur.</translation>
+<translation id="3851039766298741586">Cette règle permet de transmettre des informations sur la session kiosque active,
+      telles que l'ID et la version de l'application.
+
+      Si la règle est définie sur "False", les informations sur la session kiosque
+      ne sont pas transmises. Si elle est définie sur "True" ou si elle n'est pas
+      configurée, les informations sur la session sont transmises.</translation>
 <translation id="3859780406608282662">Permet d'ajouter un paramètre à la récupération de la valeur de départ des variantes dans <ph name="PRODUCT_OS_NAME" />.
 
       Si cette option est spécifiée, un paramètre de requête appelé "restrict" est ajouté à l'URL utilisée pour récupérer la valeur de départ des variantes. La valeur du paramètre est celle indiquée dans cette règle.
@@ -955,6 +967,13 @@ Si cette règle n'est pas configurée, la valeur par défaut globale sera utilis
 
           Cette règle n'est respectée que si la règle "DefaultSearchProviderEnabled" est activée.</translation>
 <translation id="3864818549971490907">Paramètre de plug-ins par défaut</translation>
+<translation id="386487026071140458">Cette règle étant abandonnée, veuillez utiliser à la place les règles <ph name="FORCEGOOGLESAFESEARCH_POLICY_NAME" /> et <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" />. Elle est ignorée si l'une ou l'autre des règles <ph name="FORCEGOOGLESAFESEARCH_POLICY_NAME" />, <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" /> ou <ph name="FORCEYOUTUBESAFETYMODE_POLICY_NAME" /> (laquelle est également abandonnée) est définie.
+
+      Cette règle impose l'activation de SafeSearch pour les recherches sur le Web Google, et empêche les utilisateurs de modifier ce paramètre. Elle impose également l'activation du mode restreint modéré sur YouTube.
+
+      Si vous activez ce paramètre, SafeSearch est toujours activé dans la recherche Google et en mode restreint modéré sur YouTube.
+
+      Si vous désactivez ce paramètre ou si vous ne définissez aucune valeur, SafeSearch n'est pas activé dans la recherche Google et en mode restreint sur YouTube.</translation>
 <translation id="3866249974567520381">Description</translation>
 <translation id="3866530186104388232">Si cette règle est définie sur "true" ou si elle n'est pas configurée, <ph name="PRODUCT_OS_NAME" /> affiche les utilisateurs existants sur l'écran de connexion et permet d'en choisir un. Si cette règle est définie sur "false", <ph name="PRODUCT_OS_NAME" /> affiche une boîte de dialogue demandant le nom d'utilisateur et le mot de passe pour se connecter.</translation>
 <translation id="3868347814555911633">Cette règle n'est active qu'en mode "point de vente".
@@ -1362,6 +1381,13 @@ Si elle est désactivée, le moteur de recherche par défaut n'est pas importé.
 
 Si elle n'est pas configurée, l'utilisateur peut être invité à effectuer l'importation, ou celle-ci peut se faire automatiquement.</translation>
 <translation id="5423197884968724595">Nom de la restriction Android WebView :</translation>
+<translation id="543559563129402336">Cette règle étant abandonnée, utilisez à la place la règle <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" />, qui est plus précise.
+
+      Cette règle impose le mode restreint modéré sur YouTube et empêche les utilisateurs de modifier ce paramètre.
+
+      Si ce paramètre est activé, le mode restreint sur YouTube est au moins au niveau modéré.
+
+      Si ce paramètre est désactivé ou si aucune valeur n'est définie, <ph name="PRODUCT_NAME" /> n'applique pas le mode restreint sur YouTube. Toutefois, des règles externes comme les règles de YouTube peuvent toujours appliquer le mode restreint.</translation>
 <translation id="5447306928176905178">Activer l'envoi d'informations sur la mémoire (taille du tas JS) à la page (obsolète)</translation>
 <translation id="5457065417344056871">Activer le mode Invité dans le navigateur</translation>
 <translation id="5457924070961220141">Permet de configurer le moteur de rendu HTML par défaut lorsque <ph name="PRODUCT_FRAME_NAME" /> est installé. 
@@ -1538,6 +1564,13 @@ Si l'option "Forcé" est sélectionnée, les pages peuvent être ouvertes UNIQUE
 
       Si cette règle n'est pas définie ou si elle est définie sur "False", aucun contrôle de révocation en ligne n'est effectué par <ph name="PRODUCT_NAME" /> dans <ph name="PRODUCT_NAME" /> 19 ou version ultérieure.</translation>
 <translation id="5966615072639944554">Extensions autorisées à utiliser l'API d'attestation à distance</translation>
+<translation id="5974970919245996815">Cette règle renvoie au serveur des informations sur l'état d'Android.
+      
+
+      Si cette règle est définie sur "False", les informations ne sont pas transmises.
+      Si cette règle est définie sur "True" ou si elle n'est pas configurée, les informations sont transmises.
+
+      Cette règle ne s'applique que si les applications Android sont activées.</translation>
 <translation id="5983708779415553259">Comportement par défaut des sites ne figurant dans aucun pack de contenu</translation>
 <translation id="5997543603646547632">Utiliser le format d'horloge 24 h par défaut</translation>
 <translation id="6009903244351574348">Autorisez <ph name="PRODUCT_FRAME_NAME" /> à gérer les types de contenu répertoriés. 
@@ -1798,6 +1831,7 @@ Si vous désactivez cette option ou si vous ne la définissez pas, l'outil de re
 <translation id="681446116407619279">Modèles d'authentification compatibles</translation>
 <translation id="6828905844648501476">Si cette règle est définie sur "True" ou n'est pas définie, <ph name="PRODUCT_NAME" /> permettra d'ajouter une personne à partir du gestionnaire d'utilisateurs.
       Si cette règle est définie sur "False", <ph name="PRODUCT_NAME" /> n'autorisera pas la création de nouveaux profils à partir du gestionnaire d'utilisateurs.</translation>
+<translation id="685769593149966548">Appliquer le mode restreint strict sur YouTube</translation>
 <translation id="687046793986382807">Cette règle a été supprimée de la version 35 de <ph name="PRODUCT_NAME" />.
 
       Les informations relatives à la mémoire sont tout de même consignées sur cette page, quelle que soit l'option retenue, mais les tailles indiquées sont
@@ -2143,12 +2177,6 @@ Si cette règle n'est pas configurée, la règle "AllowImages" est utilisée, et
 
       Les identifiants des types de connexion reconnus sont "ethernet", "wifi", "wimax", "bluetooth" et "cellular".</translation>
 <translation id="7763614521440615342">Afficher des recommandations de contenus sur la page "Nouvel onglet"</translation>
-<translation id="7766336524667238790">Transmettre des informations sur la session kiosque active,
-      telles que l'ID et la version de l'application.
-
-      Si la règle est définie sur "False", les informations sur la session ne seront
-      pas transmises. Si elle est définie sur "True" ou si elle n'est pas configurée,
-      les informations sur la session seront transmises.</translation>
 <translation id="7774768074957326919">Utiliser les paramètres proxy du système</translation>
 <translation id="7775831859772431793">Vous pouvez indiquer ici l'URL du serveur proxy.
 
@@ -2259,6 +2287,7 @@ Si ce paramètre est désactivé et que les connexions UDP sortantes sont filtr�
       Si la règle est définie sur la valeur "true", le format 24 heures est utilisé sur l'appareil. Si elle est définie sur la valeur "false", le format 12 heures est utilisé.
 
       Si cette règle n'est pas définie, le format 24 heures est utilisé par défaut sur l'appareil.</translation>
+<translation id="8114382167597081590">Ne pas appliquer le mode restreint sur YouTube</translation>
 <translation id="8118665053362250806">Définir la taille du cache disque de support</translation>
 <translation id="8135937294926049787">Indiquer le délai d'inactivité au terme duquel l'écran s'éteint en cas d'utilisation de l'alimentation secteur.
 
@@ -2387,6 +2416,10 @@ Si ce paramètre n'est pas défini, l'utilisateur peut décider d'utiliser cette
 <translation id="8369602308428138533">Délai d'arrêt de l'écran (secteur)</translation>
 <translation id="8382184662529825177">Autoriser l'utilisation de l'attestation à distance pour assurer la protection du contenu de l'appareil</translation>
 <translation id="838870586332499308">Activer l'itinérance des données</translation>
+<translation id="8390049129576938611">Désactive la visionneuse de documents PDF intégrée dans <ph name="PRODUCT_NAME" />. Les fichiers PDF sont alors traités comme des téléchargements que l'utilisateur peut ouvrir avec l'application par défaut.
+
+      Si cette règle n'est pas définie ou si elle est désactivée, le plug-in PDF est utilisé pour ouvrir les fichiers PDF, sauf si l'utilisateur le désactive.</translation>
+<translation id="8402079500086185021">Toujours ouvrir les fichiers PDF en externe</translation>
 <translation id="8412312801707973447">Si des contrôles OCSP/CRL en ligne sont effectués</translation>
 <translation id="8413348101535146315">Permet de mettre fin aux processus dans le gestionnaire des tâches de <ph name="PRODUCT_NAME" />.
 
@@ -2483,6 +2516,7 @@ Cette règle est facultative. Si elle n'est pas configurée, aucun mot clé n'ac
 
 Cette règle n'est prise en compte que si la règle "DefaultSearchProviderEnabled" est activée.</translation>
 <translation id="8731693562790917685">L'option "Paramètres de contenu" permet d'indiquer la manière dont le contenu d'un type spécifique (par exemple, Cookies, Images ou JavaScript) est géré.</translation>
+<translation id="8736538322216687231">Appliquer un mode restreint minimal sur YouTube</translation>
 <translation id="8749370016497832113">Permet la suppression de l'historique du navigateur et de l'historique des téléchargements dans <ph name="PRODUCT_NAME" /> sans permettre à l'utilisateur de modifier ce paramètre.
 
       Sachez que, même si cette règle est désactivée, il n'est pas garanti que l'historique du navigateur et l'historique des téléchargements soient conservés. Les utilisateurs peuvent, dans certains cas, modifier ou supprimer directement les fichiers de base de données de ces historiques. De même, le navigateur peut expirer ou archiver à tout moment des éléments de l'historique.
@@ -2569,13 +2603,6 @@ Si vous désactivez ce paramètre ou s'il n'est pas défini, le nom canonique du
       automatiquement contacter Quirks Server et télécharger les fichiers de configuration,
       s'ils sont disponibles, et les enregistrer sur l'appareil.  Ces fichiers pourront, par
       exemple, être utilisés pour améliorer la qualité d'affichage des moniteurs connectés.</translation>
-<translation id="8905426178924715309">Cette règle est abandonnée. Veuillez utiliser ForceGoogleSafeSearch et ForceYouTubeSafetyMode de préférence. Cette règle sera ignorée si des règles ForceGoogleSafeSearch ou ForceYouTubeSafetyMode sont configurées.
-
-      Cette règle entraîne l'activation obligatoire de SafeSearch pour les recherches sur le Web Google. Ce paramètre ne peut pas être modifié par l'utilisateur. Le mode sécurisé de YouTube est également activé.
-
-      Si vous activez ce paramètre, SafeSearch est toujours actif dans la recherche Google et sur YouTube.
-
-      Si vous désactivez ce paramètre ou si vous ne le configurez pas, SafeSearch ne s'appliquera pas à la recherche Google ni à YouTube.</translation>
 <translation id="8906768759089290519">Activer le mode invité</translation>
 <translation id="8908294717014659003">Vous permet de définir si les sites Web sont autorisés à accéder aux périphériques de capture multimédia. L'accès aux périphériques de capture multimédia peut être autorisé par défaut, ou l'utilisateur doit confirmer son autorisation chaque fois qu'un site Web souhaite accéder à ceux-ci.
 

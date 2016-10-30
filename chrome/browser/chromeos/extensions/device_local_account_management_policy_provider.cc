@@ -17,6 +17,7 @@
 #include "extensions/common/extension.h"
 #include "extensions/common/manifest.h"
 #include "extensions/common/manifest_constants.h"
+#include "extensions/common/manifest_handlers/app_isolation_info.h"
 #include "ui/base/l10n/l10n_util.h"
 
 namespace chromeos {
@@ -437,8 +438,8 @@ const char* const kSafePermissionStrings[] = {
 
     "contentSettings",
 
-    // Provides access to URLs.
-    "contextMenus",
+    // Privacy sensitive URL access.
+    // "contextMenus",
 
     // This would provie access to auth cookies, so needs to be blocked.
     // "cookies",
@@ -512,8 +513,8 @@ const char* const kSafePermissionStrings[] = {
     // However, keyboards and mice are apparently not surfaced via this API.
     "hid",
 
-    // Just URLs and meta data.
-    "history",
+    // Privacy sensitive URL access.
+    // "history",
 
     // Not really useful as there's no signed-in user, so OK to allow.
     "identity",
@@ -598,8 +599,8 @@ const char* const kSafePermissionStrings[] = {
     // that serial input devices are exceedingly rare, OK to allow.
     "serial",
 
-    // Access to URLs.
-    "sessions",
+    // Privacy sensitive URL access.
+    // "sessions",
 
     "socket",
 
@@ -629,11 +630,11 @@ const char* const kSafePermissionStrings[] = {
     // for user consent or (2) return blank capture.
     // "tabCapture",
 
-    // URLs and page titles.
-    "tabs",
+    // Privacy sensitive URL access.
+    // "tabs",
 
-    // URLs and page titles.
-    "topSites",
+    // Privacy sensitive URL access.
+    // "topSites",
 
     // Allows to generate TTS, but no content access. Just UX.
     "tts",
@@ -660,8 +661,8 @@ const char* const kSafePermissionStrings[] = {
     // Just UX.
     "wallpaper",
 
-    // Access to URLs.
-    "webNavigation",
+    // Privacy sensitive URL access.
+    // "webNavigation",
 
     // Provides access to cookies and form upload data. Options: (1) block,
     // (2) strip all content in events.
@@ -790,14 +791,22 @@ bool IsSafeForPublicSession(const extensions::Extension* extension) {
         if (ArrayContains(kSafePermissionStrings, permission_string)) {
           continue;
         }
-        // Allow arbitrary web requests.  Don't include <all_urls> because that
-        // also matches file:// schemes.
+        // Web requests (origin permissions).  Don't include <all_urls> because
+        // that also matches file:// schemes.
         if (base::StartsWith(permission_string, "https://",
                              base::CompareCase::SENSITIVE) ||
             base::StartsWith(permission_string, "http://",
                              base::CompareCase::SENSITIVE) ||
             base::StartsWith(permission_string, "ftp://",
                              base::CompareCase::SENSITIVE)) {
+          // Allow origin permissions if the extension is isolated from the main
+          // browser session (so it can't access user cookies, etc.).
+          if (!extensions::AppIsolationInfo::HasIsolatedStorage(extension)) {
+            LOG(ERROR) << extension->id() << " does not have isolated storage "
+                       "and it requested origin permission: "
+                       << permission_string;
+            safe = false;
+          }
           continue;
         }
         LOG(ERROR) << extension->id()

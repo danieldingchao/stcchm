@@ -143,18 +143,18 @@ ChildThreadImpl::Options GetOptions(
 }  // namespace
 
 GpuChildThread::GpuChildThread(
-    gpu::GpuWatchdogThread* watchdog_thread,
+    std::unique_ptr<gpu::GpuWatchdogThread> watchdog_thread,
     bool dead_on_arrival,
     const gpu::GPUInfo& gpu_info,
     const DeferredMessages& deferred_messages,
     gpu::GpuMemoryBufferFactory* gpu_memory_buffer_factory)
     : ChildThreadImpl(GetOptions(gpu_memory_buffer_factory)),
       dead_on_arrival_(dead_on_arrival),
+      watchdog_thread_(std::move(watchdog_thread)),
       gpu_info_(gpu_info),
       deferred_messages_(deferred_messages),
       in_browser_process_(false),
       gpu_memory_buffer_factory_(gpu_memory_buffer_factory) {
-  watchdog_thread_ = watchdog_thread;
 #if defined(OS_WIN)
   target_services_ = NULL;
 #endif
@@ -239,7 +239,6 @@ bool GpuChildThread::OnControlMessageReceived(const IPC::Message& msg) {
     IPC_MESSAGE_HANDLER(GpuMsg_Clean, OnClean)
     IPC_MESSAGE_HANDLER(GpuMsg_Crash, OnCrash)
     IPC_MESSAGE_HANDLER(GpuMsg_Hang, OnHang)
-    IPC_MESSAGE_HANDLER(GpuMsg_DisableWatchdog, OnDisableWatchdog)
     IPC_MESSAGE_HANDLER(GpuMsg_GpuSwitched, OnGpuSwitched)
     IPC_MESSAGE_UNHANDLED(handled = false)
   IPC_END_MESSAGE_MAP()
@@ -380,12 +379,6 @@ void GpuChildThread::OnFinalize() {
   base::MessageLoop::current()->QuitWhenIdle();
 }
 
-void GpuChildThread::StopWatchdog() {
-  if (watchdog_thread_.get()) {
-    watchdog_thread_->Stop();
-  }
-}
-
 void GpuChildThread::OnCollectGraphicsInfo() {
   if (dead_on_arrival_)
     return;
@@ -470,18 +463,6 @@ void GpuChildThread::OnHang() {
   for (;;) {
     // Do not sleep here. The GPU watchdog timer tracks the amount of user
     // time this thread is using and it doesn't use much while calling Sleep.
-  }
-}
-
-void GpuChildThread::OnDisableWatchdog() {
-  DVLOG(1) << "GPU: Disabling watchdog thread";
-  if (watchdog_thread_.get()) {
-    // Disarm the watchdog before shutting down the message loop. This prevents
-    // the future posting of tasks to the message loop.
-    if (watchdog_thread_->message_loop())
-      watchdog_thread_->PostAcknowledge();
-    // Prevent rearming.
-    watchdog_thread_->Stop();
   }
 }
 

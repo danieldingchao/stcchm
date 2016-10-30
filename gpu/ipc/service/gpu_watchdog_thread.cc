@@ -15,6 +15,7 @@
 #include "base/files/file_util.h"
 #include "base/location.h"
 #include "base/macros.h"
+#include "base/memory/ptr_util.h"
 #include "base/power_monitor/power_monitor.h"
 #include "base/process/process.h"
 #include "base/single_thread_task_runner.h"
@@ -86,19 +87,12 @@ GpuWatchdogThread::GpuWatchdogThread()
 }
 
 // static
-scoped_refptr<GpuWatchdogThread> GpuWatchdogThread::Create() {
-  scoped_refptr<GpuWatchdogThread> watchdog_thread = new GpuWatchdogThread();
+std::unique_ptr<GpuWatchdogThread> GpuWatchdogThread::Create() {
+  auto watchdog_thread = base::WrapUnique(new GpuWatchdogThread);
   base::Thread::Options options;
   options.timer_slack = base::TIMER_SLACK_MAXIMUM;
   watchdog_thread->StartWithOptions(options);
   return watchdog_thread;
-}
-
-void GpuWatchdogThread::PostAcknowledge() {
-  // Called on the monitored thread. Responds with OnAcknowledge. Cannot use
-  // the method factory. Rely on reference counting instead.
-  task_runner()->PostTask(FROM_HERE,
-                          base::Bind(&GpuWatchdogThread::OnAcknowledge, this));
 }
 
 void GpuWatchdogThread::CheckArmed() {
@@ -106,8 +100,14 @@ void GpuWatchdogThread::CheckArmed() {
   // and post an acknowledge task now. No barrier is needed as
   // |awaiting_acknowledge_| is only ever read from this thread.
   if (base::subtle::NoBarrier_CompareAndSwap(&awaiting_acknowledge_, true,
-                                             false))
-    PostAcknowledge();
+                                             false)) {
+    // Called on the monitored thread. Responds with OnAcknowledge. Cannot use
+    // the method factory. As we stop the task runner before destroying this
+    // class, the unretained reference will always outlive the task.
+    task_runner()->PostTask(
+        FROM_HERE,
+        base::Bind(&GpuWatchdogThread::OnAcknowledge, base::Unretained(this)));
+  }
 }
 
 void GpuWatchdogThread::ReportProgress() {
@@ -138,11 +138,7 @@ void GpuWatchdogThread::GpuWatchdogTaskObserver::DidProcessTask(
     const base::PendingTask& pending_task) {}
 
 GpuWatchdogThread::~GpuWatchdogThread() {
-  // Verify that the thread was explicitly stopped. If the thread is stopped
-  // implicitly by the destructor, CleanUp() will not be called.
-  DCHECK(!weak_factory_.HasWeakPtrs());
-  // TODO(jbauman): Switch to DCHECK after we debug http://crbug.com/609252
-  CHECK(!IsRunning());
+  Stop();
 
 #if defined(OS_WIN)
   CloseHandle(watched_thread_handle_);
@@ -411,8 +407,11 @@ bool GpuWatchdogThread::MatchXEventAtom(XEvent* event) {
 
 #endif
 void GpuWatchdogThread::AddPowerObserver() {
-  task_runner()->PostTask(
-      FROM_HERE, base::Bind(&GpuWatchdogThread::OnAddPowerObserver, this));
+  // As we stop the task runner before destroying this class, the unretained
+  // reference will always outlive the task.
+  task_runner()->PostTask(FROM_HERE,
+                          base::Bind(&GpuWatchdogThread::OnAddPowerObserver,
+                                     base::Unretained(this)));
 }
 
 void GpuWatchdogThread::OnAddPowerObserver() {
