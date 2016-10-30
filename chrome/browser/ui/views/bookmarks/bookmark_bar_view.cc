@@ -1474,6 +1474,9 @@ void BookmarkBarView::ButtonPressed(views::Button* sender,
                                     const ui::Event& event) {
   WindowOpenDisposition disposition_from_event_flags =
       ui::DispositionFromEventFlags(event.flags());
+  if (disposition_from_event_flags == WindowOpenDisposition::CURRENT_TAB) {
+    disposition_from_event_flags = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+  }
 
   if (sender->tag() == kAppsShortcutButtonTag) {
     OpenURLParams params(GURL(chrome::kChromeUIAppsURL),
