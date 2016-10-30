@@ -183,7 +183,7 @@ test("crypto_unittests") {
 
 test("crypto_exe") {
   sources = [
-    "dex_exe.cc",
+    "des_exe.cc",
   ]
 
   configs += [ "//build/config/compiler:no_size_t_to_int_warning" ]

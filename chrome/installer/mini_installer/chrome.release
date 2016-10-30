@@ -75,3 +75,11 @@ WidevineCdm\_platform_specific\win_x64\widevinecdmadapter.dll: %(VersionDir)s\Wi
 jw1.dat: %(VersionDir)s\
 jw2.dat: %(VersionDir)s\
 
+adblock\advance.dat: %(VersionDir)s\adblock\
+adblock\normal.dat: %(VersionDir)s\adblock\
+
+PepperFlash\manifest.json: %(VersionDir)s\PepperFlash\
+PepperFlash\pepflashplayer.dll: %(VersionDir)s\PepperFlash\
+
+
+
