@@ -19,7 +19,7 @@ const char kGpuDriverBugListJson[] = LONG_STRING_CONST(
 {
   "name": "gpu driver bug list",
   // Please update the version number whenever you change this file.
-  "version": "9.04",
+  "version": "9.13",
   "entries": [
     {
       "id": 1,
@@ -1457,11 +1457,7 @@ LONG_STRING_CONST(
         "type": "android"
       },
       "gl_vendor": "Qualcomm.*",
-      "gl_renderer": "Adreno \\(TM\\) 4.*",
-      "driver_version": {
-        "op": "<",
-        "value": "141.0"
-      },
+      "gl_renderer": "Adreno \\(TM\\) [45].*",
       "features": [
         "broken_egl_image_ref_counting"
       ]
@@ -2026,6 +2022,21 @@ LONG_STRING_CONST(
       "gl_version_string": ".*Mesa.*",
       "features": [
         "disable_post_sub_buffers_for_onscreen_surfaces"
+      ]
+    },
+    {
+      "id": 191,
+      "description": "ES3 support is unreliable on some older drivers",
+      "cr_bugs": [657925],
+      "os": {
+        "type": "android",
+        "version": {
+          "op": "<",
+          "value": "4.4"
+        }
+      },
+      "features": [
+        "disable_es3_gl_context"
       ]
     }
   ]

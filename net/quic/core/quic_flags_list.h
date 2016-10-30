@@ -154,3 +154,11 @@ QUIC_FLAG(bool, FLAGS_quic_buffer_packets_after_chlo, false)
 // processed, but now that flow control is implemented, it can be received once
 // decrypted.
 QUIC_FLAG(bool, FLAGS_quic_receive_packet_once_decrypted, false)
+
+// If true, v33 QUIC client uses 1 bit to specify 8-byte connection id in
+// public flag.
+QUIC_FLAG(bool, FLAGS_quic_remove_v33_hacks2, false)
+
+// If enabled, fix double call of
+// InsertLocallyClosedStreamsHighestOffset in ResetPromised.
+QUIC_FLAG(bool, FLAGS_quic_bugfix_reset_promised, true)

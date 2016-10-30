@@ -46,6 +46,7 @@ class CORE_EXPORT MediaControls final : public HTMLDivElement {
 
   void show();
   void hide();
+  bool isVisible() const;
 
   void playbackStarted();
   void playbackProgressed();
@@ -81,6 +82,15 @@ class CORE_EXPORT MediaControls final : public HTMLDivElement {
   // used for overlap checking during text track layout. May be null.
   LayoutObject* layoutObjectForTextTrackLayout();
 
+  // Return the internal elements, which is used by registering clicking
+  // EventHandlers from MediaControlsWindowEventListener.
+  MediaControlPanelElement* panelElement() { return m_panel; }
+  MediaControlTimelineElement* timelineElement() { return m_timeline; }
+  MediaControlCastButtonElement* castButtonElement() { return m_castButton; }
+  MediaControlVolumeSliderElement* volumeSliderElement() {
+    return m_volumeSlider;
+  }
+
   // Notify us that our controls enclosure has changed width.
   void notifyPanelWidthChanged(const LayoutUnit& newWidth);
 
@@ -113,7 +123,8 @@ class CORE_EXPORT MediaControls final : public HTMLDivElement {
     IgnoreNone = 0,
     IgnoreVideoHover = 1 << 0,
     IgnoreFocus = 1 << 1,
-    IgnoreControlsHover = 1 << 2
+    IgnoreControlsHover = 1 << 2,
+    IgnoreWaitForTimer = 1 << 3,
   };
 
   bool shouldHideMediaControls(unsigned behaviorFlags = 0) const;
@@ -171,6 +182,7 @@ class CORE_EXPORT MediaControls final : public HTMLDivElement {
   int m_panelWidth;
 
   bool m_allowHiddenVolumeControls : 1;
+  bool m_keepShowingUntilTimerFires : 1;
 };
 
 DEFINE_ELEMENT_TYPE_CASTS(MediaControls, isMediaControls());

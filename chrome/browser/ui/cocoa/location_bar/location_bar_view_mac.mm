@@ -121,8 +121,9 @@ LocationBarViewMac::LocationBarViewMac(AutocompleteTextField* field,
           new ManagePasswordsDecoration(command_updater, this)),
       browser_(browser),
       location_bar_visible_(true),
-      should_show_secure_verbose_(true),
-      should_animate_security_verbose_(true),
+      should_show_secure_verbose_(false),
+      should_show_nonsecure_verbose_(false),
+      should_animate_security_verbose_(false),
       is_width_available_for_security_verbose_(false),
       weak_ptr_factory_(this) {
   ScopedVector<ContentSettingImageModel> models =
@@ -149,12 +150,13 @@ LocationBarViewMac::LocationBarViewMac(AutocompleteTextField* field,
   if (command_line->HasSwitch(switches::kMaterialSecurityVerbose)) {
     std::string security_verbose_flag =
         command_line->GetSwitchValueASCII(switches::kMaterialSecurityVerbose);
-
     should_show_secure_verbose_ =
         security_verbose_flag ==
             switches::kMaterialSecurityVerboseShowAllAnimated ||
         security_verbose_flag ==
             switches::kMaterialSecurityVerboseShowAllNonAnimated;
+
+    should_show_nonsecure_verbose_ = true;
 
     should_animate_security_verbose_ =
         security_verbose_flag ==
@@ -527,6 +529,9 @@ void LocationBarViewMac::Layout() {
     }
   }
 
+  if (!security_state_bubble_decoration_->IsVisible())
+    security_state_bubble_decoration_->ResetAnimation();
+
   // These need to change anytime the layout changes.
   // TODO(shess): Anytime the field editor might have changed, the
   // cursor rects almost certainly should have changed.  The tooltips
@@ -672,20 +677,25 @@ WebContents* LocationBarViewMac::GetWebContents() {
 }
 
 bool LocationBarViewMac::ShouldShowEVBubble() const {
-  return (GetToolbarModel()->GetSecurityLevel(false) ==
-          security_state::SecurityStateModel::EV_SECURE) &&
-         should_show_secure_verbose_;
+  return GetToolbarModel()->GetSecurityLevel(false) ==
+         security_state::SecurityStateModel::EV_SECURE;
 }
 
 bool LocationBarViewMac::ShouldShowSecurityState() const {
+  if (omnibox_view_->IsEditingOrEmpty() ||
+      omnibox_view_->model()->is_keyword_hint()) {
+    return false;
+  }
+
   security_state::SecurityStateModel::SecurityLevel security =
       GetToolbarModel()->GetSecurityLevel(false);
-  bool has_verbose_for_security =
-      security == security_state::SecurityStateModel::DANGEROUS ||
-      (IsSecureConnection(security) && should_show_secure_verbose_);
+  if (security == security_state::SecurityStateModel::EV_SECURE)
+    return true;
+  else if (security == security_state::SecurityStateModel::SECURE)
+    return should_show_secure_verbose_;
 
-  return has_verbose_for_security && !omnibox_view_->IsEditingOrEmpty() &&
-         !omnibox_view_->model()->is_keyword_hint();
+  return should_show_nonsecure_verbose_ &&
+         security == security_state::SecurityStateModel::DANGEROUS;
 }
 
 bool LocationBarViewMac::IsLocationBarDark() const {
@@ -881,7 +891,7 @@ void LocationBarViewMac::UpdateSecurityState(bool tab_changed) {
   // animate the decoration if animation is enabled and the state changed is
   // not from a tab switch.
   if (is_width_available_for_security_verbose_) {
-    if (security_state_bubble_decoration_->HasAnimatedOut())
+    if (!tab_changed && security_state_bubble_decoration_->HasAnimatedOut())
       security_state_bubble_decoration_->AnimateIn(false);
     else if (!should_animate_security_verbose_ || tab_changed)
       security_state_bubble_decoration_->ShowWithoutAnimation();

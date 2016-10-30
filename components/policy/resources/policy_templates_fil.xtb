@@ -305,6 +305,7 @@
       Kung nakatakda sa false ang HardwareAccelerationModeEnabled, babalewalain ag Disable3DAPIs at magiging katumbas nito ang pagkakatakda ng Disable3DAPIs sa true.</translation>
 <translation id="2168397434410358693">Idle delay kapag tumatakbo habang nakasaksak sa kuryente</translation>
 <translation id="2170233653554726857">I-enable ang pag-optimize ng WPAD</translation>
+<translation id="2178899310296064282">Magpatupad ng kahit Moderate na Restricted Mode lang sa YouTube</translation>
 <translation id="2188979373208322108">Pinapagana ang bar ng bookmark sa <ph name="PRODUCT_NAME" />.
 
       Kung pinagana mo ang setting na ito, magpapakita ng isang bar ng bookmark ang <ph name="PRODUCT_NAME" />.
@@ -572,6 +573,7 @@
       Kung iyong i-enable o i-disable ang setting na ito, hindi maaaring baguhin o i-override ng mga user ang setting na "I-enable ang proteksyon sa phishing at malware" sa <ph name="PRODUCT_NAME" />.
 
       Kung iiwanang hindi nakatakda ang patakarang ito, ma-e-enable ito, ngunit mababago ito ng user.</translation>
+<translation id="2787173078141616821">Ulat ng impormasyon tungkol sa status ng Android</translation>
 <translation id="2801230735743888564">Nagbibigay-daan sa mga user na makapaglaro ng dinosaur easter egg game kapag offline ang device.
 
       Kung itatakda sa False ang patakarang ito, kapag naka-offline ang device, hindi makakapaglaro ng dinosaur easter egg game ang mga user. Kung itatakda naman sa True ang setting na ito, makakapaglaro ng dinosaur game ang mga user. Kung hindi itatakda ang patakarang ito, hindi makakapaglaro ng dinosaur easter egg game ang mga user na naka-enroll sa Chrome OS, ngunit sa ibang mga pagkakataon, maaari itong malaro ng mga user.</translation>
@@ -806,6 +808,15 @@
 <translation id="3417418267404583991">Kung nakatakda sa true o hindi naka-configure ang patakarang ito, papaganahin ng <ph name="PRODUCT_OS_NAME" /> ang mga pag-login ng bisita. Ang mga pag-login ng bisita ay mga walang pagkakakilanlang session ng user at hindi nangangailangan ng password.
 
       Kung nakatakda sa false ang patakarang ito, hindi papayagan ng <ph name="PRODUCT_OS_NAME" /> na masimulan ang mga session ng bisita.</translation>
+<translation id="3418871497193485241">Nagpapatupad ng minimum na Restricted Mode sa YouTube upang pigilan ang mga user na
+      pumili ng mas maluwag na mode kaysa rito.
+
+      Kung itatakda ang setting na ito sa Mahigpit, palaging aktibo ang Mahigpit na Restricted Mode sa YouTube.
+
+      Kung itatakda ang setting na ito sa Katamtaman, maaari lang piliin ng user ang Katamtamang Restricted Mode
+      at Mahigpit na Restricted Mode sa YouTube, ngunit hindi maaaring i-disable ang Restricted Mode.
+
+      Kung itatakda ang setting na ito sa Naka-off o wala kang itatakdang value, hindi ipapatupad ng <ph name="PRODUCT_NAME" /> ang Restricted Mode sa YouTube. Gayunpaman, ang Restricted Mode ay maaari pa ring ipatupad ng mga panlabas na patakaran gaya ng mga patakaran ng YouTube.</translation>
 <translation id="3428247105888806363">Paganahin ang paghula sa network</translation>
 <translation id="3449886121729668969">Nagko-configure sa mga setting ng proxy para sa <ph name="PRODUCT_NAME" />. Magiging available din ang mga setting ng proxy na ito para sa mga ARC app.
 
@@ -857,11 +868,6 @@
 <translation id="3660562134618097814">Ilipat ang cookies ng SAML IdP sa pag-log in</translation>
 <translation id="3709266154059827597">I-configure ang blacklist ng pag-install ng extension</translation>
 <translation id="3711895659073496551">Suspendihin</translation>
-<translation id="3715448429089775791">Pinupuwersang maging aktibo ang YouTube Safety Mode at pinipigilan ang mga user sa pagbabago sa setting na ito.
-
-      Kung i-enable mo ang setting na ito, palaging aktibo ang Safety Mode sa YouTube.
-
-      Kung i-disable mo ang setting na ito o hindi nagtakda ng value, hindi ipapatupad ang Safety Mode sa YouTube.</translation>
 <translation id="3750220015372671395">I-block ang pagbuo ng key sa mga site na ito</translation>
 <translation id="3756011779061588474">I-block ang mode ng developer</translation>
 <translation id="3758089716224084329">Binibigyang-daan kang tukuyin ang proxy server na ginamit ng <ph name="PRODUCT_NAME" /> at pinipigilan ang mga user na baguhin ang mga setting ng proxy.
@@ -926,6 +932,12 @@
 <translation id="384743459174066962">Binibigyang-daan kang magtakda ng isang listahan ng mga pattern ng url na tumutukoy sa mga site na hindi pinapayagang magbukas ng mga popup.
 
           Kung hinayaang hindi nakatakda ang patakarang ito gagamitin ang global na default na halaga para sa lahat ng site mula sa patakarang 'DefaultPopupsSetting' kung nakatakda ito, o kung hindi man ay sa personal na configuration ng user.</translation>
+<translation id="3851039766298741586">Nag-uulat ng impormasyon tungkol sa aktibong session sa kiosk, gaya ng
+      application ID at bersyon.
+
+      Kung itatakda ang patakaran sa false, hindi iuulat ang impormasyon ng session sa
+      kiosk. Kung itatakda sa true o kung sadyang hindi itatakda, iuulat ang impormasyon ng session
+      sa kiosk.</translation>
 <translation id="3859780406608282662">Magdagdag ng parameter sa pagkuha ng seed ng Mga Variation sa <ph name="PRODUCT_OS_NAME" />.
 
       Kung tinukoy, magdaragdag ito ng parameter ng query na tinatawag na 'restrict' sa URL na ginagamit upang kunin ang seed ng Mga Variation. Ang value ng parameter ay ang value na tinukoy sa patakarang ito.
@@ -940,6 +952,13 @@
 
           Kikilalanin lang ang patakaran kung naka-enable ang patakaran na 'DefaultSearchProviderEnabled.'</translation>
 <translation id="3864818549971490907">Default na setting ng mga plugin</translation>
+<translation id="386487026071140458">Hindi na ginagamit ang patakarang ito, mangyaring <ph name="FORCEGOOGLESAFESEARCH_POLICY_NAME" /> at <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" /> na lang ang gamitin. Babalewalain ang patakarang ito kung itatakda ang alinman sa mga patakarang <ph name="FORCEGOOGLESAFESEARCH_POLICY_NAME" />, <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" /> o ang (hindi na ginagamit na) <ph name="FORCEYOUTUBESAFETYMODE_POLICY_NAME" />.
+
+      Pinupuwersang isagawa ang mga query sa Google Search Web nang nakatakda ang SafeSearch sa aktibo at pinipigilan ang mga user na baguhin ang setting na ito. Ipinapatupad din ng setting na ito ang Katamtamang Restricted Mode sa YouTube.
+
+      Kung ie-enable mo ang setting na ito, palaging aktibo ang SafeSearch sa Google Search at Katamtamang Restricted Mode sa YouTube.
+
+      Kung idi-disable mo ang setting na ito o hindi ka magtatakda ng value, hindi ipapatupad ang SafeSearch sa Google Search at Restricted Mode sa YouTube.</translation>
 <translation id="3866249974567520381">Paglalarawan</translation>
 <translation id="3866530186104388232">Kung nakatakda sa true o hindi naka-configure ang patakarang ito, ipapakita ng <ph name="PRODUCT_OS_NAME" /> ang mga umiiral nang user sa screen ng pag-login at papayag na pumili ng isa. Kung nakatakda sa false ang patakarang ito, gagamitin ng <ph name="PRODUCT_OS_NAME" /> ang prompt ng username/password para sa pag-login.</translation>
 <translation id="3868347814555911633">Sa retail mode lang aktibo ang patakarang ito.
@@ -1338,6 +1357,13 @@
 
       Kung hindi ito nakatakda, maaaring tanungin sa user kung mag-i-import o hindi, o maaaring awtomatikong mangyari ang pag-import.</translation>
 <translation id="5423197884968724595">Pangalan ng paghihigpit sa WebView ng Android:</translation>
+<translation id="543559563129402336">Hindi na ginagamit ang patakarang ito. Pag-isipang gamitin ang <ph name="FORCEYOUTUBERESTRICT_POLICY_NAME" />, na io-override ang patakarang ito at magbibigay-daan sa mas mahusay na tuning.
+
+      Pinupuwersa ang Katamtamang Restricted Mode sa YouTube at pinipigilan ang mga user na baguhin ang setting na ito.
+
+      Kung ie-enable ang setting na ito, palaging hindi bababa sa Katamtaman ang ipapatupad na Restricted Mode sa YouTube.
+
+      Kung idi-disable ang setting na ito o wala kang itatakdang value, hindi ipapatupad ng <ph name="PRODUCT_NAME" /> ang Restricted Mode sa YouTube. Gayunpaman, ang Restricted Mode ay maaari pa ring ipatupad ng mga panlabas na patakaran gaya ng mga patakaran ng YouTube.</translation>
 <translation id="5447306928176905178">I-enable ang pag-uulat ng impormasyon ng memory (laki ng JS heap) sa pahina (hindi na ginagamit)</translation>
 <translation id="5457065417344056871">I-enable ang guest mode sa browser</translation>
 <translation id="5457924070961220141">Binibigyang-daan kang i-configure ang default na taga-render ng HTML kapag naka-install ang <ph name="PRODUCT_FRAME_NAME" />.
@@ -1514,6 +1540,13 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
 
       Kung hindi nakatakda ang patakaran, o kung nakatakda sa false, ang <ph name="PRODUCT_NAME" /> ay hindi magsasagawa ng mga online na pagsusuri sa pagbawi sa <ph name="PRODUCT_NAME" /> 19 at mas bago.</translation>
 <translation id="5966615072639944554">Mga extension na pinapayagang gamitin ang API ng malayuang pagpapatotoo</translation>
+<translation id="5974970919245996815">Ang ulat ng impormasyon tungkol sa status ng Android ay ipapadala pabalik sa
+      server.
+
+      Kung itatakda ang patakaran sa false, hindi iuulat ang impormasyon.
+      Kung itatakda ito sa true o kung sadyang hindi itatakda, iuulat ang impormasyon.
+
+      Nalalapat lang ang patakarang ito kung naka-enable ang mga Android app.</translation>
 <translation id="5983708779415553259">Default na pagkilos para sa mga site na wala sa anumang pack ng nilalaman</translation>
 <translation id="5997543603646547632">Gamitin ang 24 na oras na orasan bilang default</translation>
 <translation id="6009903244351574348">Payagan ang <ph name="PRODUCT_FRAME_NAME" /> na pangasiwaan ang mga nakalistang uri ng nilalaman.
@@ -1777,6 +1810,7 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
 <translation id="6828905844648501476">Kung hindi itatakda ang patakarang ito sa true o hindi ito iko-configure, papayagan ng <ph name="PRODUCT_NAME" /> ang Magdagdag ng Tao mula sa user manager.
 
       Kung itatakda ang patakarang ito sa false, hindi papayagan ng <ph name="PRODUCT_NAME" /> ang paggawa ng mga bagong profile mula sa profile manager.</translation>
+<translation id="685769593149966548">Ipatupad ang Mahigpit na Restricted Mode para sa YouTube</translation>
 <translation id="687046793986382807">Itinigil na ang patakarang ito simula noong bersyon 35 ng <ph name="PRODUCT_NAME" />.
 
       Iniuulat pa rin sa pahina ang impormasyon ng memory, ano pa man ang value ng opsyon, ngunit ang mga iniuulat na laki ay
@@ -2122,12 +2156,6 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
 
       Ang mga kilalang identifier ng uri ng koneksyon ay "ethernet," "wifi," "wimax," "bluetooth" at "cellular."</translation>
 <translation id="7763614521440615342">Ipakita ang mga suhestyon sa content sa page ng Bagong Tab</translation>
-<translation id="7766336524667238790">Nag-uulat ng impormasyon tungkol sa aktibong session sa kiosk, gaya ng
-      application ID at bersyon.
-
-      Kung itatakda ang patakaran sa false, hindi iuulat ang impormasyon ng
-      session. Kung itatakda sa true o kung sadyang hindi itatakda, iuulat ang impormasyon
-      ng session.</translation>
 <translation id="7774768074957326919">Gumamit ng mga setting ng proxy ng system</translation>
 <translation id="7775831859772431793">Maaari mong itakda rito ang URL ng proxy server.
 
@@ -2236,6 +2264,7 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
       Kung nakatakda ang patakaran sa true, gagamit ang device ng format ng orasan na 24 na oras. Kung nakatakda ang patakaran sa false, gagamit ang device ng format ng orasan na 12 oras.
 
       Kung hindi nakatakda ang patakarang ito, magde-default ang device sa format ng orasan na 24 na oras.</translation>
+<translation id="8114382167597081590">Huwag ipatupad ang Restricted Mode sa YouTube</translation>
 <translation id="8118665053362250806">Italkda ang laki ng cache ng media disk</translation>
 <translation id="8135937294926049787">Tinutukoy ang tagal ng oras na walang input ng user na kapag lumipas ay i-o-off ang screen kapag tumatakbo habang nakasaksak sa kuryente.
 
@@ -2364,6 +2393,10 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
 <translation id="8369602308428138533">Delay ng pag-off ng screen kapag tumatakbo habang nakasaksak sa kuryente</translation>
 <translation id="8382184662529825177">I-enable ang paggamit ng malayuang pagpapatotoo para sa pagprotekta sa nilalaman para sa device</translation>
 <translation id="838870586332499308">Payagan ang roaming ng data</translation>
+<translation id="8390049129576938611">Dini-disable ang internal PDF viewer sa <ph name="PRODUCT_NAME" />. Sa halip, itinuturing nito ito bilang download at pinapayagan ang user na magbukas ng mga PDF na file gamit ang default na application.
+
+      Kung iiwanang hindi nakatakda o naka-disable ang patakarang ito, gagamitin ang PDF plugin upang magbukas ng mga PDF file maliban na lang kung idi-disable ito ng user.</translation>
+<translation id="8402079500086185021">Palaging Magbukas ng mga PDF file nang external</translation>
 <translation id="8412312801707973447">Kung isinasagawa ang mga online na pagsusuri sa OCSP/CRL</translation>
 <translation id="8413348101535146315">Ine-enable ang pagwawakas ng mga proseso sa Task Manager ng <ph name="PRODUCT_NAME" />.
 
@@ -2465,6 +2498,7 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
 
           Isinasaalang-alang lamang ang patakarang ito kung pinagana ang patakarang 'DefaultSearchProviderEnabled'.</translation>
 <translation id="8731693562790917685">Pinapayagan ka ng Mga Setting ng Nilalaman na tukuyin kung paano pinamamahalaan ang mga nilalaman ng tukoy na uri (halimbawa Cookies, Mga Larawan o JavaScript).</translation>
+<translation id="8736538322216687231">Ipuwersa ang minimum na Restricted Mode sa Youtube</translation>
 <translation id="8749370016497832113">Pinapagana ang pagtatanggal ng kasaysayan ng browser at kasaysayan ng pag-download sa <ph name="PRODUCT_NAME" /> at pinipigilan ang mga user na baguhin ang setting na ito.
 
       Tandaan na kahit hindi pinagana ang patakarang ito, walang garantiyang mapapanatili ang kasaysayan sa pagba-browse at pag-download: maaaring ma-edit o matanggal nang direkta ng mga user ang mga file ng database ng kasaysayan, at maaaring i-expire o i-archive ng mismong browser ang anuman o lahat ng item ng kasaysayan anumang oras.
@@ -2542,13 +2576,6 @@ lumagpas na sa partikular na haba ng panahon ang oras na hindi ito nagamit.
       sa Quirks Server at ida-download nito ang mga configuration file,
       kung available, at iiimbak ang mga ito sa device.  Ang mga naturang file, halimbawa,
       ay maaaring gamitin upang pagandahin ang kalidad ng display ng mga naka-attach na monitor.</translation>
-<translation id="8905426178924715309">Hindi na ginagamit ang patakarang ito, pakigamit na lang ang ForceGoogleSafeSearch at ForceYouTubeSafetyMode. Babalewalain ang patakarang ito kung itatakda ang alinman sa mga patakarang ForceGoogleSafeSearch o ForceYouTubeSafetyMode.
-
-      Pinupuwersang isagawa ang mga query sa Google Web Search nang nakatakda ang SafeSearch sa aktibo at pinipigilan ang mga user na baguhin ang setting na ito. Ipinapatupad din ng setting na ito ang Safety Mode sa YouTube.
-
-      Kung ie-enable mo ang setting na ito, palaging aktibo ang SafeSearch sa Google Search at YouTube.
-
-      Kung idi-disable mo ang setting na ito o kung hindi ka magtatakda ng value, hindi ipapatupad ang SafeSearch sa Google Search at YouTube.</translation>
 <translation id="8906768759089290519">Payagan ang mode ng bisita</translation>
 <translation id="8908294717014659003">Binibigyang-daan kang itakda kung papayagan ang mga website na makakuha ng access sa mga media capture na device. Maaaring payagan bilang default ang access sa mga media capture na device, o maaaring tanungin ang user sa tuwing may website na nagnanais na mag-access sa mga media capture na device.
 

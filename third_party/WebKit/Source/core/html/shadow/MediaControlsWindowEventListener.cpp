@@ -39,6 +39,17 @@ void MediaControlsWindowEventListener::start() {
 
   if (LocalDOMWindow* window = getLocalDOMWindow()) {
     window->addEventListener(EventTypeNames::click, this, false);
+    window->addEventListener(EventTypeNames::resize, this, false);
+
+    m_mediaControls->panelElement()->addEventListener(EventTypeNames::click,
+                                                      this, false);
+    m_mediaControls->timelineElement()->addEventListener(EventTypeNames::click,
+                                                         this, false);
+    m_mediaControls->castButtonElement()->addEventListener(
+        EventTypeNames::click, this, false);
+    m_mediaControls->volumeSliderElement()->addEventListener(
+        EventTypeNames::click, this, false);
+
     m_isActive = true;
   }
 }
@@ -47,19 +58,28 @@ void MediaControlsWindowEventListener::stop() {
   if (!m_isActive)
     return;
 
-  if (LocalDOMWindow* window = getLocalDOMWindow())
+  if (LocalDOMWindow* window = getLocalDOMWindow()) {
     window->removeEventListener(EventTypeNames::click, this, false);
+    window->removeEventListener(EventTypeNames::resize, this, false);
+
+    m_mediaControls->panelElement()->removeEventListener(EventTypeNames::click,
+                                                         this, false);
+    m_mediaControls->timelineElement()->removeEventListener(
+        EventTypeNames::click, this, false);
+    m_mediaControls->castButtonElement()->removeEventListener(
+        EventTypeNames::click, this, false);
+    m_mediaControls->volumeSliderElement()->removeEventListener(
+        EventTypeNames::click, this, false);
+  }
   m_isActive = false;
 }
 
 void MediaControlsWindowEventListener::handleEvent(
     ExecutionContext* executionContext,
     Event* event) {
-  DCHECK(event->type() == EventTypeNames::click);
-  handleClickEvent();
-}
+  DCHECK(event->type() == EventTypeNames::click ||
+         event->type() == EventTypeNames::resize);
 
-void MediaControlsWindowEventListener::handleClickEvent() {
   if (!m_isActive)
     return;
   (*m_callback.get())();

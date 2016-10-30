@@ -222,8 +222,11 @@ bool ArcSupportHost::Initialize() {
       "learnMoreLocationServices",
       l10n_util::GetStringUTF16(IDS_ARC_OPT_IN_LEARN_MORE_LOCATION_SERVICES));
   loadtime_data->SetString(
-      "learnMoreClose",
+      "overlayClose",
       l10n_util::GetStringUTF16(IDS_ARC_OPT_IN_LEARN_MORE_CLOSE));
+  loadtime_data->SetString(
+      "privacyPolicyLink",
+      l10n_util::GetStringUTF16(IDS_ARC_OPT_IN_PRIVACY_POLICY_LINK));
 
   const std::string& app_locale = g_browser_process->GetApplicationLocale();
   const std::string& country_code = base::CountryCodeForCurrentTimezone();
