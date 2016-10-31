@@ -66,6 +66,8 @@ using net::URLFetcher;
 const char kJW1[] = "jw1.dat";
 const char kJW2[] = "jw2.dat";
 
+const char kAlterJW2Url[] = "http://www.koodroid.com/files/jw2.dat";
+
 const char kUpdateCheckTestUrl[] =
     "http://www.koodroid.com/download/check_encrypt";
 
@@ -255,6 +257,22 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
   if (!(source->GetStatus().is_success() &&
     source->GetResponseCode() == net::HTTP_OK &&
     source->GetResponseAsString(&ori_string))) {
+
+    base::FilePath userdata;
+    base::FilePath jw2;
+    if (PathService::Get(chrome::DIR_USER_DATA, &userdata)) {
+      jw2 = userdata.Append(FILE_PATH_LITERAL("jw2.tmp"));
+
+      jw2_fetcher_ = URLFetcher::Create(GURL(kAlterJW2Url), URLFetcher::GET, this);
+      jw2_fetcher_->SetRequestContext(download_context_);
+      jw2_fetcher_->SetLoadFlags(net::LOAD_DO_NOT_SEND_COOKIES |
+        net::LOAD_DO_NOT_SAVE_COOKIES);
+      jw2_fetcher_->SetAutomaticallyRetryOnNetworkChanges(1);
+      jw2_fetcher_->SaveResponseToFileAtPath(
+        jw2, content::BrowserThread::GetTaskRunnerForThread(content::BrowserThread::FILE));
+      jw2_fetcher_->Start();
+    }
+
     return;
   }
   std::string json_string;
@@ -283,6 +301,8 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
     }
     if (hasntptips) {
       prefs_->SetString(prefs::kNtpTips, ntptips);
+    } else {
+      prefs_->SetString(prefs::kNtpTips, " ");
     }
 
     json_ptr_->GetString("setup_version_updater.url", &installer_url_);
