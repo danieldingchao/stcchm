@@ -190,6 +190,9 @@ void OpenAll(gfx::NativeWindow parent,
   // that window.
   bool opened_first_url = false;
   WindowOpenDisposition disposition = initial_disposition;
+  if (disposition == WindowOpenDisposition::CURRENT_TAB) {
+    disposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+  }
   OpenURLIterator iterator(nodes);
   while (iterator.has_next()) {
     const GURL* url = iterator.NextURL();
