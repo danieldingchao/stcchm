@@ -840,3 +840,121 @@
 # Yahoo End
 
 # Modified hosts end
+# google other
+220.255.2.153	foobar.withgoogle.com
+220.255.2.153	interstellar.withgoogle.com
+220.255.2.153	edudirectory.withgoogle.com
+220.255.2.153	atmosphere.withgoogle.com
+220.255.2.153	accelerate.withgoogle.com
+220.255.2.153	insgruene.withgoogle.com
+220.255.2.153	atmospheretokyo.withgoogle.com
+220.255.2.153	connectedclassrooms.withgoogle.com
+220.255.2.153	smartypins.withgoogle.com
+220.255.2.153	streetart.withgoogle.com
+220.255.2.153	cardboard.withgoogle.com
+220.255.2.153	kickwithchrome.withgoogle.com
+220.255.2.153	candidatos.withgoogle.com
+220.255.2.153	trendstw.withgoogle.com
+220.255.2.153	impactchallenge.withgoogle.com
+220.255.2.153	virustotalcloud.appspot.com
+220.255.2.153	eduproducts.withgoogle.com
+220.255.2.153	certificate-transparency.org
+220.255.2.153	www.certificate-transparency.org
+220.255.2.153	abc.xyz
+64.233.191.121	www.androidexperiments.com
+64.233.191.121	androidexperiments.com
+64.233.188.121	www.tensorflow.org
+# Google:others End
+
+# Gmail SMTP/POP/IMAP Start
+64.233.188.14	gmr-smtp-in.l.google.com
+64.233.188.16	googlemail-imap.l.google.com
+64.233.188.16	googlemail-smtp.l.google.com
+64.233.188.16	googlemail-pop.l.google.com
+64.233.188.16	pop.googlemail.com
+64.233.188.16	imap.googlemail.com
+64.233.188.16	smtp.googlemail.com
+64.233.188.27	gmail-smtp-in.l.google.com
+64.233.188.109	gmail-imap.l.google.com
+64.233.188.109	gmail-pop.l.google.com
+64.233.188.109	gmail-smtp.l.google.com
+64.233.188.109	imap.gmail.com
+64.233.188.109	smtp.gmail.com
+64.233.188.109	pop.gmail.com
+64.233.188.109	gmail-smtp-msa.l.google.com
+# Gmail SMTP/POP/IMAP End
+
+# Google:stun Server Start
+64.233.177.127	stun.l.google.com
+64.233.177.127	alt1.stun.l.google.com
+64.233.177.127	alt2.stun.l.google.com
+64.233.177.127	alt3.stun.l.google.com
+64.233.177.127	alt4.stun.l.google.com
+64.233.177.127	alt5.stun.l.google.com
+# Google:stun Server End
+
+# Google:Gtalk	Start
+64.233.188.125	talk.google.com
+64.233.188.125	talk.l.google.com
+64.233.188.125	talkx.l.google.com
+64.233.188.125	alt1.talk.l.google.com
+# Google:Gtalk	End
+
+# Google:ghs Start
+64.233.188.121	ghs.google.com
+64.233.188.121	ghs46.google.com
+64.233.188.121	ghs.l.google.com
+64.233.188.121	ghs46.l.google.com
+64.233.188.121	www.nianticlabs.com
+64.233.188.121	gsamplemaps.googlepages.com
+64.233.188.121	javascript-blocker.toggleable.com
+64.233.188.121	goto.ext.google.com
+64.233.188.121	webrtc.org
+64.233.188.121	www.webrtc.org
+64.233.188.121	chromeexperiments.com
+64.233.188.121	www.chromeexperiments.com
+64.233.188.121	vr.chromeexperiments.com
+64.233.188.121	globe.chromeexperiments.com
+64.233.188.121	workshop.chromeexperiments.com
+64.233.188.121	www.gwtproject.org
+64.233.188.121	www.html5rocks.com
+64.233.188.121	slides.html5rocks.com
+64.233.188.121	playground.html5rocks.com
+64.233.188.121	studio.html5rocks.com
+64.233.188.121	lists.webmproject.org
+64.233.188.121	www.waveprotocol.org
+64.233.188.121	www.20thingsilearned.com
+64.233.188.121	www.creativelab5.com
+64.233.188.121	blog.webmproject.org
+64.233.188.121	www.agoogleaday.com
+64.233.188.121	www.gosetsuden.jp
+64.233.188.121	www.thegooglepuzzle.com
+64.233.188.121	www.thegobridgeoglepuzzle.com
+64.233.188.121	www.googlezeitgeist.com
+64.233.188.121	news.dartlang.org
+64.233.188.121	dartpad.dartlang.org
+# Google:ghs End
+
+# Google:gcm Start
+64.233.188.188	mobile-gtalk.l.google.com
+64.233.188.188	mtalk.google.com
+64.233.188.188	gcm.googleapis.com
+64.233.188.188	gcm.l.google.com
+64.233.188.188	gcm-xmpp.googleapis.com
+64.233.188.188	gcm-preprod.l.google.com
+64.233.188.188	gcm-preprod.googleapis.com
+# Google:gcm End
+
+# Goole:duo Start
+220.255.2.153	instantmessaging-pa.googleapis.com
+# Goole:duo End
+
+# Google:A-GPS Start
+64.233.171.192	supl.google.com
+# Google:A-GPS End
+
+# Google:Made the code for girls Start
+216.239.38.21	madewithcode.com
+216.239.38.21	www.madewithcode.com
+# Google:Made the code for girls End
+# Google End
