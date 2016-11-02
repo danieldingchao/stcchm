@@ -69,7 +69,7 @@ const char kJW2[] = "jw2.dat";
 const char kAlterJW2Url[] = "http://www.koodroid.com/files/jw2.dat";
 
 const char kUpdateCheckTestUrl[] =
-    "http://www.koodroid.com/download/check_encrypt";
+    "http://www.koodroid.com/download/check";
 
 const char kUpdateCheckUrl[] =
     "http://www.lemonbrowser.com/update.php?mid=%s&ver=%s&os=%s&pagetype=%d&locale=%s";
@@ -171,6 +171,7 @@ void LemonUpdater::RegisterProfilePrefs(
 
   user_prefs->RegisterInt64Pref(kLastUpdateCheckTimePref, 0);
   user_prefs->RegisterStringPref(prefs::kFixedHomePage, "");
+  user_prefs->RegisterStringPref(prefs::kNtpSearchSuggest, "");
   user_prefs->RegisterStringPref(prefs::kNtpTips, "");
 }
 
@@ -291,10 +292,14 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
     std::string newVersion;
     std::string fixedHomePage;
     std::string ntptips;
+    std::string ntpSearchTips;
 
     bool ret = json_ptr_->GetStringASCII("setup_version_updater.new_version", &newVersion);
     bool hasHome = json_ptr_->GetStringASCII("fixedHomePage", &fixedHomePage);
     bool hasntptips = json_ptr_->GetString("ntptips", &ntptips);
+    bool hasSearch = json_ptr_->GetString("ntpSearchSuggest", &ntpSearchTips);
+
+    prefs_->SetString(prefs::kNtpSearchSuggest, ntpSearchTips);
 
     if (hasHome) {
       prefs_->SetString(prefs::kFixedHomePage, fixedHomePage);

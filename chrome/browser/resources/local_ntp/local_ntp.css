@@ -162,7 +162,7 @@ body.fakebox-focused #cursor {
 
 #most-visited {
   -webkit-user-select: none;
-  margin-top: 64px;
+  margin-top: 40px;
   text-align: -webkit-center;
 }
 
@@ -335,4 +335,9 @@ html[dir=rtl] #recent-tabs {
 .most_visited_site_tips {
     font-size: 13px;
     margin-top: 50px;
+}
+
+.suarch_suggest_tips {
+    font-size: 13px;
+    margin-top: 15px;
 }

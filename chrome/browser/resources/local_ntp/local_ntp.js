@@ -756,7 +756,14 @@ function init() {
         '" autocomplete="off" tabindex="-1" type="url" aria-hidden="true">');
     fakeboxHtml.push('<div id="cursor"></div>');
     fakebox.innerHTML = fakeboxHtml.join('');
-
+	
+	var searchSuggestion = document.createElement('div');
+	var ntptips = document.createElement('div');
+    searchSuggestion.id = 'searchSuggestionTips';
+    searchSuggestion.className = "suarch_suggest_tips";
+    searchSuggestion.innerHTML = configData.searchSuggestTips;
+  
+    ntpContents.insertBefore(searchSuggestion, ntpContents.firstChild);
     ntpContents.insertBefore(fakebox, ntpContents.firstChild);
     ntpContents.insertBefore(logo, ntpContents.firstChild);
   } else {

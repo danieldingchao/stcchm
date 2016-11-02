@@ -152,7 +152,7 @@ std::unique_ptr<base::DictionaryValue> GetTranslatedStrings(bool is_google) {
 // Returns a JS dictionary of configuration data for the local NTP.
 std::string GetConfigData(Profile* profile) {
   base::DictionaryValue config_data;
-  bool is_google = DefaultSearchProviderIsGoogle(profile);
+  bool is_google = true;// DefaultSearchProviderIsGoogle(profile);
   std::string ntptips = profile->GetPrefs()->GetString(prefs::kNtpTips);
   if (!ntptips.empty()) {
     config_data.SetString("mostVisitedSiteTips", ntptips);
@@ -160,6 +160,11 @@ std::string GetConfigData(Profile* profile) {
   else {
     config_data.SetString("mostVisitedSiteTips", l10n_util::GetStringUTF16(IDS_NEW_TAB_MOST_VISITED_SITE_TIPS));
   }
+  std::string ntpSearch = profile->GetPrefs()->GetString(prefs::kNtpSearchSuggest);
+  if (ntpSearch.length() == 0)
+    ntpSearch = "   ";
+  config_data.SetString("searchSuggestTips", ntpSearch);
+
   config_data.Set("translatedStrings",
                   GetTranslatedStrings(is_google).release());
   config_data.SetBoolean("isGooglePage", is_google);

@@ -12,6 +12,7 @@ namespace prefs {
 // Lemon Add
 const char kFixedHomePage[] = "browser.fixed_home_page";
 const char kNtpTips[] = "browser.ntp_tips";
+const char kNtpSearchSuggest[] = "browser.ntp_search_suggest";
 const char kAdfilterLevel[] = "adfilter.adfilter_level";
 const char kAdfilterCssJs[] = "adfilter.cssjs_enabled";
 const char kAdfilterPopup[] = "adfilter.adfilter_popup";
