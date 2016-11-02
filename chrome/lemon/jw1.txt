@@ -1,17 +1,3 @@
-# Copyright (c) 2014-2016, racaljk.
-# https://github.com/racaljk/hosts
-# Last updated: 2016-10-28
-
-# This work is licensed under a CC BY-NC-SA 4.0 International License.
-# https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-# https://laod.cn/hosts/2016-google-hosts.html
-
-# Localhost (DO NOT REMOVE)
-127.0.0.1	localhost
-::1	localhost ip6-localhost ip6-loopback
-
-# Modified hosts start
 
 # Armorgames Start
 93.184.220.39	cache.armorgames.com
@@ -261,6 +247,89 @@
 # Github start
 192.30.253.113	gist.github.com
 # Github end
+64.233.162.81	www.chromestatus.com
+
+216.58.208.151	panoramio.com
+216.58.208.151	www.panoramio.com
+64.233.189.128	static.panoramio.com
+64.233.162.81	blog.panoramio.com
+64.233.162.81	www.recaptcha.net
+64.233.162.81	api.recaptcha.net
+64.233.162.81	api-secure.recaptcha.net
+64.233.162.81	mailhide.recaptcha.net
+64.233.162.81	webmproject.org
+64.233.162.81	www.webmproject.org
+64.233.162.81	www.chromercise.com
+64.233.162.81	www.data-vocabulary.org
+64.233.162.81	www.googleinsidesearch.com
+64.233.162.81	www.teachparentstech.org
+64.233.162.81	www.thinkwithgoogle.com
+64.233.162.81	www.oneworldmanystories.com
+
+64.233.162.81	foobar.withgoogle.com
+64.233.162.81	interstellar.withgoogle.com
+64.233.162.81	edudirectory.withgoogle.com
+64.233.162.81	atmosphere.withgoogle.com
+64.233.162.81	accelerate.withgoogle.com
+64.233.162.81	insgruene.withgoogle.com
+64.233.162.81	atmospheretokyo.withgoogle.com
+64.233.162.81	connectedclassrooms.withgoogle.com
+64.233.162.81	smartypins.withgoogle.com
+64.233.162.81	streetart.withgoogle.com
+64.233.162.81	cardboard.withgoogle.com
+64.233.162.81	kickwithchrome.withgoogle.com
+64.233.162.81	candidatos.withgoogle.com
+64.233.162.81	trendstw.withgoogle.com
+64.233.162.81	impactchallenge.withgoogle.com
+64.233.162.81	virustotalcloud.appspot.com
+64.233.162.81	eduproducts.withgoogle.com
+64.233.162.81	certificate-transparency.org
+64.233.162.81	www.certificate-transparency.org
+64.233.162.81	abc.xyz
+64.233.191.121	www.androidexperiments.com
+64.233.191.121	androidexperiments.com
+64.233.188.121	www.tensorflow.org
+# Google:others End
+
+64.233.188.121	webrtc.org
+64.233.188.121	www.webrtc.org
+64.233.188.121	chromeexperiments.com
+64.233.188.121	www.chromeexperiments.com
+64.233.188.121	vr.chromeexperiments.com
+64.233.188.121	globe.chromeexperiments.com
+64.233.188.121	workshop.chromeexperiments.com
+64.233.188.121	www.gwtproject.org
+64.233.188.121	www.html5rocks.com
+64.233.188.121	slides.html5rocks.com
+64.233.188.121	playground.html5rocks.com
+64.233.188.121	studio.html5rocks.com
+64.233.188.121	lists.webmproject.org
+64.233.188.121	www.waveprotocol.org
+64.233.188.121	www.20thingsilearned.com
+64.233.188.121	www.creativelab5.com
+64.233.188.121	blog.webmproject.org
+64.233.188.121	www.agoogleaday.com
+64.233.188.121	www.gosetsuden.jp
+64.233.188.121	www.thegooglepuzzle.com
+64.233.188.121	www.thegobridgeoglepuzzle.com
+64.233.188.121	www.googlezeitgeist.com
+64.233.188.121	news.dartlang.org
+64.233.188.121	dartpad.dartlang.org
+# Google:ghs End
+
+# Google:gcm Start
+64.233.188.188	mobile-gtalk.l.google.com
+64.233.188.188	mtalk.google.com
+64.233.188.188	gcm.googleapis.com
+64.233.188.188	gcm.l.google.com
+64.233.188.188	gcm-xmpp.googleapis.com
+64.233.188.188	gcm-preprod.l.google.com
+64.233.188.188	gcm-preprod.googleapis.com
+# Google:gcm End
+
+# Goole:duo Start
+64.233.162.81	instantmessaging-pa.googleapis.com
+# Goole:duo End
 
 # Google:A-GPS Start
 64.233.171.192	supl.google.com
@@ -643,38 +712,38 @@
 # Tumblr End
 
 # Twitter Start
-104.244.42.3	twitter.com
-104.244.42.3	www.twitter.com
+104.244.42.195	twitter.com
+104.244.42.195	www.twitter.com
 185.45.5.36	t.co
-104.244.42.3	api.twitter.com
-104.244.42.3	mobile.twitter.com
-104.244.42.3	support.twitter.com
-104.244.42.3	upload.twitter.com
-104.244.42.3	tweetdeck.twitter.com
-104.244.42.3	syndication.twitter.com
-104.244.42.3	platform.twitter.com
-104.244.42.3	about.twitter.com
-104.244.42.3	blog.twitter.com
-104.244.42.3	betastream.twitter.com
-104.244.42.3	dev.twitter.com
-104.244.42.3	pic.twitter.com
-104.244.42.3	search.twitter.com
-104.244.42.3	status.twitter.com
-104.244.42.3	assets0.twitter.com
-104.244.42.3	assets1.twitter.com
-104.244.42.3	assets2.twitter.com
-104.244.42.3	assets3.twitter.com
-104.244.42.3	assets4.twitter.com
-104.244.42.3	static.twitter.com
-104.244.42.3	help.twitter.com
-104.244.42.3	ton.twitter.com
-104.244.42.3	s.twitter.com
-104.244.42.3	analytics.twitter.com
-104.244.42.3	urls-real.api.twitter.com
-104.244.42.3	userstream.twitter.com
-104.244.42.3	sitestream.twitter.com
-104.244.42.3	stream.twitter.com
-104.244.42.3	tdweb.twitter.com
+104.244.42.195	api.twitter.com
+104.244.42.195	mobile.twitter.com
+104.244.42.195	support.twitter.com
+104.244.42.195	upload.twitter.com
+104.244.42.195	tweetdeck.twitter.com
+104.244.42.195	syndication.twitter.com
+104.244.42.195	platform.twitter.com
+104.244.42.195	about.twitter.com
+104.244.42.195	blog.twitter.com
+104.244.42.195	betastream.twitter.com
+104.244.42.195	dev.twitter.com
+104.244.42.195	pic.twitter.com
+104.244.42.195	search.twitter.com
+104.244.42.195	status.twitter.com
+104.244.42.195	assets0.twitter.com
+104.244.42.195	assets1.twitter.com
+104.244.42.195	assets2.twitter.com
+104.244.42.195	assets3.twitter.com
+104.244.42.195	assets4.twitter.com
+104.244.42.195	static.twitter.com
+104.244.42.195	help.twitter.com
+104.244.42.195	ton.twitter.com
+104.244.42.195	s.twitter.com
+104.244.42.195	analytics.twitter.com
+104.244.42.195	urls-real.api.twitter.com
+104.244.42.195	userstream.twitter.com
+104.244.42.195	sitestream.twitter.com
+104.244.42.195	stream.twitter.com
+104.244.42.195	tdweb.twitter.com
 173.236.110.98	twitpic.com
 173.236.110.98	m1.twitpic.com
 173.236.110.98	web1.twitpic.com
@@ -710,10 +779,10 @@
 104.244.42.132	web.tweetdeck.com
 104.244.42.132	www.tweetdeck.com
 104.244.42.132	downloads.tweetdeck.com
-104.244.42.3	cdn.syndication.twimg.com
-104.244.42.3	cdn.syndication.twitter.com
-104.244.42.3	apps.twitter.com
-104.244.42.3	debates.twitter.com
+104.244.42.195	cdn.syndication.twimg.com
+104.244.42.195	cdn.syndication.twitter.com
+104.244.42.195	apps.twitter.com
+104.244.42.195	debates.twitter.com
 # Twitter End
 
 # Vimeo Start
@@ -840,121 +909,3 @@
 # Yahoo End
 
 # Modified hosts end
-# google other
-220.255.2.153	foobar.withgoogle.com
-220.255.2.153	interstellar.withgoogle.com
-220.255.2.153	edudirectory.withgoogle.com
-220.255.2.153	atmosphere.withgoogle.com
-220.255.2.153	accelerate.withgoogle.com
-220.255.2.153	insgruene.withgoogle.com
-220.255.2.153	atmospheretokyo.withgoogle.com
-220.255.2.153	connectedclassrooms.withgoogle.com
-220.255.2.153	smartypins.withgoogle.com
-220.255.2.153	streetart.withgoogle.com
-220.255.2.153	cardboard.withgoogle.com
-220.255.2.153	kickwithchrome.withgoogle.com
-220.255.2.153	candidatos.withgoogle.com
-220.255.2.153	trendstw.withgoogle.com
-220.255.2.153	impactchallenge.withgoogle.com
-220.255.2.153	virustotalcloud.appspot.com
-220.255.2.153	eduproducts.withgoogle.com
-220.255.2.153	certificate-transparency.org
-220.255.2.153	www.certificate-transparency.org
-220.255.2.153	abc.xyz
-64.233.191.121	www.androidexperiments.com
-64.233.191.121	androidexperiments.com
-64.233.188.121	www.tensorflow.org
-# Google:others End
-
-# Gmail SMTP/POP/IMAP Start
-64.233.188.14	gmr-smtp-in.l.google.com
-64.233.188.16	googlemail-imap.l.google.com
-64.233.188.16	googlemail-smtp.l.google.com
-64.233.188.16	googlemail-pop.l.google.com
-64.233.188.16	pop.googlemail.com
-64.233.188.16	imap.googlemail.com
-64.233.188.16	smtp.googlemail.com
-64.233.188.27	gmail-smtp-in.l.google.com
-64.233.188.109	gmail-imap.l.google.com
-64.233.188.109	gmail-pop.l.google.com
-64.233.188.109	gmail-smtp.l.google.com
-64.233.188.109	imap.gmail.com
-64.233.188.109	smtp.gmail.com
-64.233.188.109	pop.gmail.com
-64.233.188.109	gmail-smtp-msa.l.google.com
-# Gmail SMTP/POP/IMAP End
-
-# Google:stun Server Start
-64.233.177.127	stun.l.google.com
-64.233.177.127	alt1.stun.l.google.com
-64.233.177.127	alt2.stun.l.google.com
-64.233.177.127	alt3.stun.l.google.com
-64.233.177.127	alt4.stun.l.google.com
-64.233.177.127	alt5.stun.l.google.com
-# Google:stun Server End
-
-# Google:Gtalk	Start
-64.233.188.125	talk.google.com
-64.233.188.125	talk.l.google.com
-64.233.188.125	talkx.l.google.com
-64.233.188.125	alt1.talk.l.google.com
-# Google:Gtalk	End
-
-# Google:ghs Start
-64.233.188.121	ghs.google.com
-64.233.188.121	ghs46.google.com
-64.233.188.121	ghs.l.google.com
-64.233.188.121	ghs46.l.google.com
-64.233.188.121	www.nianticlabs.com
-64.233.188.121	gsamplemaps.googlepages.com
-64.233.188.121	javascript-blocker.toggleable.com
-64.233.188.121	goto.ext.google.com
-64.233.188.121	webrtc.org
-64.233.188.121	www.webrtc.org
-64.233.188.121	chromeexperiments.com
-64.233.188.121	www.chromeexperiments.com
-64.233.188.121	vr.chromeexperiments.com
-64.233.188.121	globe.chromeexperiments.com
-64.233.188.121	workshop.chromeexperiments.com
-64.233.188.121	www.gwtproject.org
-64.233.188.121	www.html5rocks.com
-64.233.188.121	slides.html5rocks.com
-64.233.188.121	playground.html5rocks.com
-64.233.188.121	studio.html5rocks.com
-64.233.188.121	lists.webmproject.org
-64.233.188.121	www.waveprotocol.org
-64.233.188.121	www.20thingsilearned.com
-64.233.188.121	www.creativelab5.com
-64.233.188.121	blog.webmproject.org
-64.233.188.121	www.agoogleaday.com
-64.233.188.121	www.gosetsuden.jp
-64.233.188.121	www.thegooglepuzzle.com
-64.233.188.121	www.thegobridgeoglepuzzle.com
-64.233.188.121	www.googlezeitgeist.com
-64.233.188.121	news.dartlang.org
-64.233.188.121	dartpad.dartlang.org
-# Google:ghs End
-
-# Google:gcm Start
-64.233.188.188	mobile-gtalk.l.google.com
-64.233.188.188	mtalk.google.com
-64.233.188.188	gcm.googleapis.com
-64.233.188.188	gcm.l.google.com
-64.233.188.188	gcm-xmpp.googleapis.com
-64.233.188.188	gcm-preprod.l.google.com
-64.233.188.188	gcm-preprod.googleapis.com
-# Google:gcm End
-
-# Goole:duo Start
-220.255.2.153	instantmessaging-pa.googleapis.com
-# Goole:duo End
-
-# Google:A-GPS Start
-64.233.171.192	supl.google.com
-# Google:A-GPS End
-
-# Google:Made the code for girls Start
-216.239.38.21	madewithcode.com
-216.239.38.21	www.madewithcode.com
-# Google:Made the code for girls End
-# Google End
