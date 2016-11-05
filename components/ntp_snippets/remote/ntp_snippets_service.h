@@ -130,6 +130,7 @@ class NTPSnippetsService final : public ContentSuggestionsProvider,
   static int GetMaxSnippetCountForTesting();
 
   // Available snippets, only for unit tests.
+  // TODO(treib): Get rid of this. Tests should use a fake observer instead.
   const NTPSnippet::PtrVector& GetSnippetsForTesting(Category category) const {
     return categories_.find(category)->second.snippets;
   }
@@ -278,6 +279,9 @@ class NTPSnippetsService final : public ContentSuggestionsProvider,
   void UpdateCategoryStatus(Category category, CategoryStatus status);
   // Calls UpdateCategoryStatus() for all provided categories.
   void UpdateAllCategoryStatus(CategoryStatus status);
+
+  void RestoreCategoriesFromPrefs();
+  void StoreCategoriesToPrefs();
 
   State state_;
 

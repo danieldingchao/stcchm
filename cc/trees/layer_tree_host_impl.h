@@ -594,10 +594,6 @@ class CC_EXPORT LayerTreeHostImpl
   void SetLayerTreeMutator(std::unique_ptr<LayerTreeMutator> mutator);
   LayerTreeMutator* mutator() { return mutator_.get(); }
 
-  void ClearCurrentlyScrollingLayerForTesting() {
-    ClearCurrentlyScrollingLayer();
-  }
-
  protected:
   LayerTreeHostImpl(
       const LayerTreeSettings& settings,
@@ -635,7 +631,8 @@ class CC_EXPORT LayerTreeHostImpl
   void CleanUpTileManagerAndUIResources();
   void CreateTileManagerResources();
   void ReleaseTreeResources();
-  void RecreateTreeResources();
+  void ReleaseTileResources();
+  void RecreateTileResources();
 
   void AnimateInternal(bool active_tree);
 

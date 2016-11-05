@@ -157,7 +157,9 @@ void ExtensionInstalledBubbleView::UpdateAnchorView() {
 }
 
 void ExtensionInstalledBubbleView::CloseBubble() {
-  if (controller_ && controller_->anchor_position() ==
+  // This function should only be called once.
+  CHECK(!GetWidget()->IsClosed());
+  if (controller_->anchor_position() ==
       ExtensionInstalledBubble::ANCHOR_PAGE_ACTION) {
     BrowserView* browser_view =
         BrowserView::GetBrowserViewForBrowser(browser());
@@ -166,7 +168,6 @@ void ExtensionInstalledBubbleView::CloseBubble() {
             ->GetPageAction(*controller_->extension()),
         false);  // preview_enabled
   }
-  controller_ = nullptr;
   GetWidget()->Close();
 }
 
@@ -260,7 +261,8 @@ void ExtensionInstalledBubbleView::OnSignInLinkClicked() {
   chrome::ShowBrowserSignin(
       browser(),
       signin_metrics::AccessPoint::ACCESS_POINT_EXTENSION_INSTALL_BUBBLE);
-  CloseBubble();
+  // Showing the sign-in UI will cause the bubble to close.
+  CHECK(GetWidget()->IsClosed());
 }
 
 void ExtensionInstalledBubbleView::LinkClicked(views::Link* source,
@@ -272,7 +274,8 @@ void ExtensionInstalledBubbleView::LinkClicked(views::Link* source,
   chrome::NavigateParams params(
       chrome::GetSingletonTabNavigateParams(browser(), GURL(configure_url)));
   chrome::Navigate(&params);
-  CloseBubble();
+  // Navigating will cause the bubble to close.
+  CHECK(GetWidget()->IsClosed());
 }
 
 gfx::Size ExtensionInstalledBubbleView::GetIconSize() const {
