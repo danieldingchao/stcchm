@@ -341,8 +341,7 @@ bool GetBundledPepperFlash(content::PepperPluginInfo* plugin) {
   if (!PathService::Get(chrome::FILE_PEPPER_FLASH_PLUGIN, &flash_path))
     return false;
 
-  *plugin = CreatePepperFlashInfo(flash_path, FLAPPER_VERSION_STRING, false,
-                                  false, true);
+  *plugin = CreatePepperFlashInfo(flash_path, FLAPPER_VERSION_STRING, true);
   return true;
 #else
   return false;
