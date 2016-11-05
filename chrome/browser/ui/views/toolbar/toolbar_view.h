@@ -201,6 +201,7 @@ class ToolbarView : public views::AccessiblePaneView,
   // |location_bar_| is guaranteed to exist.
   BackButton* back_;
   ToolbarButton* forward_;
+  ToolbarButton* recover_;
   ReloadButton* reload_;
   HomeButton* home_;
   LocationBarView* location_bar_;

@@ -1715,6 +1715,8 @@ split_static_library("ui") {
         "views/infobars/infobar_container_view.h",
         "views/infobars/infobar_view.cc",
         "views/infobars/infobar_view.h",
+        "views/lemon/restore_menu.cc",
+        "views/lemon/restore_menu.h",
         "views/load_complete_listener.cc",
         "views/load_complete_listener.h",
         "views/location_bar/background_with_1_px_border.cc",

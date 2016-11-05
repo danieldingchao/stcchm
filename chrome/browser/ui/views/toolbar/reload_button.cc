@@ -235,8 +235,8 @@ void ReloadButton::ChangeModeInternal(Mode mode) {
     const gfx::VectorIconId icon_id = (mode == MODE_RELOAD)
                                           ? gfx::VectorIconId::NAVIGATE_RELOAD
                                           : gfx::VectorIconId::NAVIGATE_STOP;
-    const SkColor normal_color =
-        tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON);
+    const SkColor normal_color = SkColorSetARGBMacro(255, 86, 126, 179);
+        //tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON);
     const SkColor disabled_color =
         tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON_INACTIVE);
     SetImage(views::Button::STATE_NORMAL,

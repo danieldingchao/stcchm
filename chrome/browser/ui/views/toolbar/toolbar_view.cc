@@ -89,6 +89,8 @@
 #include "ash/shell.h"  // nogncheck
 #endif
 
+#include "chrome/browser/ui/views/lemon/restore_menu.h"
+
 using base::UserMetricsAction;
 using content::WebContents;
 
@@ -115,6 +117,7 @@ const char ToolbarView::kViewClassName[] = "ToolbarView";
 ToolbarView::ToolbarView(Browser* browser)
     : back_(nullptr),
       forward_(nullptr),
+      recover_(nullptr),
       reload_(nullptr),
       home_(nullptr),
       location_bar_(nullptr),
@@ -132,6 +135,8 @@ ToolbarView::ToolbarView(Browser* browser)
   chrome::AddCommandObserver(browser_, IDC_RELOAD, this);
   chrome::AddCommandObserver(browser_, IDC_HOME, this);
   chrome::AddCommandObserver(browser_, IDC_LOAD_NEW_TAB_PAGE, this);
+  chrome::AddCommandObserver(browser_, IDC_RESTORE_TAB, this);
+
 
   if (OutdatedUpgradeBubbleView::IsAvailable()) {
     registrar_.Add(this, chrome::NOTIFICATION_OUTDATED_INSTALL,
@@ -190,6 +195,15 @@ void ToolbarView::Init() {
   forward_->set_id(VIEW_ID_FORWARD_BUTTON);
   forward_->Init();
 
+  recover_ = new ToolbarButton(browser_->profile(), this, new RestoreMenuModel(browser_));
+  recover_->set_triggerable_event_flags(ui::EF_LEFT_MOUSE_BUTTON |
+    ui::EF_MIDDLE_MOUSE_BUTTON);
+  recover_->set_tag(IDC_RESTORE_TAB);
+  recover_->SetTooltipText(l10n_util::GetStringUTF16(IDS_TOOLTIP_RECOVER));
+  recover_->SetAccessibleName(l10n_util::GetStringUTF16(IDS_ACCNAME_RECOVER));
+  recover_->set_id(VIEW_ID_RESTORE_BUTTON);
+  recover_->Init();
+
   reload_ = new ReloadButton(browser_->profile(),
                              browser_->command_controller()->command_updater());
   reload_->set_triggerable_event_flags(
@@ -224,6 +238,8 @@ void ToolbarView::Init() {
   AddChildView(back_);
   AddChildView(forward_);
   AddChildView(reload_);
+  AddChildView(recover_);
+
   AddChildView(home_);
   AddChildView(location_bar_);
   AddChildView(search_bar_);
@@ -428,6 +444,9 @@ void ToolbarView::EnabledStateChangedForCommand(int id, bool enabled) {
     case IDC_RELOAD:
       button = reload_;
       break;
+    case IDC_RESTORE_TAB:
+      button = recover_;
+      break;
     case IDC_HOME:
       button = home_;
       break;
@@ -532,7 +551,10 @@ void ToolbarView::Layout() {
 
   reload_->SetBounds(next_element_x, child_y,
     reload_->GetPreferredSize().width(), child_height);
-  next_element_x = reload_->bounds().right();
+  next_element_x = reload_->bounds().right() + element_padding;
+  recover_->SetBounds(next_element_x,
+    child_y, recover_->GetPreferredSize().width(), child_height);
+  next_element_x = recover_->bounds().right();
 
   if (show_home_button_.GetValue() ||
     (browser_->is_app() && extensions::util::IsNewBookmarkAppsEnabled())) {
@@ -704,6 +726,7 @@ gfx::Size ToolbarView::GetSizeInternal(
         (back_->*get_size)().width() + element_padding +
         (forward_->*get_size)().width() + element_padding +
         (reload_->*get_size)().width() +
+        (recover_->*get_size)().width() + element_padding +
         (show_home_button_.GetValue()
              ? element_padding + (home_->*get_size)().width()
              : 0) +
@@ -730,8 +753,8 @@ gfx::Size ToolbarView::SizeForContentSize(gfx::Size size) const {
 void ToolbarView::LoadImages() {
   const ui::ThemeProvider* tp = GetThemeProvider();
 
-  const SkColor normal_color =
-      tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON);
+  const SkColor normal_color = SkColorSetARGBMacro(255, 86, 126, 179);
+      //tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON);
   const SkColor disabled_color =
       tp->GetColor(ThemeProperties::COLOR_TOOLBAR_BUTTON_ICON_INACTIVE);
 
@@ -741,6 +764,12 @@ void ToolbarView::LoadImages() {
   back_->SetImage(
       views::Button::STATE_DISABLED,
       gfx::CreateVectorIcon(gfx::VectorIconId::NAVIGATE_BACK, disabled_color));
+  recover_->SetImage(
+    views::Button::STATE_NORMAL,
+    gfx::CreateVectorIcon(gfx::VectorIconId::RESTORE, normal_color));
+  recover_->SetImage(
+    views::Button::STATE_DISABLED,
+    gfx::CreateVectorIcon(gfx::VectorIconId::RESTORE, disabled_color));
   forward_->SetImage(
       views::Button::STATE_NORMAL,
       gfx::CreateVectorIcon(gfx::VectorIconId::NAVIGATE_FORWARD, normal_color));
@@ -754,6 +783,7 @@ void ToolbarView::LoadImages() {
 
   back_->set_ink_drop_base_color(normal_color);
   forward_->set_ink_drop_base_color(normal_color);
+  recover_->set_ink_drop_base_color(normal_color);
   home_->set_ink_drop_base_color(normal_color);
   app_menu_button_->set_ink_drop_base_color(normal_color);
 

@@ -213,6 +213,24 @@ are declared in build/common.gypi.
 	<message name="IDS_ABOUT_KERNEL_VERSION" use_name_for_id = "true" desc="start up show homepage">
       Kernel Version <ph name="PRODUCT_VERSION">$1<ex>15.0.865.0</ex></ph>
     </message>
+	<message name="IDS_TOOLTIP_RECOVER" desc="The tooltip for recover button" use_name_for_id = "true">
+        Click to recover tab, hold to see recover list
+      </message>
+	  <message name="IDS_ACCNAME_RECOVER" desc="The accessible name for the recover button.">
+        Recover      
+      </message>
+	  
+	  <message name="IDS_SHOWFULLHISTORY_LINK" use_name_for_id="true" desc="The label of the Show Full History link at the bottom of the back/forward menu.">
+        Show Full History
+      </message>
+
+      <message name="IDS_CLEANRESTORE_LIST" use_name_for_id="true" desc="Clear tab restore list">
+        Clear Undo List
+      </message>
+	  <message name="IDS_NEW_TAB_RECENTLY_CLOSED_WINDOW_MULTIPLE" use_name_for_id = "true"
+               desc="Title of recently closed windows in the recently closed section of the new tab page when the window has more than one tab. The % is replaced by the number of tabs">
+        <ph name="TAB_COUNT">$1<ex>3</ex></ph> Tabs
+      </message>
       <message name="IDS_FACEBOOK_TITLE" use_name_for_id = "true"  desc="Text for the Chrome Web Store">
         Facebook - Log In or Sign Up
       </message>

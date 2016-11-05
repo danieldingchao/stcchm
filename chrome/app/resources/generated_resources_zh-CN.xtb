@@ -3,6 +3,11 @@
 <translationbundle lang="zh-CN">
 <translation id="IDS_OPTIONS_STARTUP_HOMEPAGE">打开预置导航首页</translation>
 <translation id="IDS_ABOUT_KERNEL_VERSION">内核版本 <ph name="PRODUCT_VERSION" /></translation>
+<translation id="IDS_TOOLTIP_RECOVER">点击恢复刚关闭的网页，按住查看恢复列表</translation>
+<translation id="IDS_ACCNAME_RECOVER">恢复</translation>
+<translation id="IDS_SHOWFULLHISTORY_LINK">显示所有历史记录</translation>
+<translation id="IDS_CLEANRESTORE_LIST">清空撤销列表</translation>
+<translation id="IDS_NEW_TAB_RECENTLY_CLOSED_WINDOW_MULTIPLE"><ph name="TAB_COUNT"/> 个标签页</translation>
 <translation id="IDS_SPONSOR_US">微信赞助柠檬浏览器</translation>
 <translation id="IDS_SPONSOR_DESCRIPTION">柠檬浏览器是一款简洁的免费浏览器，如果您觉的我们的浏览器很赞，您可以扫描上方微信二维码赞助我们。</translation>
 <translation id="IDS_NEW_TAB_MOST_VISITED_SITE_TIPS">此页显示您最常访问的网站，会随着您的使用自动更新。</translation>

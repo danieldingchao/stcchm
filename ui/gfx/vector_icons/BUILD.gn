@@ -153,6 +153,7 @@ action("aggregate_vector_icons") {
     "radio_button_normal.icon",
     "remove_box.icon",
     "remove_circle.icon",
+    "restore.icon",
     "sad_tab.icon",
     "settings.icon",
     "shelf_keyboard.1x.icon",
