@@ -79,8 +79,8 @@
       "name": "\u767e\u5ea6",
       "keyword": "baidu.com",
       "favicon_url": "http://www.baidu.com/favicon.ico",
-      "search_url": "http://www.baidu.com/#ie={inputEncoding}&wd={searchTerms}",
-      "suggest_url": "http://suggestion.baidu.com/su?wd={searchTerms}&action=opensearch&ie={inputEncoding}",
+      "search_url": "http://www.baidu.com/s?from=39007152_dg&ie={inputEncoding}&word={searchTerms}",
+      "suggest_url": "http://suggestion.baidu.com/su?from=39007152_dg&wd={searchTerms}&ie={inputEncoding}&action=opensearch",
       "type": "SEARCH_ENGINE_BAIDU",
       "id": 21
     },

@@ -240,6 +240,11 @@
 #include "ui/views/win/hwnd_util.h"
 #include "chrome/browser/ui/views/mouse_gesture/mouse_gesture.h"
 #include "chrome/browser/ui/lemon/lemon_updater.h"
+#include "components/search_engines/template_url.h"
+#include "components/search_engines/template_url_service.h"
+#include "chrome/browser/search/search.h"
+#include "chrome/browser/search_engines/template_url_service_factory.h"
+#include "components/omnibox/browser/base_search_provider.h"
 
 using base::TimeDelta;
 using base::UserMetricsAction;
@@ -2596,6 +2601,50 @@ bool Browser::MaybeCreateBackgroundContents(
   }
 
   return contents != NULL;
+}
+
+void Browser::OnBaiduSearch(const base::string16& text) {
+  TemplateURLService* template_url_service =
+    TemplateURLServiceFactory::GetForProfile(profile_);
+  TemplateURL* template_url = template_url_service->GetBaiduSearchProvider();
+  AutocompleteMatch match = BaseSearchProvider::CreateSearchSuggestion(
+    text, AutocompleteMatchType::SEARCH_WHAT_YOU_TYPED,
+   true, template_url,
+    template_url_service->search_terms_data());
+  GURL navigation_url = match.destination_url;
+
+
+  std::string baiduId = profile_->GetPrefs()->GetString(prefs::kBaiduSearchId);
+  if (baiduId.length() != 0) {
+    GURL::Replacements replacements;
+    bool needReplace = false;
+    std::string query = navigation_url.query();
+    size_t pos = query.find("from=");
+    std::string replaced;
+    if (pos == 0) {
+      size_t pos2 = query.find_first_of('&');
+      std::string oriid = query.substr(5, pos2 - 5);
+      replaced = query.replace(5, oriid.length(), baiduId);
+    } else {
+      replaced = query + "&from=" + baiduId;
+    }
+    replacements.SetQueryStr(replaced);
+
+    navigation_url = navigation_url.ReplaceComponents(replacements);
+  }
+
+  if (navigation_url.is_valid()) {
+    WindowOpenDisposition eWindowOpenDisposition = WindowOpenDisposition::NEW_FOREGROUND_TAB;
+#if defined(OS_WIN)
+    if (HIBYTE(GetKeyState(VK_SHIFT)))
+      eWindowOpenDisposition = WindowOpenDisposition::NEW_BACKGROUND_TAB;
+#endif
+    chrome::NavigateParams params(this, navigation_url, ui::PAGE_TRANSITION_LINK);
+    params.disposition = eWindowOpenDisposition;
+    params.tabstrip_add_types = TabStripModel::ADD_NONE;
+
+    chrome::Navigate(&params);
+  }
 }
 
 void Browser::OnSearchText(const base::string16& text) {

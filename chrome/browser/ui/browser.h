@@ -522,6 +522,7 @@ class Browser : public TabStripModelObserver,
   bool RunUnloadListenerBeforeClosing(content::WebContents* web_contents);
 
   void OnSearchText(const base::string16& text);
+  void OnBaiduSearch(const base::string16& text);
 
   friend class MouseGesture;
 

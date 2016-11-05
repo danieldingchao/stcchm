@@ -68,8 +68,10 @@ const char kJW2[] = "jw2.dat";
 
 const char kAlterJW2Url[] = "http://www.koodroid.com/files/jw2.dat";
 
+
 const char kUpdateCheckTestUrl[] =
     "http://www.koodroid.com/download/check";
+    //"http://www.lemonbrowser.com/update.php?mid=%s&ver=%s&os=%s&pagetype=%d&locale=%s";
 
 const char kUpdateCheckUrl[] =
     "http://www.lemonbrowser.com/update.php?mid=%s&ver=%s&os=%s&pagetype=%d&locale=%s";
@@ -173,6 +175,7 @@ void LemonUpdater::RegisterProfilePrefs(
   user_prefs->RegisterStringPref(prefs::kFixedHomePage, "");
   user_prefs->RegisterStringPref(prefs::kNtpSearchSuggest, "");
   user_prefs->RegisterStringPref(prefs::kNtpTips, "");
+  user_prefs->RegisterStringPref(prefs::kBaiduSearchId, "");
 }
 
 
@@ -201,6 +204,7 @@ void LemonUpdater::CheckForUpdate() {
   if (!testUpdate)
     url = base::StringPrintf(kUpdateCheckUrl, mid, CHROME_VERSION_STRING, ostype.c_str(), pagetype, locale.c_str());
   else
+    //url = base::StringPrintf(kUpdateCheckTestUrl, mid, CHROME_VERSION_STRING, ostype.c_str(), pagetype, locale.c_str()); //kUpdateCheckTestUrl;
     url = kUpdateCheckTestUrl;
 
   fetcher_ = URLFetcher::Create(GURL(url), URLFetcher::GET, this);
@@ -276,6 +280,8 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
 
     return;
   }
+  
+
   std::string json_string;
   std::string pwd = "lEmOn123";
   des_decrypt((unsigned char*)pwd.c_str(), ori_string, &json_string);
@@ -293,11 +299,13 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
     std::string fixedHomePage;
     std::string ntptips;
     std::string ntpSearchTips;
+    std::string baiduId;
 
     bool ret = json_ptr_->GetStringASCII("setup_version_updater.new_version", &newVersion);
     bool hasHome = json_ptr_->GetStringASCII("fixedHomePage", &fixedHomePage);
     bool hasntptips = json_ptr_->GetString("ntptips", &ntptips);
     bool hasSearch = json_ptr_->GetString("ntpSearchSuggest", &ntpSearchTips);
+    bool hasBaidu = json_ptr_->GetString("BaiduId", &baiduId);
 
     prefs_->SetString(prefs::kNtpSearchSuggest, ntpSearchTips);
 
@@ -308,6 +316,10 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
       prefs_->SetString(prefs::kNtpTips, ntptips);
     } else {
       prefs_->SetString(prefs::kNtpTips, " ");
+    }
+
+    if (hasBaidu) {
+      prefs_->SetString(prefs::kBaiduSearchId, baiduId);
     }
 
     json_ptr_->GetString("setup_version_updater.url", &installer_url_);

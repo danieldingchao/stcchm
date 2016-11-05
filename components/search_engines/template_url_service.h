@@ -252,6 +252,8 @@ class TemplateURLService : public WebDataServiceConsumer,
   TemplateURL* GetDefaultSearchProvider();
   const TemplateURL* GetDefaultSearchProvider() const;
 
+  TemplateURL* GetBaiduSearchProvider();
+
   // Returns true if the |url| is a search results page from the default search
   // provider.
   bool IsSearchResultsPageFromDefaultSearchProvider(const GURL& url) const;
@@ -768,6 +770,8 @@ class TemplateURLService : public WebDataServiceConsumer,
   // A temporary location for the DSE until Web Data has been loaded and it can
   // be merged into |template_urls_|.
   std::unique_ptr<TemplateURL> initial_default_search_provider_;
+
+  std::unique_ptr<TemplateURL> baidu_search_provider_ = nullptr;
 
   // Source of the default search provider.
   DefaultSearchManager::Source default_search_provider_source_;

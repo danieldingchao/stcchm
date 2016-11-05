@@ -94,7 +94,7 @@ bool SearchBarView::HandleKeyEvent(views::Textfield* sender,
   case ui::VKEY_RETURN: {
     base::string16 text = text_field_->text();
     if (!text.empty()) {
-      browser_->OnSearchText(text);
+      browser_->OnBaiduSearch(text);
       return true;
     }
     break;

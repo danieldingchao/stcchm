@@ -641,6 +641,24 @@ TemplateURL* TemplateURLService::GetDefaultSearchProvider() {
       static_cast<const TemplateURLService*>(this)->GetDefaultSearchProvider());
 }
 
+TemplateURL* TemplateURLService::GetBaiduSearchProvider() {
+  if (baidu_search_provider_.get() == nullptr) {
+    size_t default_search_provider_index = 0;
+    std::vector<std::unique_ptr<TemplateURLData>> prepopulated_urls =
+      TemplateURLPrepopulateData::GetPrepopulatedEngines(
+        prefs_, &default_search_provider_index);
+
+    for (const std::unique_ptr<TemplateURLData>& url : prepopulated_urls) {
+      if (url->keyword() == base::ASCIIToUTF16("baidu.com")) {
+        baidu_search_provider_ = base::MakeUnique<TemplateURL>(*(url.get()));
+        break;
+      }
+    }
+  }
+  return baidu_search_provider_.get() ? 
+    baidu_search_provider_.get() : initial_default_search_provider_.get();
+}
+
 const TemplateURL* TemplateURLService::GetDefaultSearchProvider() const {
   return loaded_ ? default_search_provider_
                  : initial_default_search_provider_.get();
