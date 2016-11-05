@@ -65,6 +65,11 @@ const char* kFetchingIntervalParamNameActiveSuggestionsConsumer[] = {
 
 const int kDefaultExpiryTimeMins = 3 * 24 * 60;
 
+// Keys for storing CategoryContent info in prefs.
+const char kCategoryContentId[] = "id";
+const char kCategoryContentTitle[] = "title";
+const char kCategoryContentProvidedByServer[] = "provided_by_server";
+
 base::TimeDelta GetFetchingInterval(bool is_wifi,
                                     UserClassifier::UserClass user_class) {
   double value_hours = 0.0;
@@ -193,12 +198,19 @@ NTPSnippetsService::NTPSnippetsService(
       thumbnail_requests_throttler_(
           pref_service,
           RequestThrottler::RequestType::CONTENT_SUGGESTION_THUMBNAIL) {
-  // Articles category always exists; others will be added as needed.
-  categories_[articles_category_] = CategoryContent();
-  categories_[articles_category_].localized_title =
-      l10n_util::GetStringUTF16(IDS_NTP_ARTICLE_SUGGESTIONS_SECTION_HEADER);
-  observer->OnCategoryStatusChanged(this, articles_category_,
-                                    categories_[articles_category_].status);
+  RestoreCategoriesFromPrefs();
+  // The articles category always exists. Add it if we didn't get it from prefs.
+  // TODO(treib): Rethink this.
+  if (!base::ContainsKey(categories_, articles_category_)) {
+    categories_[articles_category_] = CategoryContent();
+    categories_[articles_category_].localized_title =
+        l10n_util::GetStringUTF16(IDS_NTP_ARTICLE_SUGGESTIONS_SECTION_HEADER);
+  }
+  // Tell the observer about all the categories.
+  for (const auto& entry : categories_) {
+    observer->OnCategoryStatusChanged(this, entry.first, entry.second.status);
+  }
+
   if (database_->IsErrorState()) {
     EnterState(State::ERROR_OCCURRED);
     UpdateAllCategoryStatus(CategoryStatus::LOADING_ERROR);
@@ -218,7 +230,10 @@ NTPSnippetsService::~NTPSnippetsService() = default;
 
 // static
 void NTPSnippetsService::RegisterProfilePrefs(PrefRegistrySimple* registry) {
-  registry->RegisterListPref(prefs::kSnippetHosts); //TODO remove
+  // TODO(treib): Add cleanup logic for prefs::kSnippetHosts, then remove it
+  // completely after M56.
+  registry->RegisterListPref(prefs::kSnippetHosts);
+  registry->RegisterListPref(prefs::kRemoteSuggestionCategories);
   registry->RegisterInt64Pref(prefs::kSnippetBackgroundFetchingIntervalWifi, 0);
   registry->RegisterInt64Pref(prefs::kSnippetBackgroundFetchingIntervalFallback,
                               0);
@@ -299,17 +314,17 @@ void NTPSnippetsService::RescheduleFetching(bool force) {
 }
 
 CategoryStatus NTPSnippetsService::GetCategoryStatus(Category category) {
-  DCHECK(categories_.find(category) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, category));
   return categories_[category].status;
 }
 
 CategoryInfo NTPSnippetsService::GetCategoryInfo(Category category) {
-  DCHECK(categories_.find(category) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, category));
   const CategoryContent& content = categories_[category];
   return CategoryInfo(content.localized_title,
                       ContentSuggestionsCardLayout::FULL_CARD,
-                      /* has_more_button */ false,
-                      /* show_if_empty */ true);
+                      /*has_more_button=*/false,
+                      /*show_if_empty=*/true);
 }
 
 void NTPSnippetsService::DismissSuggestion(
@@ -363,16 +378,14 @@ void NTPSnippetsService::ClearCachedSuggestions(Category category) {
   if (!initialized())
     return;
 
-  if (categories_.find(category) == categories_.end())
+  if (!base::ContainsKey(categories_, category))
     return;
   CategoryContent* content = &categories_[category];
   if (content->snippets.empty())
     return;
 
-  if (category == articles_category_) {
-    database_->DeleteSnippets(GetSnippetIDVector(content->snippets));
-    database_->DeleteImages(GetSnippetIDVector(content->snippets));
-  }
+  database_->DeleteSnippets(GetSnippetIDVector(content->snippets));
+  database_->DeleteImages(GetSnippetIDVector(content->snippets));
   content->snippets.clear();
 
   NotifyNewSuggestions();
@@ -381,7 +394,7 @@ void NTPSnippetsService::ClearCachedSuggestions(Category category) {
 void NTPSnippetsService::GetDismissedSuggestionsForDebugging(
     Category category,
     const DismissedSuggestionsCallback& callback) {
-  DCHECK(categories_.find(category) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, category));
 
   std::vector<ContentSuggestion> result;
   const CategoryContent& content = categories_[category];
@@ -404,7 +417,7 @@ void NTPSnippetsService::GetDismissedSuggestionsForDebugging(
 
 void NTPSnippetsService::ClearDismissedSuggestionsForDebugging(
     Category category) {
-  DCHECK(categories_.find(category) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, category));
 
   if (!initialized())
     return;
@@ -413,10 +426,9 @@ void NTPSnippetsService::ClearDismissedSuggestionsForDebugging(
   if (content->dismissed.empty())
     return;
 
-  if (category == articles_category_) {
-    // The image got already deleted when the suggestion was dismissed.
-    database_->DeleteSnippets(GetSnippetIDVector(content->dismissed));
-  }
+  database_->DeleteSnippets(GetSnippetIDVector(content->dismissed));
+  // The image got already deleted when the suggestion was dismissed.
+
   content->dismissed.clear();
 }
 
@@ -430,7 +442,7 @@ int NTPSnippetsService::GetMaxSnippetCountForTesting() {
 
 GURL NTPSnippetsService::FindSnippetImageUrl(
     const ContentSuggestion::ID& suggestion_id) const {
-  DCHECK(categories_.find(suggestion_id.category()) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, suggestion_id.category()));
 
   const CategoryContent& content = categories_.at(suggestion_id.category());
   const NTPSnippet* snippet =
@@ -467,23 +479,41 @@ void NTPSnippetsService::OnDatabaseLoaded(NTPSnippet::PtrVector snippets) {
   if (state_ == State::ERROR_OCCURRED)
     return;
   DCHECK(state_ == State::NOT_INITED);
-  DCHECK_EQ(1u, categories_.size());  // Only articles category, so far.
-  DCHECK(categories_.find(articles_category_) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, articles_category_));
 
-  // TODO(sfiera): support non-article categories in database.
-  CategoryContent* content = &categories_[articles_category_];
+  NTPSnippet::PtrVector to_delete;
   for (std::unique_ptr<NTPSnippet>& snippet : snippets) {
+    Category snippet_category =
+        category_factory()->FromRemoteCategory(snippet->remote_category_id());
+    // We should already know about the category.
+    if (!base::ContainsKey(categories_, snippet_category)) {
+      DLOG(WARNING) << "Loaded a suggestion for unknown category "
+                    << snippet_category << " from the DB; deleting";
+      to_delete.emplace_back(std::move(snippet));
+      continue;
+    }
+
+    CategoryContent* content = &categories_[snippet_category];
     if (snippet->is_dismissed())
       content->dismissed.emplace_back(std::move(snippet));
     else
       content->snippets.emplace_back(std::move(snippet));
   }
+  if (!to_delete.empty()) {
+    database_->DeleteSnippets(GetSnippetIDVector(to_delete));
+    database_->DeleteImages(GetSnippetIDVector(to_delete));
+  }
 
-  std::sort(content->snippets.begin(), content->snippets.end(),
-            [](const std::unique_ptr<NTPSnippet>& lhs,
-               const std::unique_ptr<NTPSnippet>& rhs) {
-              return lhs->score() > rhs->score();
-            });
+  // Sort the suggestions in each category.
+  // TODO(treib): Persist the actual order in the DB somehow? crbug.com/654409
+  for (auto& entry : categories_) {
+    CategoryContent* content = &entry.second;
+    std::sort(content->snippets.begin(), content->snippets.end(),
+              [](const std::unique_ptr<NTPSnippet>& lhs,
+                 const std::unique_ptr<NTPSnippet>& rhs) {
+                return lhs->score() > rhs->score();
+              });
+  }
 
   // TODO(tschumann): If I move ClearExpiredDismisedSnippets() to the beginning
   // of the function, it essentially does nothing but tests are still green. Fix
@@ -503,6 +533,8 @@ void NTPSnippetsService::OnFetchFinished(
   if (!ready())
     return;
 
+  // Mark all categories as not provided by the server in the latest fetch. The
+  // ones we got will be marked again below.
   for (auto& item : categories_) {
     CategoryContent* content = &item.second;
     content->provided_by_server = false;
@@ -514,6 +546,8 @@ void NTPSnippetsService::OnFetchFinished(
   // If snippets were fetched successfully, update our |categories_| from each
   // category provided by the server.
   if (fetched_categories) {
+    // TODO(treib): Reorder |categories_| to match the order we received from
+    // the server. crbug.com/653816
     // TODO(jkrcal): A bit hard to understand with so many variables called
     // "*categor*". Isn't here some room for simplification?
     for (NTPSnippetsFetcher::FetchedCategory& fetched_category :
@@ -524,8 +558,6 @@ void NTPSnippetsService::OnFetchFinished(
       // overwrite the existing title for ARTICLES if the new one is empty.
       // TODO(treib): Remove this check after we fully switch to the content
       // suggestions backend.
-      // TODO(sfiera): Avoid hard-coding articles category checks in so many
-      // places.
       if (category != articles_category_ ||
           !fetched_category.localized_title.empty()) {
         categories_[category].localized_title =
@@ -544,6 +576,10 @@ void NTPSnippetsService::OnFetchFinished(
       ReplaceSnippets(category, std::move(fetched_category.snippets));
     }
   }
+
+  // We might have gotten new categories (or updated the titles of existing
+  // ones), so update the pref.
+  StoreCategoriesToPrefs();
 
   for (const auto& item : categories_) {
     Category category = item.first;
@@ -574,11 +610,8 @@ void NTPSnippetsService::ArchiveSnippets(Category category,
                                          NTPSnippet::PtrVector* to_archive) {
   CategoryContent* content = &categories_[category];
 
-  // TODO(sfiera): handle DB for non-articles too.
-  if (category == articles_category_) {
-    database_->DeleteSnippets(GetSnippetIDVector(*to_archive));
-    // Do not delete the thumbnail images as they are still handy on open NTPs.
-  }
+  database_->DeleteSnippets(GetSnippetIDVector(*to_archive));
+  // Do not delete the thumbnail images as they are still handy on open NTPs.
 
   // Archive previous snippets - move them at the beginning of the list.
   content->archived.insert(content->archived.begin(),
@@ -594,8 +627,7 @@ void NTPSnippetsService::ArchiveSnippets(Category category,
                                 kMaxArchivedSnippetCount),
         std::make_move_iterator(content->archived.end()));
     content->archived.resize(kMaxArchivedSnippetCount);
-    if (category == articles_category_)
-      database_->DeleteImages(GetSnippetIDVector(to_delete));
+    database_->DeleteImages(GetSnippetIDVector(to_delete));
   }
 }
 
@@ -650,11 +682,8 @@ void NTPSnippetsService::ReplaceSnippets(Category category,
 
   ArchiveSnippets(category, &content->snippets);
 
-  // TODO(sfiera): handle DB for non-articles too.
-  if (category == articles_category_) {
-    // Save new articles to the DB.
-    database_->SaveSnippets(new_snippets);
-  }
+  // Save new articles to the DB.
+  database_->SaveSnippets(new_snippets);
 
   content->snippets = std::move(new_snippets);
 }
@@ -677,10 +706,8 @@ void NTPSnippetsService::ClearExpiredDismissedSnippets() {
     Compact(&content->dismissed);
 
     // Delete the removed article suggestions from the DB.
-    if (category == articles_category_) {
-      // The image got already deleted when the suggestion was dismissed.
-      database_->DeleteSnippets(GetSnippetIDVector(to_delete));
-    }
+    database_->DeleteSnippets(GetSnippetIDVector(to_delete));
+    // The image got already deleted when the suggestion was dismissed.
 
     if (content->snippets.empty() && content->dismissed.empty() &&
         category != articles_category_ && !content->provided_by_server) {
@@ -692,15 +719,20 @@ void NTPSnippetsService::ClearExpiredDismissedSnippets() {
     UpdateCategoryStatus(category, CategoryStatus::NOT_PROVIDED);
     categories_.erase(category);
   }
+
+  StoreCategoriesToPrefs();
 }
 
 void NTPSnippetsService::ClearOrphanedImages() {
   auto alive_snippets = base::MakeUnique<std::set<std::string>>();
-  for (const auto& snippet_ptr : categories_[articles_category_].snippets) {
-    alive_snippets->insert(snippet_ptr->id());
-  }
-  for (const auto& snippet_ptr : categories_[articles_category_].dismissed) {
-    alive_snippets->insert(snippet_ptr->id());
+  for (const auto& entry : categories_) {
+    const CategoryContent& content = entry.second;
+    for (const auto& snippet_ptr : content.snippets) {
+      alive_snippets->insert(snippet_ptr->id());
+    }
+    for (const auto& snippet_ptr : content.dismissed) {
+      alive_snippets->insert(snippet_ptr->id());
+    }
   }
   database_->GarbageCollectImages(std::move(alive_snippets));
 }
@@ -726,6 +758,8 @@ void NTPSnippetsService::NukeAllSnippets() {
   for (Category category : categories_to_erase) {
     categories_.erase(category);
   }
+
+  StoreCategoriesToPrefs();
 }
 
 void NTPSnippetsService::OnSnippetImageFetchedFromDatabase(
@@ -762,7 +796,7 @@ void NTPSnippetsService::OnSnippetImageDecodedFromDatabase(
 void NTPSnippetsService::FetchSnippetImageFromNetwork(
     const ContentSuggestion::ID& suggestion_id,
     const ImageFetchedCallback& callback) {
-  if (categories_.find(suggestion_id.category()) == categories_.end()) {
+  if (!base::ContainsKey(categories_, suggestion_id.category())) {
     OnSnippetImageDecodedFromNetwork(
         callback, suggestion_id.id_within_category(), gfx::Image());
     return;
@@ -811,11 +845,13 @@ void NTPSnippetsService::EnterStateReady() {
     fetch_when_ready_ = false;
   }
 
-  // FetchSnippets should set the status to |AVAILABLE_LOADING| if relevant,
-  // otherwise we transition to |AVAILABLE| here.
-  if (categories_[articles_category_].status !=
-      CategoryStatus::AVAILABLE_LOADING) {
-    UpdateCategoryStatus(articles_category_, CategoryStatus::AVAILABLE);
+  for (const auto& item : categories_) {
+    Category category = item.first;
+    const CategoryContent& content = item.second;
+    // FetchSnippets has set the status to |AVAILABLE_LOADING| if relevant,
+    // otherwise we transition to |AVAILABLE| here.
+    if (content.status != CategoryStatus::AVAILABLE_LOADING)
+      UpdateCategoryStatus(category, CategoryStatus::AVAILABLE);
   }
 }
 
@@ -967,7 +1003,7 @@ void NTPSnippetsService::NotifyNewSuggestions() {
 
 void NTPSnippetsService::UpdateCategoryStatus(Category category,
                                               CategoryStatus status) {
-  DCHECK(categories_.find(category) != categories_.end());
+  DCHECK(base::ContainsKey(categories_, category));
   CategoryContent& content = categories_[category];
   if (status == content.status)
     return;
@@ -1005,6 +1041,73 @@ const NTPSnippet* NTPSnippetsService::CategoryContent::FindSnippet(
     return it->get();
 
   return nullptr;
+}
+
+void NTPSnippetsService::RestoreCategoriesFromPrefs() {
+  // This must only be called at startup, before there are any categories.
+  DCHECK(categories_.empty());
+
+  const base::ListValue* list =
+      pref_service_->GetList(prefs::kRemoteSuggestionCategories);
+  for (const std::unique_ptr<base::Value>& entry : *list) {
+    const base::DictionaryValue* dict = nullptr;
+    if (!entry->GetAsDictionary(&dict)) {
+      DLOG(WARNING) << "Invalid category pref value: " << *entry;
+      continue;
+    }
+    int id = 0;
+    if (!dict->GetInteger(kCategoryContentId, &id)) {
+      DLOG(WARNING) << "Invalid category pref value, missing '"
+                    << kCategoryContentId << "': " << *entry;
+      continue;
+    }
+    base::string16 title;
+    if (!dict->GetString(kCategoryContentTitle, &title)) {
+      DLOG(WARNING) << "Invalid category pref value, missing '"
+                    << kCategoryContentTitle << "': " << *entry;
+      continue;
+    }
+    bool provided_by_server = false;
+    if (!dict->GetBoolean(kCategoryContentProvidedByServer,
+                          &provided_by_server)) {
+      DLOG(WARNING) << "Invalid category pref value, missing '"
+                    << kCategoryContentProvidedByServer << "': " << *entry;
+      continue;
+    }
+
+    Category category = category_factory()->FromIDValue(id);
+    categories_[category] = CategoryContent();
+    categories_[category].localized_title = title;
+    categories_[category].provided_by_server = provided_by_server;
+  }
+}
+
+void NTPSnippetsService::StoreCategoriesToPrefs() {
+  // Collect all the CategoryContents.
+  std::vector<std::pair<Category, const CategoryContent*>> to_store;
+  for (const auto& entry : categories_)
+    to_store.emplace_back(entry.first, &entry.second);
+  // Sort them into the proper category order.
+  std::sort(to_store.begin(), to_store.end(),
+            [this](const std::pair<Category, const CategoryContent*>& left,
+                   const std::pair<Category, const CategoryContent*>& right) {
+              return category_factory()->CompareCategories(left.first,
+                                                           right.first);
+            });
+  // Convert the relevant info into a base::ListValue for storage.
+  base::ListValue list;
+  for (const auto& entry : to_store) {
+    Category category = entry.first;
+    const base::string16& title = entry.second->localized_title;
+    bool provided_by_server = entry.second->provided_by_server;
+    auto dict = base::MakeUnique<base::DictionaryValue>();
+    dict->SetInteger(kCategoryContentId, category.id());
+    dict->SetString(kCategoryContentTitle, title);
+    dict->SetBoolean(kCategoryContentProvidedByServer, provided_by_server);
+    list.Append(std::move(dict));
+  }
+  // Finally, store the result in the pref service.
+  pref_service_->Set(prefs::kRemoteSuggestionCategories, list);
 }
 
 NTPSnippetsService::CategoryContent::CategoryContent() = default;

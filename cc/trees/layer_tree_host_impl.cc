@@ -1369,7 +1369,7 @@ void LayerTreeHostImpl::SetMemoryPolicy(const ManagedMemoryPolicy& policy) {
   // TODO(boliu): crbug.com/499004 to track removing this.
   if (!policy.bytes_limit_when_visible && resource_pool_ &&
       settings_.using_synchronous_renderer_compositor) {
-    ReleaseTreeResources();
+    ReleaseTileResources();
     CleanUpTileManagerAndUIResources();
 
     // Force a call to NotifyAllTileTasks completed - otherwise this logic may
@@ -1378,7 +1378,7 @@ void LayerTreeHostImpl::SetMemoryPolicy(const ManagedMemoryPolicy& policy) {
     NotifyAllTileTasksCompleted();
 
     CreateTileManagerResources();
-    RecreateTreeResources();
+    RecreateTileResources();
   }
 }
 
@@ -1817,12 +1817,12 @@ void LayerTreeHostImpl::UpdateTreeResourcesForGpuRasterizationIfNeeded() {
   // appropriate rasterizer. Only do this however if we already have a
   // resource pool, since otherwise we might not be able to create a new
   // one.
-  ReleaseTreeResources();
+  ReleaseTileResources();
   if (resource_pool_) {
     CleanUpTileManagerAndUIResources();
     CreateTileManagerResources();
   }
-  RecreateTreeResources();
+  RecreateTileResources();
 
   // We have released tilings for both active and pending tree.
   // We would not have any content to draw until the pending tree is activated.
@@ -2091,12 +2091,20 @@ void LayerTreeHostImpl::ReleaseTreeResources() {
   EvictAllUIResources();
 }
 
-void LayerTreeHostImpl::RecreateTreeResources() {
-  active_tree_->RecreateResources();
+void LayerTreeHostImpl::ReleaseTileResources() {
+  active_tree_->ReleaseTileResources();
   if (pending_tree_)
-    pending_tree_->RecreateResources();
+    pending_tree_->ReleaseTileResources();
   if (recycle_tree_)
-    recycle_tree_->RecreateResources();
+    recycle_tree_->ReleaseTileResources();
+}
+
+void LayerTreeHostImpl::RecreateTileResources() {
+  active_tree_->RecreateTileResources();
+  if (pending_tree_)
+    pending_tree_->RecreateTileResources();
+  if (recycle_tree_)
+    recycle_tree_->RecreateTileResources();
 }
 
 void LayerTreeHostImpl::CreateTileManagerResources() {
@@ -2333,7 +2341,7 @@ bool LayerTreeHostImpl::InitializeRenderer(
     pending_tree_->set_needs_update_draw_properties();
 
   CreateTileManagerResources();
-  RecreateTreeResources();
+  RecreateTileResources();
 
   client_->OnCanDrawStateChanged(CanDraw());
   SetFullViewportDamage();
@@ -2644,11 +2652,6 @@ InputHandler::ScrollStatus LayerTreeHostImpl::ScrollBegin(
       MainThreadScrollingReason::kNotScrollingOnMain;
   TRACE_EVENT0("cc", "LayerTreeHostImpl::ScrollBegin");
 
-  // On Mac a scroll begin with |inertial_phase| = true happens to handle a
-  // fling.
-  if (scroll_state->is_in_inertial_phase())
-    return FlingScrollBegin();
-
   ClearCurrentlyScrollingLayer();
 
   gfx::Point viewport_point(scroll_state->position_x(),
@@ -2816,6 +2819,7 @@ InputHandler::ScrollStatus LayerTreeHostImpl::ScrollAnimated(
   ScrollStateData scroll_state_data;
   scroll_state_data.position_x = viewport_point.x();
   scroll_state_data.position_y = viewport_point.y();
+  scroll_state_data.is_in_inertial_phase = true;
   ScrollState scroll_state(scroll_state_data);
 
   // ScrollAnimated is used for animated wheel scrolls. We find the first layer
@@ -2854,12 +2858,7 @@ InputHandler::ScrollStatus LayerTreeHostImpl::ScrollAnimated(
     }
   }
   scroll_state.set_is_ending(true);
-  // TODO(Sahel): Once the touchpad scroll latching for Non-mac devices is
-  // implemented, the current scrolling layer should not get cleared after
-  // each animation (crbug.com/526463).
   ScrollEnd(&scroll_state);
-  ClearCurrentlyScrollingLayer();
-
   return scroll_status;
 }
 
@@ -3177,12 +3176,7 @@ void LayerTreeHostImpl::ScrollEnd(ScrollState* scroll_state) {
 
   DistributeScrollDelta(scroll_state);
   top_controls_manager_->ScrollEnd();
-
-  if (scroll_state->is_in_inertial_phase()) {
-    // Only clear the currently scrolling layer if we know the scroll is done.
-    // A non-inertial scroll end could be followed by an inertial scroll.
-    ClearCurrentlyScrollingLayer();
-  }
+  ClearCurrentlyScrollingLayer();
 }
 
 InputHandler::ScrollStatus LayerTreeHostImpl::FlingScrollBegin() {
@@ -4022,11 +4016,7 @@ void LayerTreeHostImpl::ScrollOffsetAnimationFinished() {
   // TODO(majidvp): We should pass in the original starting scroll position here
   ScrollStateData scroll_state_data;
   ScrollState scroll_state(scroll_state_data);
-  // TODO(Sahel): Once the touchpad scroll latching for Non-mac devices is
-  // implemented, the current scrolling layer should not get cleared after
-  // each animation (crbug.com/526463).
   ScrollEnd(&scroll_state);
-  ClearCurrentlyScrollingLayer();
 }
 
 gfx::ScrollOffset LayerTreeHostImpl::GetScrollOffsetForAnimation(

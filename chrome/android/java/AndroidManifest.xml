@@ -110,10 +110,10 @@ by a child template that "extends" this file.
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:largeHeap="false"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:manageSpaceActivity="@string/manage_space_activity"
         android:fullBackupContent="@xml/chromebackupscheme"
-        android:fullBackupOnly="true"
+        android:fullBackupOnly="false"
         android:restoreAnyVersion="true"
         {% block android_backup_agent %}
         android:backupAgent="org.chromium.chrome.browser.ChromeBackupAgent"
@@ -328,6 +328,8 @@ by a child template that "extends" this file.
             android:exported="false"
             android:taskAffinity=""
             android:windowSoftInputMode="adjustResize"
+            android:persistableMode="persistNever"
+            android:autoRemoveFromRecents="false"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|mcc|mnc|screenLayout|smallestScreenSize"
             android:hardwareAccelerated="false">
         </activity>
