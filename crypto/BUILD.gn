@@ -181,7 +181,7 @@ test("crypto_unittests") {
   ]
 }
 
-test("crypto_exe") {
+executable("crypto_exe") {
   sources = [
     "des_exe.cc",
   ]

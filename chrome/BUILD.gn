@@ -1283,15 +1283,37 @@ copy("visual_elements_resources") {
   ]
 }
 
-copy("lemon_files") {
+action("lemon_files") {
+  script = "//chrome/lemon/process.py"
+  
   sources = [
-    "lemon/jw1.dat",
-    "lemon/jw2.dat",
+    "lemon/jw1.txt",
+    "lemon/jw2.txt",
   ]
 
   outputs = [
-    "$root_out_dir/{{source_file_part}}",
+    "$root_out_dir/jw1.dat",
   ]
+  
+  inputdirs = "//chrome/lemon/"
+  outputdirs = "${root_out_dir}"
+  
+  deps = [
+    "//crypto:crypto_exe",
+  ]
+  process_exe = "$root_out_dir/crypto_exe"
+  if (host_os == "win") {
+    process_exe += ".exe"
+  }
+  inputs = [
+    process_exe,
+  ]
+  args = [
+    rebase_path(process_exe),
+    rebase_path(inputdirs),
+    rebase_path(outputdirs),
+  ]
+  
 }
 
 group("resources") {
