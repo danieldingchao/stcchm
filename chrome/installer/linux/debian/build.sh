@@ -265,6 +265,13 @@ export DEBEMAIL="${MAINTMAIL}"
 # the LSB sub-packages, to avoid pulling in all that stuff that's not installed
 # by default.
 
+# Need a dummy debian/control file for dpkg-shlibdeps.
+DUMMY_STAGING_DIR="${TMPFILEDIR}/dummy_staging"
+mkdir "$DUMMY_STAGING_DIR"
+cd "$DUMMY_STAGING_DIR"
+mkdir debian
+touch debian/control
+
 # Generate the dependencies,
 # TODO(mmoss): This is a workaround for a problem where dpkg-shlibdeps was
 # resolving deps using some of our build output shlibs (i.e.
@@ -274,40 +281,21 @@ export DEBEMAIL="${MAINTMAIL}"
 # but it seems that we don't currently, so this is the most expediant fix.
 SAVE_LDLP=${LD_LIBRARY_PATH:-}
 unset LD_LIBRARY_PATH
-<<<<<<< HEAD
 DPKG_SHLIB_DEPS=$(dpkg-shlibdeps -O "$BUILDDIR/lemon" | \
   sed 's/^shlibs:Depends=//')
-=======
-if [ ${TARGETARCH} = "x64" ]; then
-  SHLIB_ARGS="-l${SYSROOT}/usr/lib/x86_64-linux-gnu"
-  SHLIB_ARGS="${SHLIB_ARGS} -l${SYSROOT}/lib/x86_64-linux-gnu"
-else
-  SHLIB_ARGS="-l${SYSROOT}/usr/lib/i386-linux-gnu"
-  SHLIB_ARGS="${SHLIB_ARGS} -l${SYSROOT}/lib/i386-linux-gnu"
-fi
-SHLIB_ARGS="${SHLIB_ARGS} -l${SYSROOT}/usr/lib"
-# TODO(thomasanderson): Unbundle dpkg-shlibdeps once the Precise->Trusty
-# transition is complete by reverting CL 2411423002 and applying ps40001.
-DPKG_SHLIB_DEPS=$(cd ${SYSROOT} && DPKG_DATADIR=${DPKG_DEV_DIR} \
-  perl -I ${DPKG_DEV_DIR}/scripts ${DPKG_DEV_DIR}/scripts/dpkg-shlibdeps.pl \
-  ${SHLIB_ARGS:-} -O -e"$BUILDDIR/chrome" | sed 's/^shlibs:Depends=//')
->>>>>>> chrome_ori
 if [ -n "$SAVE_LDLP" ]; then
   LD_LIBRARY_PATH=$SAVE_LDLP
 fi
 
 # Format it nicely and save it for comparison.
-echo "$DPKG_SHLIB_DEPS" | sed 's/, /\n/g' | LANG=C sort > actual
+# The grep -v is for a duplicate libc6 dep caused by Lucid glibc silliness.
+echo "$DPKG_SHLIB_DEPS" | sed 's/, /\n/g' | \
+  grep -v '^libc6 (>= 2.3.6-6~)$' | LANG=C sort > actual
 
 # Compare the expected dependency list to the generated list.
 BAD_DIFF=0
-<<<<<<< HEAD
-#diff -u "$SCRIPTDIR/expected_deps_${TARGETARCH}_${HOST_DISTRO}" actual || \
+#diff -u "$SCRIPTDIR/expected_deps_${TARGETARCH}_${TARGET_DISTRO}" actual || \
 #  BAD_DIFF=1
-=======
-diff -u "$SCRIPTDIR/expected_deps_${TARGETARCH}_${TARGET_DISTRO}" actual || \
-  BAD_DIFF=1
->>>>>>> chrome_ori
 if [ $BAD_DIFF -ne 0 ] && [ -z "${IGNORE_DEPS_CHANGES:-}" ]; then
   echo
   echo "ERROR: Shared library dependencies changed!"

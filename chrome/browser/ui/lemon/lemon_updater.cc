@@ -195,7 +195,10 @@ void LemonUpdater::CheckForUpdate() {
 
 #else
   ostype = "linux";
-  getDiskID(mid);
+  if (getDiskID(mid) == -1){
+    memset(&mid,0,strlen(mid));
+    get_mac(mid);
+  }
 #endif
 
   std::string locale = g_browser_process->GetApplicationLocale();

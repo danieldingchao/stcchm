@@ -4,7 +4,7 @@
 
 #include "chrome/browser/ui/lemon/lemon_tips.h"
 
-#include "base/strings/sys_string_conversions.h"
+#include "base/strings/utf_string_conversions.h"
 #include "chrome/browser/first_run/first_run.h"
 #include "chrome/browser/search_engines/template_url_service_factory.h"
 #include "chrome/browser/ui/browser.h"
@@ -49,9 +49,9 @@ void LemonTipsBubble::Init() {
   const gfx::FontList& original_font_list =
       rb.GetFontList(ui::ResourceBundle::MediumFont);
 
-  std::wstring strtips1 = base::SysUTF8ToWide(sBubbleTips1);
-  std::wstring strtips2 = base::SysUTF8ToWide(sBubbleTips2);
-  std::wstring linktext = base::SysUTF8ToWide(sLinkText);
+  base::string16 strtips1 = base::UTF8ToUTF16(sBubbleTips1);
+  base::string16 strtips2 = base::UTF8ToUTF16(sBubbleTips2);
+  base::string16 linktext = base::UTF8ToUTF16(sLinkText);
   tips1_ = new views::Label(strtips1,
         original_font_list.Derive(2, gfx::Font::NORMAL, gfx::Font::Weight::BOLD));
       //original_font_list);

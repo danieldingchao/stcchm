@@ -2289,7 +2289,7 @@ void BrowserOptionsHandler::HandleSelectDiskCacheLocation(
     &info,
     1,
     base::FilePath::StringType(),
-    web_ui()->GetWebContents()->GetView()->GetTopLevelNativeWindow(),
+    platform_util::GetTopLevel(web_ui()->GetWebContents()->GetNativeView()),
     NULL);
 }
 
@@ -2299,7 +2299,7 @@ void BrowserOptionsHandler::HandleOpenDiskCacheDir(const base::ListValue* args)
   PrefService* prefs = profile->GetPrefs();
   if (prefs) {
     base::FilePath path = prefs->GetFilePath(prefs::kDiskCacheDir);
-    path = path.Append(L"Cache");
+    path = path.Append(FILE_PATH_LITERAL("Cache"));
     if (!base::DirectoryExists(path))
       base::CreateDirectory(path);
     platform_util::OpenItem(Profile::FromWebUI(web_ui()), path, platform_util::OPEN_FOLDER, platform_util::OpenOperationCallback());
