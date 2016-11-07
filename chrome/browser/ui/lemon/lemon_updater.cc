@@ -286,9 +286,9 @@ void LemonUpdater::OnManifestDownloadComplete(const net::URLFetcher* source) {
   
 
   std::string json_string;
-  std::string pwd = "lEmOn123";
-  des_decrypt((unsigned char*)pwd.c_str(), ori_string, &json_string);
-  //json_string = ori_string;
+  //std::string pwd = "lEmOn123";
+  //des_decrypt((unsigned char*)pwd.c_str(), ori_string, &json_string);
+  json_string = ori_string;
   prefs_->SetInt64(kLastUpdateCheckTimePref,
   	  base::Time::Now().ToInternalValue());
 
