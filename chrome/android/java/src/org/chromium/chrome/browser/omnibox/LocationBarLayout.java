@@ -1020,6 +1020,8 @@ public class LocationBarLayout extends FrameLayout implements OnClickListener,
         }
 
         changeLocationBarIcon();
+        updateVerboseStatusVisibility();
+        updateLocationBarIconContainerVisibility();
         mUrlBar.setCursorVisible(hasFocus);
 
         if (!mUrlFocusedWithoutAnimations) handleUrlFocusAnimation(hasFocus);
@@ -1272,7 +1274,7 @@ public class LocationBarLayout extends FrameLayout implements OnClickListener,
             int securityLevel, boolean isSmallDevice, boolean isOfflinePage) {
         // Both conditions should be met, because isOfflinePage might take longer to be cleared.
         if (securityLevel == ConnectionSecurityLevel.NONE && isOfflinePage) {
-            return R.drawable.offline_pin;
+            return R.drawable.offline_pin_round;
         }
         switch (securityLevel) {
             case ConnectionSecurityLevel.NONE:
