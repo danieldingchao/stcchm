@@ -838,9 +838,7 @@ const char kQuicVersion[] = "quic-version";
 const char kRemoteDebuggingTargets[] = "remote-debugging-targets";
 
 // Indicates the last session should be restored on startup. This overrides the
-// preferences value and is primarily intended for testing. The value of this
-// switch is the number of tabs to wait until loaded before 'load completed' is
-// sent to the ui_test.
+// preferences value.
 const char kRestoreLastSession[]            = "restore-last-session";
 
 // Disable saving pages as HTML-only, disable saving pages as HTML Complete
@@ -873,6 +871,14 @@ const char kSbDisableExtensionBlacklist[] =
 // for ways to by-pass download protection.
 const char kSbManualDownloadBlacklist[] =
     "safebrowsing-manual-download-blacklist";
+
+const char kSecurityChipShowNonSecureOnly[] = "show-nonsecure-only";
+const char kSecurityChipShowAll[] = "show-all";
+
+const char kSecurityChipAnimation[] = "security-chip-animation";
+const char kSecurityChipAnimationNone[] = "none";
+const char kSecurityChipAnimationNonSecureOnly[] = "animate-nonsecure-only";
+const char kSecurityChipAnimationAll[] = "animate-all";
 
 // Causes the process to run as a service process.
 const char kServiceProcess[]                = "service";

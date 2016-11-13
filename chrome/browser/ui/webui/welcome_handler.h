@@ -6,31 +6,35 @@
 #define CHROME_BROWSER_UI_WEBUI_WELCOME_HANDLER_H_
 
 #include "base/macros.h"
+#include "chrome/browser/ui/webui/signin/login_ui_service.h"
 #include "content/public/browser/web_ui_message_handler.h"
-#include "google_apis/gaia/oauth2_token_service.h"
 
 class Browser;
 class Profile;
-class ProfileOAuth2TokenService;
 
 // Handles actions on Welcome page.
 class WelcomeHandler : public content::WebUIMessageHandler,
-                       public OAuth2TokenService::Observer {
+                       public LoginUIService::Observer {
  public:
   explicit WelcomeHandler(content::WebUI* web_ui);
   ~WelcomeHandler() override;
 
-  // OAuth2TokenService::Observer:
-  void OnRefreshTokenAvailable(const std::string& account_id) override;
+  // LoginUIService::Observer:
+  void OnSyncConfirmationUIClosed(
+      LoginUIService::SyncConfirmationUIClosedResult result) override;
 
   // content::WebUIMessageHandler:
   void RegisterMessages() override;
 
  private:
   enum WelcomeResult {
-    DEFAULT = 0,
-    SIGNED_IN,  // User clicked the "Sign In" button and completed sign-in.
-    DECLINED    // User clicked the "No Thanks" button.
+    DEFAULT = 0,    // User navigated away from the page.
+    DECLINED = 1,   // User clicked the "No Thanks" button.
+    SIGNED_IN = 2,  // User clicked the "Sign In" button and completed sign-in.
+
+    // New results must be added before this line, and should correspond to
+    // values in tools/metrics/histograms/histograms.xml.
+    WELCOME_RESULT_MAX
   };
 
   void HandleActivateSignIn(const base::ListValue* args);
@@ -40,7 +44,7 @@ class WelcomeHandler : public content::WebUIMessageHandler,
   Browser* GetBrowser();
 
   Profile* profile_;
-  ProfileOAuth2TokenService* oauth2_token_service_;
+  LoginUIService* login_ui_service_;
   WelcomeResult result_;
 
   DISALLOW_COPY_AND_ASSIGN(WelcomeHandler);
