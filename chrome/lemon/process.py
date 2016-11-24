@@ -11,12 +11,14 @@ import sys
 
 
 def Main(args):
-  crypto_exe, input_file, output_dir = args
+  crypto_exe, input_file, output_dir,file1,file2 = args
   print crypto_exe
   print input_file
   print output_dir
+  print file1
+  print file2
   return subprocess.call([
-      crypto_exe, input_file, output_dir
+      crypto_exe, input_file, output_dir,file1,file2
       ])
 
 

@@ -1299,14 +1299,17 @@ copy("visual_elements_resources") {
 
 action("lemon_files") {
   script = "//chrome/lemon/process.py"
-  
+
+  irt_final1 = "${root_out_dir}/jw1.dat"
+  irt_final2 = "${root_out_dir}/jw2.dat"  
   sources = [
     "lemon/jw1.txt",
     "lemon/jw2.txt",
   ]
 
   outputs = [
-    "$root_out_dir/jw1.dat",
+    irt_final1,
+    irt_final2,
   ]
   
   inputdirs = "//chrome/lemon/"
@@ -1326,6 +1329,8 @@ action("lemon_files") {
     rebase_path(process_exe),
     rebase_path(inputdirs),
     rebase_path(outputdirs),
+    rebase_path(irt_final1),
+    rebase_path(irt_final2),
   ]
   
 }

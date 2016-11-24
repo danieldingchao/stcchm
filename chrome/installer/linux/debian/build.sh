@@ -350,7 +350,7 @@ case "$TARGETARCH" in
     exit 1
     ;;
 esac
-BASEREPOCONFIG="dl.google.com/linux/chrome/deb/ stable main"
+BASEREPOCONFIG="dl.lemonbrowser.xyz/linux/chrome/deb/ stable main"
 # Only use the default REPOCONFIG if it's unset (e.g. verify_channel might have
 # set it to an empty string)
 REPOCONFIG="${REPOCONFIG-deb [arch=${ARCHITECTURE}] http://${BASEREPOCONFIG}}"

@@ -25,7 +25,7 @@
 #include "base/strings/stringprintf.h"
 
 int main(int argc, char** argv) {
-  base::CommandLine::Init(0, NULL);
+  base::CommandLine::Init(argc, argv);
 
   base::CommandLine& cmd_line = *base::CommandLine::ForCurrentProcess();
   if (cmd_line.HasSwitch("input")) {
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  std::vector<base::string16> args = cmd_line.GetArgs();
+  base::CommandLine::StringVector args = cmd_line.GetArgs();
   base::FilePath input_dir = base::FilePath(args[0]);
   base::FilePath output_dir = base::FilePath(args[1]);
 
