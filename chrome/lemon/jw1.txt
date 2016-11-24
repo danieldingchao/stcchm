@@ -1,3 +1,15 @@
+WikiLeaks Start
+95.211.113.154	wikileaks.org
+95.211.113.154	www.wikileaks.org
+95.211.113.154	shop.wikileaks.org
+95.211.113.154	wardiaries.wikileaks.org
+95.211.113.154	file.wikileaks.org
+95.211.113.154	wardiary.wikileaks.org
+95.211.113.154	search.wikileaks.org
+95.211.113.154	911.wikileaks.org
+95.211.113.154	collateralmurder.wikileaks.org
+95.211.113.154	cablegate.wikileaks.org
+# WikiLeaks End
 
 # Armorgames Start
 93.184.220.39	cache.armorgames.com
@@ -141,55 +153,55 @@
 # DuckDuckGo End
 
 # Facebook start
-157.240.2.37	fb.me
-157.240.2.37	facebook.com
-157.240.2.37	www.facebook.com
-157.240.2.37	m.facebook.com
-157.240.2.37	mqtt.facebook.com
-157.240.2.37	s-static.ak.facebook.com
+157.240.0.17	fb.me
+157.240.0.17	facebook.com
+157.240.0.17	www.facebook.com
+157.240.0.17	m.facebook.com
+157.240.0.17	mqtt.facebook.com
+157.240.0.17	s-static.ak.facebook.com
 23.76.153.42	static.ak.facebook.com
 23.76.153.42	b.static.ak.facebook.com
-157.240.2.37	graph.facebook.com
-157.240.2.37	ssl.facebook.com
-157.240.2.37	api.facebook.com
-157.240.2.37	secure.facebook.com
-157.240.2.37	zh-cn.facebook.com
-157.240.2.37	login.facebook.com
-157.240.2.37	attachments.facebook.com
-157.240.2.37	touch.facebook.com
-157.240.2.37	apps.facebook.com
-157.240.2.37	upload.facebook.com
-157.240.2.37	developers.facebook.com
-157.240.2.37	beta-chat-01-05-ash3.facebook.com
-157.240.2.37	channel-ecmp-05-ash3.facebook.com
-157.240.2.37	channel-staging-ecmp-05-ash3.facebook.com
-157.240.2.37	channel-testing-ecmp-05-ash3.facebook.com
-157.240.2.37	0-edge-chat.facebook.com
-157.240.2.37	1-edge-chat.facebook.com
-157.240.2.37	2-edge-chat.facebook.com
-157.240.2.37	3-edge-chat.facebook.com
-157.240.2.37	4-edge-chat.facebook.com
-157.240.2.37	5-edge-chat.facebook.com
-157.240.2.37	6-edge-chat.facebook.com
-157.240.2.37	api-read.facebook.com
-157.240.2.37	bigzipfiles.facebook.com
-157.240.2.37	check4.facebook.com
-157.240.2.37	check6.facebook.com
-157.240.2.37	code.facebook.com
-157.240.2.37	connect.facebook.com
-157.240.2.37	edge-chat.facebook.com
-157.240.2.37	pixel.facebook.com
-157.240.2.37	star.c10r.facebook.com
-157.240.2.37	star.facebook.com
-157.240.2.37	zh-tw.facebook.com
-157.240.2.37	b-api.facebook.com
-157.240.2.37	b-graph.facebook.com
-157.240.2.37	orcart.facebook.com
-157.240.2.37	s-static.facebook.com
-157.240.2.37	vupload.facebook.com
-157.240.2.37	vupload2.facebook.com
-157.240.2.37	d.facebook.com
-157.240.2.37	fbcdn.net
+157.240.0.17	graph.facebook.com
+157.240.0.17	ssl.facebook.com
+157.240.0.17	api.facebook.com
+157.240.0.17	secure.facebook.com
+157.240.0.17	zh-cn.facebook.com
+157.240.0.17	login.facebook.com
+157.240.0.17	attachments.facebook.com
+157.240.0.17	touch.facebook.com
+157.240.0.17	apps.facebook.com
+157.240.0.17	upload.facebook.com
+157.240.0.17	developers.facebook.com
+157.240.0.17	beta-chat-01-05-ash3.facebook.com
+157.240.0.17	channel-ecmp-05-ash3.facebook.com
+157.240.0.17	channel-staging-ecmp-05-ash3.facebook.com
+157.240.0.17	channel-testing-ecmp-05-ash3.facebook.com
+157.240.0.17	0-edge-chat.facebook.com
+157.240.0.17	1-edge-chat.facebook.com
+157.240.0.17	2-edge-chat.facebook.com
+157.240.0.17	3-edge-chat.facebook.com
+157.240.0.17	4-edge-chat.facebook.com
+157.240.0.17	5-edge-chat.facebook.com
+157.240.0.17	6-edge-chat.facebook.com
+157.240.0.17	api-read.facebook.com
+157.240.0.17	bigzipfiles.facebook.com
+157.240.0.17	check4.facebook.com
+157.240.0.17	check6.facebook.com
+157.240.0.17	code.facebook.com
+157.240.0.17	connect.facebook.com
+157.240.0.17	edge-chat.facebook.com
+157.240.0.17	pixel.facebook.com
+157.240.0.17	star.c10r.facebook.com
+157.240.0.17	star.facebook.com
+157.240.0.17	zh-tw.facebook.com
+157.240.0.17	b-api.facebook.com
+157.240.0.17	b-graph.facebook.com
+157.240.0.17	orcart.facebook.com
+157.240.0.17	s-static.facebook.com
+157.240.0.17	vupload.facebook.com
+157.240.0.17	vupload2.facebook.com
+157.240.0.17	d.facebook.com
+157.240.0.17	fbcdn.net
 31.13.95.14	scontent.xx.fbcdn.net
 31.13.95.14	scontent-a.xx.fbcdn.net
 31.13.95.14	scontent-b.xx.fbcdn.net
@@ -208,8 +220,8 @@
 31.13.95.14	ent-e.xx.fbcdn.net
 23.207.122.24	s-external.ak.fbcdn.net
 23.34.45.177	s-static.ak.fbcdn.net
-157.240.2.37	static.thefacebook.com
-157.240.2.37	attachment.fbsbx.com
+157.240.0.17	static.thefacebook.com
+157.240.0.17	attachment.fbsbx.com
 31.13.73.7	staticxx.facebook.com
 31.13.73.7	connect.facebook.net
 192.0.78.13	live.fb.com
@@ -247,50 +259,92 @@
 # Github start
 192.30.253.113	gist.github.com
 # Github end
-64.233.162.81	www.chromestatus.com
-
+61.91.161.217	www.googleartproject.com
+61.91.161.217	feedburner.google.com
+61.91.161.217	www.feedburner.com
+61.91.161.217	feeds.feedburner.com
+61.91.161.217	feeds2.feedburner.com
+61.91.161.217	feedproxy.google.com
+61.91.161.217	go.googlesource.com
+61.91.161.217	golang.org
+61.91.161.217	www.golang.org
+61.91.161.217	blog.golang.org
+61.91.161.217	play.golang.org
+61.91.161.217	tip.golang.org
+61.91.161.217	tour.golang.org
+74.125.28.14	google.golang.org
+61.91.161.217	goo.gl
+61.91.161.217	pay.app.goo.gl
+61.91.161.217	g.co
+61.91.161.217	www.google.org
+61.91.161.217	blog.google.org
 216.58.208.151	panoramio.com
 216.58.208.151	www.panoramio.com
 64.233.189.128	static.panoramio.com
-64.233.162.81	blog.panoramio.com
-64.233.162.81	www.recaptcha.net
-64.233.162.81	api.recaptcha.net
-64.233.162.81	api-secure.recaptcha.net
-64.233.162.81	mailhide.recaptcha.net
-64.233.162.81	webmproject.org
-64.233.162.81	www.webmproject.org
-64.233.162.81	www.chromercise.com
-64.233.162.81	www.data-vocabulary.org
-64.233.162.81	www.googleinsidesearch.com
-64.233.162.81	www.teachparentstech.org
-64.233.162.81	www.thinkwithgoogle.com
-64.233.162.81	www.oneworldmanystories.com
-
-64.233.162.81	foobar.withgoogle.com
-64.233.162.81	interstellar.withgoogle.com
-64.233.162.81	edudirectory.withgoogle.com
-64.233.162.81	atmosphere.withgoogle.com
-64.233.162.81	accelerate.withgoogle.com
-64.233.162.81	insgruene.withgoogle.com
-64.233.162.81	atmospheretokyo.withgoogle.com
-64.233.162.81	connectedclassrooms.withgoogle.com
-64.233.162.81	smartypins.withgoogle.com
-64.233.162.81	streetart.withgoogle.com
-64.233.162.81	cardboard.withgoogle.com
-64.233.162.81	kickwithchrome.withgoogle.com
-64.233.162.81	candidatos.withgoogle.com
-64.233.162.81	trendstw.withgoogle.com
-64.233.162.81	impactchallenge.withgoogle.com
-64.233.162.81	virustotalcloud.appspot.com
-64.233.162.81	eduproducts.withgoogle.com
-64.233.162.81	certificate-transparency.org
-64.233.162.81	www.certificate-transparency.org
-64.233.162.81	abc.xyz
+61.91.161.217	blog.panoramio.com
+61.91.161.217	www.recaptcha.net
+61.91.161.217	api.recaptcha.net
+61.91.161.217	api-secure.recaptcha.net
+61.91.161.217	mailhide.recaptcha.net
+61.91.161.217	webmproject.org
+61.91.161.217	www.webmproject.org
+61.91.161.217	www.chromercise.com
+61.91.161.217	www.data-vocabulary.org
+61.91.161.217	www.googleinsidesearch.com
+61.91.161.217	www.teachparentstech.org
+61.91.161.217	www.thinkwithgoogle.com
+61.91.161.217	www.oneworldmanystories.com
+61.91.161.217	certificate-transparency.org
+61.91.161.217	www.certificate-transparency.org
+61.91.161.217	abc.xyz
 64.233.191.121	www.androidexperiments.com
 64.233.191.121	androidexperiments.com
 64.233.188.121	www.tensorflow.org
 # Google:others End
 
+# Gmail SMTP/POP/IMAP Start
+64.233.188.14	gmr-smtp-in.l.google.com
+64.233.188.16	googlemail-imap.l.google.com
+64.233.188.16	googlemail-smtp.l.google.com
+64.233.188.16	googlemail-pop.l.google.com
+64.233.188.16	pop.googlemail.com
+64.233.188.16	imap.googlemail.com
+64.233.188.16	smtp.googlemail.com
+64.233.188.27	gmail-smtp-in.l.google.com
+64.233.188.109	gmail-imap.l.google.com
+64.233.188.109	gmail-pop.l.google.com
+64.233.188.109	gmail-smtp.l.google.com
+64.233.188.109	imap.gmail.com
+64.233.188.109	smtp.gmail.com
+64.233.188.109	pop.gmail.com
+64.233.188.109	gmail-smtp-msa.l.google.com
+# Gmail SMTP/POP/IMAP End
+
+# Google:stun Server Start
+64.233.177.127	stun.l.google.com
+64.233.177.127	alt1.stun.l.google.com
+64.233.177.127	alt2.stun.l.google.com
+64.233.177.127	alt3.stun.l.google.com
+64.233.177.127	alt4.stun.l.google.com
+64.233.177.127	alt5.stun.l.google.com
+# Google:stun Server End
+
+# Google:Gtalk	Start
+64.233.188.125	talk.google.com
+64.233.188.125	talk.l.google.com
+64.233.188.125	talkx.l.google.com
+64.233.188.125	alt1.talk.l.google.com
+# Google:Gtalk	End
+
+# Google:ghs Start
+64.233.188.121	ghs.google.com
+64.233.188.121	ghs46.google.com
+64.233.188.121	ghs.l.google.com
+64.233.188.121	ghs46.l.google.com
+64.233.188.121	www.nianticlabs.com
+64.233.188.121	gsamplemaps.googlepages.com
+64.233.188.121	javascript-blocker.toggleable.com
+64.233.188.121	goto.ext.google.com
 64.233.188.121	webrtc.org
 64.233.188.121	www.webrtc.org
 64.233.188.121	chromeexperiments.com
@@ -328,7 +382,7 @@
 # Google:gcm End
 
 # Goole:duo Start
-64.233.162.81	instantmessaging-pa.googleapis.com
+61.91.161.217	instantmessaging-pa.googleapis.com
 # Goole:duo End
 
 # Google:A-GPS Start
@@ -712,38 +766,38 @@
 # Tumblr End
 
 # Twitter Start
-104.244.42.195	twitter.com
-104.244.42.195	www.twitter.com
+202.171.253.111	twitter.com
+202.171.253.111	www.twitter.com
 185.45.5.36	t.co
-104.244.42.195	api.twitter.com
-104.244.42.195	mobile.twitter.com
-104.244.42.195	support.twitter.com
-104.244.42.195	upload.twitter.com
-104.244.42.195	tweetdeck.twitter.com
-104.244.42.195	syndication.twitter.com
-104.244.42.195	platform.twitter.com
-104.244.42.195	about.twitter.com
-104.244.42.195	blog.twitter.com
-104.244.42.195	betastream.twitter.com
-104.244.42.195	dev.twitter.com
-104.244.42.195	pic.twitter.com
-104.244.42.195	search.twitter.com
-104.244.42.195	status.twitter.com
-104.244.42.195	assets0.twitter.com
-104.244.42.195	assets1.twitter.com
-104.244.42.195	assets2.twitter.com
-104.244.42.195	assets3.twitter.com
-104.244.42.195	assets4.twitter.com
-104.244.42.195	static.twitter.com
-104.244.42.195	help.twitter.com
-104.244.42.195	ton.twitter.com
-104.244.42.195	s.twitter.com
-104.244.42.195	analytics.twitter.com
-104.244.42.195	urls-real.api.twitter.com
-104.244.42.195	userstream.twitter.com
-104.244.42.195	sitestream.twitter.com
-104.244.42.195	stream.twitter.com
-104.244.42.195	tdweb.twitter.com
+202.171.253.111	api.twitter.com
+202.171.253.111	mobile.twitter.com
+202.171.253.111	support.twitter.com
+202.171.253.111	upload.twitter.com
+202.171.253.111	tweetdeck.twitter.com
+202.171.253.111	syndication.twitter.com
+202.171.253.111	platform.twitter.com
+202.171.253.111	about.twitter.com
+202.171.253.111	blog.twitter.com
+202.171.253.111	betastream.twitter.com
+202.171.253.111	dev.twitter.com
+202.171.253.111	pic.twitter.com
+202.171.253.111	search.twitter.com
+202.171.253.111	status.twitter.com
+202.171.253.111	assets0.twitter.com
+202.171.253.111	assets1.twitter.com
+202.171.253.111	assets2.twitter.com
+202.171.253.111	assets3.twitter.com
+202.171.253.111	assets4.twitter.com
+202.171.253.111	static.twitter.com
+202.171.253.111	help.twitter.com
+202.171.253.111	ton.twitter.com
+202.171.253.111	s.twitter.com
+202.171.253.111	analytics.twitter.com
+202.171.253.111	urls-real.api.twitter.com
+202.171.253.111	userstream.twitter.com
+202.171.253.111	sitestream.twitter.com
+202.171.253.111	stream.twitter.com
+202.171.253.111	tdweb.twitter.com
 173.236.110.98	twitpic.com
 173.236.110.98	m1.twitpic.com
 173.236.110.98	web1.twitpic.com
@@ -779,10 +833,10 @@
 104.244.42.132	web.tweetdeck.com
 104.244.42.132	www.tweetdeck.com
 104.244.42.132	downloads.tweetdeck.com
-104.244.42.195	cdn.syndication.twimg.com
-104.244.42.195	cdn.syndication.twitter.com
-104.244.42.195	apps.twitter.com
-104.244.42.195	debates.twitter.com
+202.171.253.111	cdn.syndication.twimg.com
+202.171.253.111	cdn.syndication.twitter.com
+202.171.253.111	apps.twitter.com
+202.171.253.111	debates.twitter.com
 # Twitter End
 
 # Vimeo Start

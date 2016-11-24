@@ -15,4 +15,6 @@
 61.91.161.217	gvt0.com
 61.91.161.217	orkut.com
 61.91.161.217	gstatic.com
+61.91.161.217	googleblog.com
+61.91.161.217	withgoogle.com
 60.205.27.42    lemonbrowser.com
