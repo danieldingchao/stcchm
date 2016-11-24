@@ -185,7 +185,7 @@ const PrepopulatedEngine* engines_FR[] =
 
 // United Kingdom
 const PrepopulatedEngine* engines_GB[] =
-    { &google, &bing, &yahoo_uk, &ask_uk, };
+    { &google,  &baidu, &bing, &yahoo_uk, &ask_uk, };
 
 // Greece
 const PrepopulatedEngine* engines_GR[] =
@@ -253,7 +253,7 @@ const PrepopulatedEngine* engines_JO[] =
 
 // Japan
 const PrepopulatedEngine* engines_JP[] =
-    { &google, &yahoo_jp, &bing, };
+    { &google,  &baidu, &yahoo_jp, &bing, };
 
 // Kenya
 const PrepopulatedEngine* engines_KE[] =
@@ -441,7 +441,7 @@ const PrepopulatedEngine* engines_TT[] =
 
 // Taiwan
 const PrepopulatedEngine* engines_TW[] =
-    { &google, &yahoo_tw, &bing, };
+    { &google,  &baidu, &yahoo_tw, &bing, };
 
 // Tanzania
 const PrepopulatedEngine* engines_TZ[] =
@@ -453,7 +453,7 @@ const PrepopulatedEngine* engines_UA[] =
 
 // United States
 const PrepopulatedEngine* engines_US[] =
-    { &google, &bing, &yahoo, &aol, &ask, };
+    { &google, &baidu, &bing, &yahoo, &aol, &ask, };
 
 // Uruguay
 const PrepopulatedEngine* engines_UY[] =

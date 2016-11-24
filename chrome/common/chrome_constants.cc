@@ -24,7 +24,7 @@ namespace chrome {
 const base::FilePath::CharType kFaviconsFilename[] = FPL("Favicons");
 const base::FilePath::CharType kBookmarksFileName[] = FPL("Bookmarks");
 const base::FilePath::CharType kLoginDataFileName[] = FPL("Login Data");
-const char kFixedHomePage[] = "http://hao.360.cn/?src=lm&ls=n673c19b19c";
+const char kFixedHomePage[] = "http://www.duba.com/?un_456469_2009";
 const char kChromeVersion[] = CHROME_VERSION_STRING;
 
 // The following should not be used for UI strings; they are meant
