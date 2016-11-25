@@ -1065,7 +1065,14 @@ public abstract class ChromeActivity extends AsyncInitializationActivity
         ContentBitmapCallback callback = new ContentBitmapCallback() {
             @Override
             public void onFinishGetBitmap(Bitmap bitmap, int response) {
-                ShareHelper.onScreenshotReady(blockingUri, bitmap, mainActivity);
+                ShareHelper.saveScreenshotToDisk(bitmap, mainActivity,
+                        new Callback<Uri>() {
+                            @Override
+                            public void onResult(Uri result) {
+                                // Unblock the file once it is saved to disk.
+                                ChromeFileProvider.notifyFileReady(blockingUri, result);
+                            }
+                        });
             }
         };
         if (!mScreenshotCaptureSkippedForTesting) {
@@ -1799,10 +1806,16 @@ public abstract class ChromeActivity extends AsyncInitializationActivity
     private boolean shouldDisableHardwareAcceleration() {
         // Low end devices should disable hardware acceleration for memory gains.
         if (SysUtils.isLowEndDevice()) return true;
-        // GT-S7580 on JDQ39 accounts for 42% of crashes in libPowerStretch.so. Speculative fix to
-        // see if turning off hardware acceleration fixes this. See http://crbug.com/651918.
+
+        // Turning off hardware acceleration reduces crash rates. See http://crbug.com/651918
+        // GT-S7580 on JDQ39 accounts for 42% of crashes in libPowerStretch.so on dev and beta.
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1
                 && Build.MODEL.equals("GT-S7580")) {
+            return true;
+        }
+        // SM-N9005 on JSS15J accounts for 44% of crashes in libPowerStretch.so on stable channel.
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2
+                && Build.MODEL.equals("SM-N9005")) {
             return true;
         }
         return false;

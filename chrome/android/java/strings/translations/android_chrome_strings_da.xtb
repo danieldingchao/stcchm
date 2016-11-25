@@ -107,6 +107,7 @@ Du skal aktivere Bluetooth og Placering for at kunne bruge Fysisk web.</translat
 <translation id="2139186145475833000">Føj til startskærm</translation>
 <translation id="2146738493024040262">Åbn instant app</translation>
 <translation id="2148716181193084225">I dag</translation>
+<translation id="2154484045852737596">Rediger kort</translation>
 <translation id="2154710561487035718">Kopier webadresse</translation>
 <translation id="219985413780390209">Beskyt dig selv og din enhed mod farlige websites</translation>
 <translation id="2206488550163399966"><ph name="APP_NAME" />, webapp. <ph name="APP_URL" /></translation>
@@ -465,6 +466,7 @@ Nogle websites kan f.eks. reagere på denne anmodning ved at vise dig annoncer, 
 <translation id="6409731863280057959">Pop op-vinduer</translation>
 <translation id="641643625718530986">Udskriv…</translation>
 <translation id="6433490469411711332">Rediger kontaktoplysninger</translation>
+<translation id="6443118737398455446">Udløbsdatoen er ugyldig</translation>
 <translation id="6447842834002726250">Cookies</translation>
 <translation id="6448273550210938826">Forslag til søgning og webadresser</translation>
 <translation id="6463070039183944536">Tilføjer...</translation>
@@ -662,7 +664,7 @@ Du kan få nye licenser ved at oprette forbindelse til internettet og afspille d
 <translation id="8699799819461268362">Google SafeSites-filter</translation>
 <translation id="8719023831149562936">Den aktuelle fane kan ikke overføres</translation>
 <translation id="8725066075913043281">Forsøg igen</translation>
-<translation id="8730621377337864115">Fuldført</translation>
+<translation id="8730621377337864115">Udfør</translation>
 <translation id="8748850008226585750">Indholdet er skjult</translation>
 <translation id="8812942424849541387">Kontrollér, hvordan dette fungerer i <ph name="BEGIN_LINK1" />Indstillinger<ph name="END_LINK1" /></translation>
 <translation id="8820817407110198400">Bogmærker</translation>

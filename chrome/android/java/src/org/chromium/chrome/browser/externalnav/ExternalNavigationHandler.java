@@ -21,6 +21,7 @@ import org.chromium.base.metrics.RecordHistogram;
 import org.chromium.chrome.browser.ChromeSwitches;
 import org.chromium.chrome.browser.IntentHandler;
 import org.chromium.chrome.browser.UrlConstants;
+import org.chromium.chrome.browser.instantapps.InstantAppsHandler;
 import org.chromium.chrome.browser.tab.Tab;
 import org.chromium.chrome.browser.tab.TabRedirectHandler;
 import org.chromium.chrome.browser.util.IntentUtils;
@@ -46,6 +47,9 @@ public class ExternalNavigationHandler {
 
     @VisibleForTesting
     static final String EXTRA_BROWSER_FALLBACK_URL = "browser_fallback_url";
+
+    // Supervisor package name
+    private static final Object SUPERVISOR_PKG = "com.google.android.instantapps.supervisor";
 
     // An extra that may be specified on an intent:// URL that contains an encoded value for the
     // referrer field passed to the market:// URL in the case where the app is not present.
@@ -258,7 +262,7 @@ public class ExternalNavigationHandler {
             // number=string(phone-number)
             mDelegate.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse(WebView.SCHEME_TEL
-                            + params.getUrl().substring(SCHEME_WTAI_MC.length()))));
+                            + params.getUrl().substring(SCHEME_WTAI_MC.length()))), false);
             return OverrideUrlLoadingResult.OVERRIDE_WITH_EXTERNAL_INTENT;
         }
 
@@ -335,7 +339,7 @@ public class ExternalNavigationHandler {
                     if (params.getReferrerUrl() != null) {
                         intent.putExtra(Intent.EXTRA_REFERRER, Uri.parse(params.getReferrerUrl()));
                     }
-                    mDelegate.startActivity(intent);
+                    mDelegate.startActivity(intent, false);
                     return OverrideUrlLoadingResult.OVERRIDE_WITH_EXTERNAL_INTENT;
                 } catch (ActivityNotFoundException ex) {
                     // ignore the error on devices that does not have
@@ -388,7 +392,7 @@ public class ExternalNavigationHandler {
             if (!mDelegate.isSpecializedHandlerAvailable(resolvingInfos)) {
                 if (params.webApkPackageName() != null) {
                     intent.setPackage(mDelegate.getPackageName());
-                    mDelegate.startActivity(intent);
+                    mDelegate.startActivity(intent, false);
                     return OverrideUrlLoadingResult.OVERRIDE_WITH_EXTERNAL_INTENT;
                 }
 
@@ -437,13 +441,29 @@ public class ExternalNavigationHandler {
             }
         }
 
+        boolean isDirectInstantAppsIntent = isExternalProtocol
+                && SUPERVISOR_PKG.equals(intent.getPackage());
+        boolean shouldProxyForInstantApps = isDirectInstantAppsIntent
+                && mDelegate.isSerpReferrer(params.getReferrerUrl(), params.getTab());
+        if (shouldProxyForInstantApps) {
+            intent.putExtra(InstantAppsHandler.IS_GOOGLE_SEARCH_REFERRER, true);
+        } else if (isDirectInstantAppsIntent) {
+            // For security reasons, we disable all intent:// URLs to Instant Apps that are
+            // not coming from SERP.
+            return OverrideUrlLoadingResult.NO_OVERRIDE;
+        } else {
+            // Make sure this extra is not sent unless we've done the verification.
+            intent.removeExtra(InstantAppsHandler.IS_GOOGLE_SEARCH_REFERRER);
+        }
+
         try {
             if (params.isIncognito() && !mDelegate.willChromeHandleIntent(intent)) {
                 // This intent may leave Chrome.  Warn the user that incognito does not carry over
                 // to apps out side of Chrome.
                 mDelegate.startIncognitoIntent(intent, params.getReferrerUrl(),
                         hasBrowserFallbackUrl ? browserFallbackUrl : null, params.getTab(),
-                        params.shouldCloseContentsOnOverrideUrlLoadingAndLaunchIntent());
+                        params.shouldCloseContentsOnOverrideUrlLoadingAndLaunchIntent(),
+                        shouldProxyForInstantApps);
                 return OverrideUrlLoadingResult.OVERRIDE_WITH_ASYNC_ACTION;
             }
 
@@ -488,7 +508,7 @@ public class ExternalNavigationHandler {
                 }
             }
 
-            if (mDelegate.startActivityIfNeeded(intent)) {
+            if (mDelegate.startActivityIfNeeded(intent, shouldProxyForInstantApps)) {
                 return OverrideUrlLoadingResult.OVERRIDE_WITH_EXTERNAL_INTENT;
             }
 
