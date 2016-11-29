@@ -712,6 +712,7 @@ class CONTENT_EXPORT WebContentsImpl
   void SetFocusToLocationBar(bool select_all) override;
   bool IsHidden() override;
   int GetOuterDelegateFrameTreeNodeId() override;
+  RenderWidgetHostImpl* GetFullscreenRenderWidgetHost() const override;
 
   virtual MouseGesture* GetMouseGesture() override;
   // NotificationObserver ------------------------------------------------------

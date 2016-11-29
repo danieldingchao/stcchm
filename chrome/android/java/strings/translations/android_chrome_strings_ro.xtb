@@ -107,6 +107,7 @@ Pentru a folosi Webul material, trebuie să activezi Bluetooth și Locația.</tr
 <translation id="2139186145475833000">Adaugă pe ecran pornire</translation>
 <translation id="2146738493024040262">Deschide aplicația instantanee</translation>
 <translation id="2148716181193084225">Astăzi</translation>
+<translation id="2154484045852737596">Editează cardul</translation>
 <translation id="2154710561487035718">Copiați adresa URL</translation>
 <translation id="219985413780390209">Protecție împotriva site-urilor periculoase</translation>
 <translation id="2206488550163399966"><ph name="APP_NAME" />, aplicație web. <ph name="APP_URL" /></translation>
@@ -387,7 +388,7 @@ Pentru a ajusta termenii căutării, apasă lung pentru a selecta. Pentru a rafi
 <translation id="554327794654007401">Webul material</translation>
 <translation id="5556459405103347317">Reîncarcă</translation>
 <translation id="5565871407246142825">Carduri de credit</translation>
-<translation id="5578795271662203820">Căutați imaginea cu <ph name="SEARCH_ENGINE" /></translation>
+<translation id="5578795271662203820">Caută imaginea cu <ph name="SEARCH_ENGINE" /></translation>
 <translation id="5579997910517802656">Nu s-a găsit niciun dispozitiv.</translation>
 <translation id="5595485650161345191">Editează adresa</translation>
 <translation id="5596627076506792578">Mai multe opțiuni</translation>
@@ -465,6 +466,7 @@ De exemplu, unele site-uri pot răspunde la această solicitare afișând anunț
 <translation id="6409731863280057959">Ferestre pop-up</translation>
 <translation id="641643625718530986">Printați...</translation>
 <translation id="6433490469411711332">Editează informațiile de contact</translation>
+<translation id="6443118737398455446">Dată de expirare nevalidă</translation>
 <translation id="6447842834002726250">Cookie-uri</translation>
 <translation id="6448273550210938826">Sugestii de căutare și pentru adrese URL</translation>
 <translation id="6463070039183944536">Se adaugă…</translation>
@@ -605,7 +607,7 @@ Contul Google poate să ofere alte forme ale istoricului de navigare, cum ar fi 
 <translation id="8063895661287329888">Marcajul nu a putut fi adăugat.</translation>
 <translation id="8068648041423924542">Certificatul nu poate fi selectat.</translation>
 <translation id="8069239273282989646">După comprimare</translation>
-<translation id="8073388330009372546">Vedeți imaginea în filă nouă</translation>
+<translation id="8073388330009372546">Vezi imaginea în filă nouă</translation>
 <translation id="8076014560081431679">Setările salvate pentru site-uri nu vor fi șterse și pot reflecta obiceiurile de navigare. <ph name="BEGIN_LINK" />Află mai multe<ph name="END_LINK" /></translation>
 <translation id="8087000398470557479">Acest conținut provine de pe <ph name="DOMAIN_NAME" />, oferit de Google.</translation>
 <translation id="8103578431304235997">Filă incognito</translation>

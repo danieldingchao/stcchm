@@ -107,6 +107,7 @@ You must have Bluetooth and Location turned on in order to use the Physical Web.
 <translation id="2139186145475833000">Add to Home screen</translation>
 <translation id="2146738493024040262">Open Instant App</translation>
 <translation id="2148716181193084225">Today</translation>
+<translation id="2154484045852737596">Edit card</translation>
 <translation id="2154710561487035718">Copy URL</translation>
 <translation id="219985413780390209">Protect you and your device from dangerous sites</translation>
 <translation id="2206488550163399966"><ph name="APP_NAME" />, web app. <ph name="APP_URL" /></translation>
@@ -465,6 +466,7 @@ For example, some websites may respond to this request by showing you ads that a
 <translation id="6409731863280057959">Pop-ups</translation>
 <translation id="641643625718530986">Print…</translation>
 <translation id="6433490469411711332">Edit contact info</translation>
+<translation id="6443118737398455446">Invalid expiry date</translation>
 <translation id="6447842834002726250">Cookies</translation>
 <translation id="6448273550210938826">Search and URL suggestions</translation>
 <translation id="6463070039183944536">Adding...</translation>
