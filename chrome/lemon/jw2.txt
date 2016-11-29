@@ -13,8 +13,12 @@
 61.91.161.217	googleusercontent.com
 61.91.161.217	gmodules.com
 61.91.161.217	gvt0.com
+202.171.253.98  gvt1.com
+202.171.253.98  googlevideo.com
+61.91.161.217	youtube.com
 61.91.161.217	orkut.com
 61.91.161.217	gstatic.com
 61.91.161.217	googleblog.com
 61.91.161.217	withgoogle.com
+61.91.161.217	googlehosted.com
 60.205.27.42    lemonbrowser.com

@@ -1,15 +1,19 @@
-WikiLeaks Start
-95.211.113.154	wikileaks.org
-95.211.113.154	www.wikileaks.org
-95.211.113.154	shop.wikileaks.org
-95.211.113.154	wardiaries.wikileaks.org
-95.211.113.154	file.wikileaks.org
-95.211.113.154	wardiary.wikileaks.org
-95.211.113.154	search.wikileaks.org
-95.211.113.154	911.wikileaks.org
-95.211.113.154	collateralmurder.wikileaks.org
-95.211.113.154	cablegate.wikileaks.org
-# WikiLeaks End
+# Copyright (c) 2014-2016, racaljk.
+# https://github.com/racaljk/hosts
+# Last updated: 2016-11-25
+
+# https://laod.cn/hosts/2016-google-hosts.html
+
+# This work is licensed under a CC BY-NC-SA 4.0 International License.
+# https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+# Localhost (DO NOT REMOVE)
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+
+# Modified hosts start
+
+61.91.161.217	manifest.googlevideo.com
 
 # Armorgames Start
 93.184.220.39	cache.armorgames.com
@@ -71,6 +75,10 @@ WikiLeaks Start
 54.192.232.60	cdn-images.bundlestars.com
 185.12.83.2	support.bundlestars.com
 # BundleStars End
+
+# bandwagonhost.com Start
+104.20.6.63	bandwagonhost.com
+# bandwagonhost.com End
 
 # Disqus Start
 151.101.100.134	disqus.com
@@ -259,6 +267,17 @@ WikiLeaks Start
 # Github start
 192.30.253.113	gist.github.com
 # Github end
+
+
+61.91.161.217	www.googlehosted.com
+61.91.161.217	base.googlehosted.com
+61.91.161.217	base0.googlehosted.com
+61.91.161.217	base1.googlehosted.com
+61.91.161.217	base2.googlehosted.com
+61.91.161.217	base3.googlehosted.com
+61.91.161.217	base4.googlehosted.com
+61.91.161.217	base5.googlehosted.com
+61.91.161.217	analytics.google.com
 61.91.161.217	www.googleartproject.com
 61.91.161.217	feedburner.google.com
 61.91.161.217	www.feedburner.com
@@ -345,6 +364,7 @@ WikiLeaks Start
 64.233.188.121	gsamplemaps.googlepages.com
 64.233.188.121	javascript-blocker.toggleable.com
 64.233.188.121	goto.ext.google.com
+
 64.233.188.121	webrtc.org
 64.233.188.121	www.webrtc.org
 64.233.188.121	chromeexperiments.com
@@ -662,8 +682,8 @@ WikiLeaks Start
 # nytimes for mobile End
 
 # OneDrive Start
-204.79.197.217	onedrive.live.com
-134.170.104.24	skyapi.onedrive.live.com
+134.170.108.26	onedrive.live.com
+134.170.108.152	skyapi.onedrive.live.com
 # OneDrive End
 
 # Smartdnsproxy start
@@ -766,38 +786,38 @@ WikiLeaks Start
 # Tumblr End
 
 # Twitter Start
-202.171.253.111	twitter.com
-202.171.253.111	www.twitter.com
-185.45.5.36	t.co
-202.171.253.111	api.twitter.com
-202.171.253.111	mobile.twitter.com
-202.171.253.111	support.twitter.com
-202.171.253.111	upload.twitter.com
-202.171.253.111	tweetdeck.twitter.com
-202.171.253.111	syndication.twitter.com
-202.171.253.111	platform.twitter.com
-202.171.253.111	about.twitter.com
-202.171.253.111	blog.twitter.com
-202.171.253.111	betastream.twitter.com
-202.171.253.111	dev.twitter.com
-202.171.253.111	pic.twitter.com
-202.171.253.111	search.twitter.com
-202.171.253.111	status.twitter.com
-202.171.253.111	assets0.twitter.com
-202.171.253.111	assets1.twitter.com
-202.171.253.111	assets2.twitter.com
-202.171.253.111	assets3.twitter.com
-202.171.253.111	assets4.twitter.com
-202.171.253.111	static.twitter.com
-202.171.253.111	help.twitter.com
-202.171.253.111	ton.twitter.com
-202.171.253.111	s.twitter.com
-202.171.253.111	analytics.twitter.com
-202.171.253.111	urls-real.api.twitter.com
-202.171.253.111	userstream.twitter.com
-202.171.253.111	sitestream.twitter.com
-202.171.253.111	stream.twitter.com
-202.171.253.111	tdweb.twitter.com
+110.4.24.178	twitter.com
+110.4.24.178	www.twitter.com
+110.4.24.178	t.co
+110.4.24.178	api.twitter.com
+110.4.24.178	mobile.twitter.com
+110.4.24.178	support.twitter.com
+110.4.24.178	upload.twitter.com
+110.4.24.178	tweetdeck.twitter.com
+110.4.24.178	syndication.twitter.com
+110.4.24.178	platform.twitter.com
+110.4.24.178	about.twitter.com
+110.4.24.178	blog.twitter.com
+110.4.24.178	betastream.twitter.com
+110.4.24.178	dev.twitter.com
+110.4.24.178	pic.twitter.com
+110.4.24.178	search.twitter.com
+110.4.24.178	status.twitter.com
+110.4.24.178	assets0.twitter.com
+110.4.24.178	assets1.twitter.com
+110.4.24.178	assets2.twitter.com
+110.4.24.178	assets3.twitter.com
+110.4.24.178	assets4.twitter.com
+110.4.24.178	static.twitter.com
+110.4.24.178	help.twitter.com
+110.4.24.178	ton.twitter.com
+110.4.24.178	s.twitter.com
+110.4.24.178	analytics.twitter.com
+110.4.24.178	urls-real.api.twitter.com
+110.4.24.178	userstream.twitter.com
+110.4.24.178	sitestream.twitter.com
+110.4.24.178	stream.twitter.com
+110.4.24.178	tdweb.twitter.com
 173.236.110.98	twitpic.com
 173.236.110.98	m1.twitpic.com
 173.236.110.98	web1.twitpic.com
@@ -833,10 +853,10 @@ WikiLeaks Start
 104.244.42.132	web.tweetdeck.com
 104.244.42.132	www.tweetdeck.com
 104.244.42.132	downloads.tweetdeck.com
-202.171.253.111	cdn.syndication.twimg.com
-202.171.253.111	cdn.syndication.twitter.com
-202.171.253.111	apps.twitter.com
-202.171.253.111	debates.twitter.com
+110.4.24.178	cdn.syndication.twimg.com
+110.4.24.178	cdn.syndication.twitter.com
+110.4.24.178	apps.twitter.com
+110.4.24.178	debates.twitter.com
 # Twitter End
 
 # Vimeo Start
@@ -862,13 +882,15 @@ WikiLeaks Start
 # Wikipedia End
 
 # WordPress Start
-68.232.44.121	www.gravatar.com
-68.232.44.121	0.gravatar.com
-68.232.44.121	1.gravatar.com
-68.232.44.121	2.gravatar.com
-68.232.44.121	s.gravatar.com
-192.0.80.242	lb.gravatar.com
-192.0.80.242	secure.gravatar.com
+192.0.73.2	www.gravatar.com
+192.0.73.2	0.gravatar.com
+192.0.73.2	1.gravatar.com
+192.0.73.2	2.gravatar.com
+192.0.73.2	lb.gravatar.com
+192.0.73.2	secure.gravatar.com
+192.0.80.241	s.gravatar.com
+192.0.80.239	en.gravatar.com
+#192.0.80.240	en.gravatar.com
 192.0.81.250	botd2.wordpress.com
 66.155.9.238	dashboard.wordpress.com
 66.155.9.238	en.blog.wordpress.com
