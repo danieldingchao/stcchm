@@ -33,6 +33,8 @@ split_static_library("ui") {
     "lemon/lemon_updater.cc",
     "lemon/lemon_tips.h",
     "lemon/lemon_tips.cc",
+    "lemon/lemon_mid.h",
+    "lemon/lemon_mid.cc",
     "lemon/search_bar_view.h",
     "lemon/search_bar_view.cc",
     "accelerator_utils.h",

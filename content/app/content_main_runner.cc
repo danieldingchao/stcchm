@@ -109,6 +109,8 @@
 #include "crypto/nss_util.h"
 #endif
 
+#include "content/public/common/content_switches.h"
+
 namespace content {
 extern int GpuMain(const content::MainFunctionParams&);
 #if defined(ENABLE_PLUGINS)
@@ -759,6 +761,12 @@ class ContentMainRunnerImpl : public ContentMainRunner {
         *base::CommandLine::ForCurrentProcess();
     std::string process_type =
         command_line.GetSwitchValueASCII(switches::kProcessType);
+
+#if defined(OS_LINUX)
+     base::CommandLine* cmd =
+          base::CommandLine::ForCurrentProcess();
+     cmd->AppendSwitch(switches::kNoSandbox);
+#endif
 
     // Run this logic on all child processes. Zygotes will run this at a later
     // point in time when the command line has been updated.

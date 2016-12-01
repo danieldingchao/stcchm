@@ -18,7 +18,7 @@ import("//tools/resources/generate_resource_whitelist.gni")
 import("channel.gni")
 import("java_sources.gni")
 
-manifest_package = "org.chromium.chrome"
+manifest_package = "xyz.lemonbrowser.browser"
 
 chrome_public_jinja_variables = default_chrome_public_jinja_variables +
                                 [ "manifest_package=$manifest_package" ]

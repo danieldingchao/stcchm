@@ -50,7 +50,7 @@ void ShowBadFlagsPrompt(Browser* browser) {
 #if !defined(DISABLE_NACL)
     switches::kNaClDangerousNoSandboxNonSfi,
 #endif
-    switches::kNoSandbox,
+    //switches::kNoSandbox,
     switches::kSingleProcess,
 
     // These flags disable or undermine the Same Origin Policy.
