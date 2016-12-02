@@ -7,6 +7,8 @@
 #include <stdint.h>
 
 #include "base/bind.h"
+#include "base/base_paths.h"
+#include "base/files/file_util.h"
 #include "build/build_config.h"
 #include "chrome/browser/shell_integration.h"
 #include "chrome/common/importer/firefox_importer_utils.h"
@@ -25,13 +27,19 @@
 
 #if defined(OS_WIN)
 #include "chrome/common/importer/edge_importer_utils_win.h"
-#endif
-
-#if defined(OS_WIN)
 #include "chrome/browser/importer/theworld_importer_utils.h"
 #include "base/win/registry.h"
-#include "base/files/file_util.h"
 #include "base/path_service.h"
+#endif
+
+
+#if defined(OS_LINUX)
+#include "base/environment.h"
+#include "base/nix/xdg_util.h"
+using base::nix::GetXDGDirectory;
+using base::nix::GetXDGUserDirectory;
+using base::nix::kDotConfigDir;
+using base::nix::kXdgConfigHomeEnvVar;
 #endif
 
 using content::BrowserThread;
@@ -127,6 +135,52 @@ void DetectFirefoxProfiles(const std::string locale,
   firefox.locale = locale;
   profiles->push_back(firefox);
 }
+
+
+void DetectGoogleChromeProfiles(std::vector<importer::SourceProfile>* profiles) {
+#if defined(OS_WIN)
+	HKEY root_key = HKEY_LOCAL_MACHINE;
+	HKEY current_user = HKEY_CURRENT_USER;
+	std::wstring key_path(L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe");
+	base::win::RegKey key1(root_key, key_path.c_str(), KEY_READ);
+	base::win::RegKey key2(current_user, key_path.c_str(), KEY_READ);
+
+	std::wstring path;
+	if (key1.Valid())
+		key1.ReadValue(L"", &path);
+	else if (key2.Valid())
+		key2.ReadValue(L"", &path);
+
+		if (base::PathExists(base::FilePath(path)) && (path.find(L"Google") != std::wstring::npos)) {
+			importer::SourceProfile gc_explorer;
+			gc_explorer.importer_name = l10n_util::GetStringUTF16(IDS_IMPORT_FROM_GOOGLE_CHROME);
+			gc_explorer.importer_type = importer::TYPE_GOOGLE_CHROME;
+			gc_explorer.source_path = base::FilePath(path);
+			gc_explorer.app_path = base::FilePath(path);
+			gc_explorer.services_supported = importer::FAVORITES | importer::HOME_PAGE |
+				importer::SEARCH_ENGINES | importer::PASSWORDS | importer::MOST_VISITED;
+			profiles->push_back(gc_explorer);
+		}
+#elif defined(OS_LINUX)
+  std::unique_ptr<base::Environment> env(base::Environment::Create());
+  base::FilePath config_dir(GetXDGDirectory(env.get(),
+                                            kXdgConfigHomeEnvVar,
+                                            kDotConfigDir));
+  base::FilePath chrome_path = config_dir.Append("google-chrome");
+  if (base::PathExists(chrome_path)) {
+		importer::SourceProfile gc_explorer;
+		gc_explorer.importer_name = l10n_util::GetStringUTF16(IDS_IMPORT_FROM_GOOGLE_CHROME);
+		gc_explorer.importer_type = importer::TYPE_GOOGLE_CHROME;
+		gc_explorer.source_path = chrome_path;
+		//gc_explorer.app_path = base::FilePath(path);
+		gc_explorer.services_supported = importer::FAVORITES | importer::HOME_PAGE |
+			importer::SEARCH_ENGINES | importer::PASSWORDS | importer::MOST_VISITED;
+		profiles->push_back(gc_explorer);
+  }
+#endif
+}
+
+
 
 #if defined(OS_WIN)
 void DetectTheworld3Profiles(std::vector<importer::SourceProfile>* profiles) {
@@ -262,32 +316,6 @@ bool IsSupporttedGoogleChromeVersion() {
 		return false;
 	else
 		return true;
-}
-
-void DetectGoogleChromeProfiles(std::vector<importer::SourceProfile>* profiles) {
-	HKEY root_key = HKEY_LOCAL_MACHINE;
-	HKEY current_user = HKEY_CURRENT_USER;
-	std::wstring key_path(L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe");
-	base::win::RegKey key1(root_key, key_path.c_str(), KEY_READ);
-	base::win::RegKey key2(current_user, key_path.c_str(), KEY_READ);
-
-	std::wstring path;
-	if (key1.Valid())
-		key1.ReadValue(L"", &path);
-	else if (key2.Valid())
-		key2.ReadValue(L"", &path);
-
-		if (base::PathExists(base::FilePath(path)) && (path.find(L"Google") != std::wstring::npos)) {
-			importer::SourceProfile gc_explorer;
-			gc_explorer.importer_name = l10n_util::GetStringUTF16(IDS_IMPORT_FROM_GOOGLE_CHROME);
-			gc_explorer.importer_type = importer::TYPE_GOOGLE_CHROME;
-			gc_explorer.source_path = base::FilePath(path);
-			gc_explorer.app_path = base::FilePath(path);
-			gc_explorer.services_supported = importer::FAVORITES | importer::HOME_PAGE |
-				importer::SEARCH_ENGINES | importer::PASSWORDS | importer::MOST_VISITED;
-			profiles->push_back(gc_explorer);
-		}
-
 }
 
 void Detect360ChromeProfiles(std::vector<importer::SourceProfile>* profiles) {
@@ -717,6 +745,8 @@ std::vector<importer::SourceProfile> DetectSourceProfilesWorker(
 #else
   DetectFirefoxProfiles(locale, &profiles);
 #endif
+
+  DetectGoogleChromeProfiles(&profiles);
 
   if (include_interactive_profiles) {
     importer::SourceProfile bookmarks_profile;

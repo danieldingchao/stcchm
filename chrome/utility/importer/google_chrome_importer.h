@@ -57,7 +57,7 @@ private:
   void ImportSearchEngines();
   void ImportFavicons();
   void ImportHomepageAndStartupPage();
-  void LoadProfileName(const base::FilePath& local_state, std::wstring& profile_name, PrefsMap& prefs_map);
+  void LoadProfileName(const base::FilePath& local_state, std::string& profile_name, PrefsMap& prefs_map);
   bool CanImport();
 
   void ImportMostVisitedEE();
@@ -65,8 +65,10 @@ private:
 
   base::FilePath user_data_;
   base::FilePath profile_path_;
-  std::wstring chrome_path_;
-  std::wstring homepage_str_;
+#if defined(OS_WIN)
+  base::FilePath chrome_path_;
+#endif
+  base::string16 homepage_str_;
   std::auto_ptr<base::Value> root_;
   std::auto_ptr<base::Value> local_state_;
 

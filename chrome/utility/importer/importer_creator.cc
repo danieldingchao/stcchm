@@ -7,6 +7,7 @@
 #include "base/logging.h"
 #include "build/build_config.h"
 #include "chrome/utility/importer/bookmarks_file_importer.h"
+#include "chrome/utility/importer/google_chrome_importer.h"
 #include "chrome/utility/importer/firefox_importer.h"
 
 #if defined(OS_WIN)
@@ -15,7 +16,6 @@
 #include "chrome/utility/importer/ie_importer_win.h"
 
 #include "chrome/utility/importer/360se_importer.h"
-#include "chrome/utility/importer/google_chrome_importer.h"
 #include "chrome/utility/importer/html_importer.h"
 #include "chrome/utility/importer/maxthon_importer.h"
 #include "chrome/utility/importer/sg_importer.h"
@@ -40,8 +40,6 @@ scoped_refptr<Importer> CreateImporterByType(ImporterType type) {
       if (IsEdgeFavoritesLegacyMode())
         return new IEImporter();
       return new EdgeImporter();
-	case TYPE_GOOGLE_CHROME:
-		return new GoogleChromeImporter(GoogleChromeImporter::GOOGLE_CHROME);
 		//case TYPE_360SE5:
 		//	return new SafeBrowserImporter(SafeBrowserImporter::SE_VER_5);
 	case TYPE_360SE6:
@@ -73,6 +71,8 @@ scoped_refptr<Importer> CreateImporterByType(ImporterType type) {
       return new BookmarksFileImporter();
     case TYPE_FIREFOX:
       return new FirefoxImporter();
+	case TYPE_GOOGLE_CHROME:
+		return new GoogleChromeImporter(GoogleChromeImporter::GOOGLE_CHROME);
 #if defined(OS_MACOSX)
     case TYPE_SAFARI:
       return new SafariImporter(base::mac::GetUserLibraryPath());

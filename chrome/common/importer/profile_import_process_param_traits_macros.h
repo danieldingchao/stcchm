@@ -28,11 +28,11 @@
 #if defined(OS_WIN)
 IPC_ENUM_TRAITS_MIN_MAX_VALUE(importer::ImporterType,
                               importer::TYPE_UNKNOWN,
-                              importer::TYPE_HTML)
+                              importer::TYPE_GOOGLE_CHROME)
 #else
 IPC_ENUM_TRAITS_MIN_MAX_VALUE(importer::ImporterType,
                               importer::TYPE_UNKNOWN,
-                              importer::TYPE_BOOKMARKS_FILE)
+                              importer::TYPE_GOOGLE_CHROME)
 #endif
 
 IPC_STRUCT_TRAITS_BEGIN(importer::SourceProfile)

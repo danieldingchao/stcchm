@@ -3,15 +3,20 @@
 // found in the LICENSE file.
 #include "chrome/utility/importer/google_chrome_importer.h"
 
+#if defined(OS_WIN)
 #include <Psapi.h>
+#endif
 
 #include "base/files/file_util.h"
 #include "base/files/file_enumerator.h"
+#include "base/base_paths.h"
+#include "base/environment.h"
 #include "base/json/json_file_value_serializer.h"
 #include "base/strings/utf_string_conversions.h"
+#if defined(OS_WIN)
 #include <strsafe.h>
 #include <ShlObj.h>
-
+#endif
 #include "chrome/common/chrome_constants.h"
 #include "chrome/common/chrome_paths.h"
 #include "chrome/common/chrome_paths_internal.h"
@@ -31,12 +36,16 @@
 #include "grit/components_strings.h"
 #include "components/search_engines/search_engines_pref_names.h"
 
+#if defined(OS_LINUX)
+#include "base/nix/xdg_util.h"
+#endif
+
 using content::BrowserThread;
 using importer::BookmarkNode;
 using importer::BookmarkCodec;
 
 namespace {
-
+#if defined(OS_WIN)
   bool IsGoogleChromeRunning(const std::wstring &chrome_exe)
   {
     DWORD processid[1024] = {0};
@@ -68,6 +77,7 @@ namespace {
     }
     return false;
   }
+#endif
 
   class MobileNode : public BookmarkNode {
   public:
@@ -122,7 +132,7 @@ namespace {
   }
 
   void AddBookmarksToVector(std::vector<ImportedBookmarkEntry>& bookmarks,
-    BookmarkNode* node,std::vector<std::wstring> path, bool in_toolbar, bool first = true) {
+    BookmarkNode* node,std::vector<base::string16> path, bool in_toolbar, bool first = true) {
       if (node->is_url()) {
         if (node->url().is_valid()) {
           ImportedBookmarkEntry entry;
@@ -137,9 +147,11 @@ namespace {
       }
       else {
         if (first) {
+          #if defined(OS_WIN)
           if ((node->GetTitle() != L"收藏栏") && (node->GetTitle() != L"Bookmarks bar")
             && (node->GetTitle() != L"其他收藏") && (node->GetTitle() != L"Other bookmarks"))
             path.push_back(node->GetTitle());
+          #endif
         }
         else
           path.push_back(node->GetTitle());
@@ -174,7 +186,9 @@ GoogleChromeImporter::GoogleChromeImporter(Chrome_Type chrome_type)
 
 void GoogleChromeImporter::StartImport(const importer::SourceProfile& profile_info, uint16_t items, ImporterBridge* bridge) {
   bridge_ = bridge;
-  chrome_path_ = profile_info.source_path.value();
+#if defined(OS_WIN)
+  chrome_path_ = profile_info.source_path;
+#endif
   InitPaths();
 
   bridge_->NotifyStarted();
@@ -215,12 +229,16 @@ void GoogleChromeImporter::StartImport(const importer::SourceProfile& profile_in
 //////////////////////////////////////////////////////////////////////////
 // Private Methods.
 bool GoogleChromeImporter::CanImport() {
-  if (IsGoogleChromeRunning(chrome_path_)) {
+#if defined(OS_WIN)
+  if (IsGoogleChromeRunning(chrome_path_.value())) {
     return false;
   }
   else {
     return true;
   }
+#else
+  return true;
+#endif
 }
 
 void GoogleChromeImporter::ImportHomepageAndStartupPage() {
@@ -295,7 +313,7 @@ void GoogleChromeImporter::ImportSearchEngines() {
       StringValue* default_search_url = static_cast<StringValue*>(default_search_url_value);
       default_search_url->GetAsString(&url);
       if (!url.empty()) {
-        bridge_->SetDefaultSearchEngine(ASCIIToUTF16(url), L"");
+        bridge_->SetDefaultSearchEngine(ASCIIToUTF16(url), ASCIIToUTF16(""));
       }
     }
   }
@@ -307,10 +325,8 @@ void GoogleChromeImporter::ImportFavicons() {
   favicon_path = profile_path_.Append(chrome::kFaviconsFilename);
 
   base::FilePath tmp_path;
-  wchar_t path[MAX_PATH];
-  GetTempPath(MAX_PATH,path);
-  tmp_path = base::FilePath(path);
-  tmp_path = tmp_path.Append(L"lemon_import_icon_tmp.db");
+  PathService::Get(base::DIR_TEMP, &tmp_path);
+  tmp_path = tmp_path.Append(FILE_PATH_LITERAL("lemon_import_icon_tmp.db"));
   base::CopyFile(favicon_path, tmp_path);
   
   sql::Connection favicon_db;
@@ -322,7 +338,7 @@ void GoogleChromeImporter::ImportFavicons() {
     return;
 
   sql::Statement s;
-  // 新版chrome的icon存储方式，360极速，chrome高版本采用
+
   if(favicon_db.DoesTableExist("icon_mapping") && favicon_db.DoesTableExist("favicon_bitmaps")) {
   s.Assign(favicon_db.GetUniqueStatement("SELECT page_url, image_data "
     "FROM icon_mapping join favicon_bitmaps on icon_mapping.icon_id = favicon_bitmaps.icon_id"));
@@ -348,7 +364,7 @@ void GoogleChromeImporter::ImportFavicons() {
   if(!favicons.empty())
     bridge_->SetFavicons(favicons);
 }
-
+#if defined(OS_WIN)
 base::FilePath get360ChromeBookmarkPath(const base::FilePath& profile) {
   base::FilePath bookmark_path = profile.Append(chrome::kBookmarksFileName);
   base::FileEnumerator temp_traversal(profile,
@@ -384,12 +400,13 @@ base::FilePath getTW6BookmarkPath(const base::FilePath& profile) {
   }
   return  bookmark_path;
 }
+#endif
 
 void GoogleChromeImporter::ImportFavorites() {
   base::FilePath bookmark_path;
-
+#if defined(OS_WIN)
   if (chrome_type_ == TW_LOCAL)
-    bookmark_path = bookmark_path.FromUTF16Unsafe(chrome_path_);
+    bookmark_path = bookmark_path.FromUTF16Unsafe(chrome_path_.value());
   else if (chrome_type_ == CHROME_360) {
     bookmark_path = get360ChromeBookmarkPath(profile_path_);
   } else if (chrome_type_ == THEWORLD_6){
@@ -397,15 +414,22 @@ void GoogleChromeImporter::ImportFavorites() {
   } else {
     bookmark_path = profile_path_.Append(chrome::kBookmarksFileName);
   }
+#else
+  bookmark_path = profile_path_.Append(chrome::kBookmarksFileName);
+#endif
 
   if (!base::PathExists(bookmark_path))
     return;
 
   base::FilePath tmp_path;
+#if defined(OS_WIN)
   wchar_t tmp[MAX_PATH];
   GetTempPath(MAX_PATH, tmp);
   tmp_path = base::FilePath(tmp);
-  tmp_path = tmp_path.Append(L"lemon_bookmarks_tmp");
+#else
+  PathService::Get(base::DIR_TEMP, &tmp_path);
+#endif
+  tmp_path = tmp_path.Append(FILE_PATH_LITERAL("lemon_bookmarks_tmp"));
   base::CopyFile(bookmark_path, tmp_path);
 
   int id = 0;
@@ -417,7 +441,7 @@ void GoogleChromeImporter::ImportFavorites() {
   LoadBookmarksFile(tmp_path, bb_node.get(), other_node.get(), mobile_node.get());
   base::DeleteFile(tmp_path, false);
 
-  std::vector<std::wstring> path;
+  std::vector<base::string16> path;
 
   BookmarkVector other_bookmarks;
   AddBookmarksToVector(other_bookmarks, other_node.get(), path, false);
@@ -427,6 +451,7 @@ void GoogleChromeImporter::ImportFavorites() {
 
 
   if ((!bookmarks.empty()) && !cancelled()) {
+#if defined(OS_WIN)
     string16 first_folder_name = L"从 Chrome 导入";
     if(CHROME_360 == chrome_type_)
       first_folder_name = L"从 360极速 导入";
@@ -440,6 +465,9 @@ void GoogleChromeImporter::ImportFavorites() {
 		first_folder_name = L"从 Cent浏览器 导入";
 	else if (STAR7_BROWSER == chrome_type_)
 		first_folder_name = L"从 七星浏览器 导入";
+#else
+   string16 first_folder_name = ASCIIToUTF16("Import from Google Chrome");
+#endif
       // l10n_util::GetStringUTF16(IDS_BOOKMARK_GROUP_FROM_GOOGLE_CHROME);
     bridge_->AddBookmarks(bookmarks, first_folder_name);
     bridge_->AddBookmarks(other_bookmarks, first_folder_name, 
@@ -455,10 +483,8 @@ void GoogleChromeImporter::ImportPasswords() {
 
   // copy the original login data
   base::FilePath tmp_path;
-  wchar_t path[MAX_PATH];
-  GetTempPath(MAX_PATH,path);
-  tmp_path = base::FilePath(path);
-  tmp_path = tmp_path.Append(L"lemon_import_login_tmp.db");
+  PathService::Get(base::DIR_TEMP, &tmp_path);
+  tmp_path = tmp_path.Append(FILE_PATH_LITERAL("lemon_import_login_tmp.db"));
   base::CopyFile(login_file_path, tmp_path);
 
   importer::LoginDatabase login_db;
@@ -482,7 +508,15 @@ void GoogleChromeImporter::ImportPasswords() {
   }
 }
 
+#if defined(OS_LINUX)
+using base::nix::GetXDGDirectory;
+using base::nix::GetXDGUserDirectory;
+using base::nix::kDotConfigDir;
+using base::nix::kXdgConfigHomeEnvVar;
+#endif
+
 void GoogleChromeImporter::InitPaths() {
+#if defined(OS_WIN)
   wchar_t buffer[MAX_PATH] = {0};
   if(CHROME_360 == chrome_type_ || CHROME_TW == chrome_type_ || THEWORLD_6 == chrome_type_) {
     user_data_ = base::FilePath(chrome_path_).DirName().DirName().
@@ -502,20 +536,25 @@ void GoogleChromeImporter::InitPaths() {
 		  path.append(L"\\7Star\\7Star\\");
       user_data_ = base::FilePath(path).Append(chrome::kUserDataDirname);
   }
-
+#elif defined(OS_LINUX)
+  std::unique_ptr<base::Environment> env(base::Environment::Create());
+  base::FilePath config_dir(GetXDGDirectory(env.get(),
+                                            kXdgConfigHomeEnvVar,
+                                            kDotConfigDir));
+  user_data_ = config_dir.Append("google-chrome");
+#endif
   base::FilePath local_state = user_data_.Append(chrome::kLocalStateFilename);
 
-  std::wstring profile_name;
+  std::string profile_name;
   PrefsMap prefs_map;
   LoadProfileName(local_state, profile_name, prefs_map);
-  if (profile_name.empty()) {
-    profile_name.append(ASCIIToUTF16(chrome::kInitialProfile));
-  }
-  profile_path_ = user_data_.Append(profile_name);
+
+  profile_path_ = user_data_.AppendASCII(profile_name.c_str());
   local_prefs_.swap(prefs_map);
+
 }
 
-void GoogleChromeImporter::LoadProfileName(const base::FilePath& local_state, std::wstring& profile_name, PrefsMap& prefs_map){
+void GoogleChromeImporter::LoadProfileName(const base::FilePath& local_state, std::string& profile_name, PrefsMap& prefs_map){
   JSONFileValueDeserializer deserializer(local_state);
   local_state_.reset(deserializer.Deserialize(NULL, NULL).release());
   if (local_state_.get()) {
@@ -523,14 +562,17 @@ void GoogleChromeImporter::LoadProfileName(const base::FilePath& local_state, st
     if (root_node->GetType() != Value::TYPE_DICTIONARY)
       return;
 
-    // Load Profile Name.
     DictionaryValue& d_value = static_cast<DictionaryValue&>(*root_node);
-    Value* profile_name_value;
-    if (d_value.Get(prefs::kProfileLastUsed, &profile_name_value)) {
-      if (profile_name_value->GetType() == Value::TYPE_STRING) {
-        StringValue* profile_name_str = static_cast<StringValue*>(profile_name_value);
-        profile_name_str->GetAsString(&profile_name);
-      }
+    std::string last_used_profile_name;
+      d_value.GetString(prefs::kProfileLastUsed,&last_used_profile_name);
+  // Make sure the system profile can't be the one marked as the last one used
+  // since it shouldn't get a browser.
+  if (!last_used_profile_name.empty() &&
+      last_used_profile_name !=
+          base::FilePath(chrome::kSystemProfileDir).AsUTF8Unsafe()) {
+    profile_name = last_used_profile_name;
+  } else {
+    profile_name = chrome::kInitialProfile;
     }
   }
 }
@@ -540,19 +582,17 @@ void GoogleChromeImporter::ImportMostVisitedEE()
   base::FilePath app_data_path,user_data_path;
   base::FilePath ee_history_path,history_file_path,ee_topsites_path,topsites_file_path;
   if (!profile_path_.empty()) {
-    ee_history_path = profile_path_.Append(L"History");
-    ee_topsites_path = profile_path_.Append(L"Top Sites");
+    ee_history_path = profile_path_.Append(FILE_PATH_LITERAL("History"));
+    ee_topsites_path = profile_path_.Append(FILE_PATH_LITERAL("Top Sites"));
   }
 
   base::FilePath temp_path;
 
-  wchar_t path[MAX_PATH];
-  GetTempPath(MAX_PATH,path);
-  temp_path = base::FilePath(path);
+  PathService::Get(base::DIR_TEMP, &temp_path);
 
   if (!temp_path.empty()) {
-    history_file_path = temp_path.Append(L"importHistory");
-    topsites_file_path = temp_path.Append(L"importTop Sites");
+    history_file_path = temp_path.Append(FILE_PATH_LITERAL("importHistory"));
+    topsites_file_path = temp_path.Append(FILE_PATH_LITERAL("importTop Sites"));
   }
 
   base::CopyFile(ee_history_path,history_file_path);
@@ -600,19 +640,17 @@ void GoogleChromeImporter::ImportMostVisitedWorldChromeAndGoogleChrome()
   base::FilePath app_data_path,user_data_path,src_db_path;
   base::FilePath chrome_history_path,history_file_path,chrome_topsites_path,topsites_file_path;
   if (!profile_path_.empty()) {
-    chrome_history_path = profile_path_.Append(L"History");
-    chrome_topsites_path = profile_path_.Append(L"Top Sites");
+    chrome_history_path = profile_path_.Append(FILE_PATH_LITERAL("History"));
+    chrome_topsites_path = profile_path_.Append(FILE_PATH_LITERAL("Top Sites"));
   }
 
   base::FilePath temp_path;
 
-  wchar_t path[MAX_PATH];
-  GetTempPath(MAX_PATH,path);
-  temp_path = base::FilePath(path);
+  PathService::Get(base::DIR_TEMP, &temp_path);
 
   if (!temp_path.empty()) {
-    history_file_path = temp_path.Append(L"importHistory");
-    topsites_file_path = temp_path.Append(L"importTop Sites");
+    history_file_path = temp_path.Append(FILE_PATH_LITERAL("importHistory"));
+    topsites_file_path = temp_path.Append(FILE_PATH_LITERAL("importTop Sites"));
   }
 
   base::CopyFile(chrome_history_path,history_file_path);

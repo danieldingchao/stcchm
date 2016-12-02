@@ -29,7 +29,6 @@ enum ImporterType {
   TYPE_EDGE            = 6,
   TYPE_THEWORLD5 = 7,
   TYPE_THEWORLDCHROME = 8,
-  TYPE_GOOGLE_CHROME = 9,
   TYPE_360SE5 = 10,
   TYPE_360SE6 = 11,
   TYPE_360CHROME = 12,
@@ -43,6 +42,7 @@ enum ImporterType {
   TYPE_LOCAL = 20,
   TYPE_HTML = 21,
 #endif
+  TYPE_GOOGLE_CHROME = 22,
 };
 
 }  // namespace importer
