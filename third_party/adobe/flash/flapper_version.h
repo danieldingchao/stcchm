@@ -5,7 +5,7 @@
 #define FLAPPER_VERSION_H_INCLUDED_
 
 #define FLAPPER_AVAILABLE
-#define FLAPPER_VERSION_STRING "23.0.0.205"
+#define FLAPPER_VERSION_STRING "23.0.0.207"
 // If Flapper were available, we'd define two things:
 //  - FLAPPER_AVAILABLE (to indicate availability), and
 //  - FLAPPER_VERSION_STRING (with the version of the Flapper that's available

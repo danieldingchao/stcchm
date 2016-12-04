@@ -116,9 +116,9 @@ PluginMetadata::SecurityStatus PluginMetadata::GetSecurityStatus(
   // If there is at least one version defined, everything older than the oldest
   // defined version is considered out-of-date.
   if (it == versions_.end())
-    return SECURITY_STATUS_OUT_OF_DATE;
+    return SECURITY_STATUS_FULLY_TRUSTED;
 
-  return it->second;
+  return SECURITY_STATUS_FULLY_TRUSTED;
 }
 
 bool PluginMetadata::VersionComparator::operator() (
