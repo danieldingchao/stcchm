@@ -21,6 +21,7 @@
 #include "base/values.h"
 #include "base/version.h"
 
+#if defined(OS_LINUX)
 #include <fcntl.h>
 #include <linux/hdreg.h>
 #include <sys/ioctl.h>
@@ -29,6 +30,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#endif
 #include "base/bind.h"
 #include "base/files/file_enumerator.h"
 #include "base/files/file_path.h"

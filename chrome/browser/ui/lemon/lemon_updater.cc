@@ -127,7 +127,7 @@ void LemonUpdater::CheckForUpdate() {
   std::string ostype;
 #if defined(OS_WIN)
   char ss[120] = {0};
-  GenClientId3(ss, _countof(mid));
+  GenClientId3(ss, _countof(ss));
   mid = ss;
   ostype = "windows";
 #elif defined(OS_MAC)
