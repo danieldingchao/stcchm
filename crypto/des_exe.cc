@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   if (base::ReadFileToString(file, &contents)) {
     des_encrypt((unsigned char*)pwd.c_str(), contents, &encrypted);
     base::WriteFile(output, encrypted.c_str(), encrypted.length());
-    std::string md5 = base::MD5String(contents);
+    std::string md5 = base::MD5String(encrypted);
     base::WriteFile(md5file, md5.c_str(), md5.length());
   }
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   if (base::ReadFileToString(file, &contents)) {
     des_encrypt((unsigned char*)pwd.c_str(), contents, &encrypted);
     base::WriteFile(output, encrypted.c_str(), encrypted.length());
-    std::string md5 = base::MD5String(contents);
+    std::string md5 = base::MD5String(encrypted);
     base::WriteFile(md5file, md5.c_str(), md5.length());
   }
 
