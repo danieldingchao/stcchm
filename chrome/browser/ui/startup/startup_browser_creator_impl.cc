@@ -1054,6 +1054,7 @@ Browser* StartupBrowserCreatorImpl::ProcessSpecifiedURLs(
     std::vector<GURL> urls;
     AddStartupURLs(&urls);
     UrlsToTabs(urls, &tabs);
+    /*
   } else if (pref.type == SessionStartupPref::URLS && !pref.urls.empty() &&
              !HasPendingUncleanExit(profile_)) {
     std::vector<GURL> extra_urls;
@@ -1068,10 +1069,19 @@ Browser* StartupBrowserCreatorImpl::ProcessSpecifiedURLs(
     //homePageTab.is_pinned = false;
     //homePageTab.url = GURL(chrome::kFixedHomePage);
     //tabs.push_back(homePageTab);
+    */
   } else {
     StartupTab homePageTab;
     homePageTab.is_pinned = false;
-    homePageTab.url = GURL(chrome::kFixedHomePage);
+    GURL HomePageUrl(chrome::kFixedHomePage);
+    std::string fixHomePage = profile_->GetPrefs()->GetString(prefs::kFixedHomePage);
+    if (!fixHomePage.empty()) {
+      GURL url(fixHomePage);
+      if (url.is_valid()) {
+        HomePageUrl = GURL(fixHomePage);
+      }
+    }
+    homePageTab.url = HomePageUrl;
     tabs.push_back(homePageTab);
   }
 

@@ -254,12 +254,12 @@ cr.define('options', function() {
       Preferences.getInstance().addEventListener(
           'session.startup_urls',
           function(event) {
-            $('startup-set-pages').disabled = event.value.disabled;
+            //$('startup-set-pages').disabled = event.value.disabled;
           });
 
-      $('startup-set-pages').onclick = function() {
-        PageManager.showPageByName('startup');
-      };
+      //$('startup-set-pages').onclick = function() {
+      //  PageManager.showPageByName('startup');
+      //};
 
       // Appearance section.
       Preferences.getInstance().addEventListener('browser.show_home_button',
@@ -912,7 +912,7 @@ cr.define('options', function() {
 
         // Select "open the following pages" and lock down the list of URLs
         // to reflect the intention of the policy.
-        $('startup-show-pages').checked = true;
+        //$('startup-show-pages').checked = true;
         StartupOverlay.getInstance().setControlsDisabled(true);
       } else {
         // Re-enable the controls in the startup overlay if necessary.
